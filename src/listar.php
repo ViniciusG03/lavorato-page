@@ -10,7 +10,7 @@ if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
 }
 
-$sql = "SELECT id, paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_lote FROM pacientes";
+$sql = "SELECT id, paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_lote, paciente_especialidade, paciente_mes, paciente_section, paciente_entrada, paciente_saida FROM pacientes";
 $result = $conn->query($sql);
 
 if ($result === false) {
@@ -36,6 +36,23 @@ $conn->close();
     <label for="numero_guia">Número da Guia:</label>
     <input type="text" id="numero_guia" name="numero_guia">
 
+    <label for="especialidade">Especialidade:</label>
+    <input type="text" name="especialidade" id="especialidade">
+    <datalist id=especialidades>
+        <option></option>
+        <option></option>
+        <option></option>
+        <option></option>
+        <option></option>
+        <option></option>
+        <option></option>
+        <option></option>
+    </datalist>
+    
+    <label for="mes">Mes:</label>
+    <input type="text" id="mes" name="id">
+
+
     <button type="submit">Buscar</button>
 </form>
     <table>
@@ -47,6 +64,11 @@ $conn->close();
                 <th>Número da Guia</th>
                 <th>Status da Guia</th>
                 <th>Número de Lote</th>
+                <th>Especialidade</th>
+                <th>Mês</th>
+                <th>Seções</th>
+                <th>Entrada</th>
+                <th>Saida</th>
             </tr>
         </thead>
         <tbody>
@@ -60,6 +82,11 @@ $conn->close();
                     echo "<td>" . $row["paciente_guia"] . "</td>";
                     echo "<td>" . $row["paciente_status"] . "</td>";
                     echo "<td>" . $row["paciente_lote"] . "</td>";
+                    echo "<td>" . $row["paciente_especialidade"] . "</td>";
+                    echo "<td>" . $row["paciente_mes"] . "</td>";
+                    echo "<td>" . $row["paciente_section"] . "</td>";
+                    echo "<td>" . $row["paciente_entrada"] . "</td>";
+                    echo "<td>" . $row["paciente_saida"] . "</td>";
                     echo "</tr>";
                 }
             } else {

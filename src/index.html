@@ -39,27 +39,44 @@
         <h1>Cadastro de Guia!</h1>
 
         <form action="../src/database/cadastrar.php" method="post">
-          <label for="nome">Nome:</label>
-          <input type="text" id="nome" name="nome" />
-          <label for="convenio">Convênio:</label>
-          <input type="text" id="convenio" name="convenio" />
-          <label for="numero_guia">Número da Guia:</label>
-          <input type="text" id="numero_guia" name="numero_guia" /><br />
-          <div class="status_guia">
-            <label for="status_guia">Status:</label>
-            <input
-              list="statusGuia"
-              type="text"
-              id="status_guia"
-              name="status_guia" />
-
-            <datalist id="statusGuia">
-              <option>Solicitado</option>
-              <option>Emitido</option>
-              <option>Descida</option>
-              <option>Assinado</option>
-            </datalist>
-          </div>
+    
+            <div class="f1">
+              <label for="nome">Nome:</label>
+              <input type="text" id="nome" name="nome" />
+              <label for="convenio">Convênio:</label>
+              <input type="text" id="convenio" name="convenio" />
+            </div>
+            <div class="f2">
+              <label for="numero_guia">Número da Guia:</label>
+              <input type="text" id="numero_guia" name="numero_guia" />
+                <label for="status_guia">Status:</label>
+                <input
+                  list="statusGuia"
+                  type="text"
+                  id="status_guia"
+                  name="status_guia" />
+    
+                <datalist id="statusGuia">
+                  <option>Solicitado</option>
+                  <option>Emitido</option>
+                  <option>Descida</option>
+                  <option>Assinado</option>
+                  <option>Faturado</option>
+                </datalist>
+            </div>
+            <div class="f3">
+              <label for="especialidade">Especialidade:</label>
+              <input type="text" id="especialidade" name="especialidade">
+              <label for="mes">Mês:</label>
+              <input type="text" id="mes" name="mes">
+            </div>
+            <div class="f4">
+              <label for="entrada">Entrada:</label>
+              <input type="text" id="entrada" name="entrada">
+              <label for="saida">Saída:</label>
+              <input type="text" id="saida" name="saida">
+            </div>
+      
 
           <div class="buttonCadastro">
             <button id="btnCadastrarModal">Cadastrar</button>
@@ -90,7 +107,15 @@
             <option>Emitido</option>
             <option>Descida</option>
             <option>Assinado</option>
+            <option>Faturado</option>
           </datalist>
+
+          <div class="f1-at">
+            <label for="entrada">Entrada:</label>
+            <input type="text" id="entrada" name="entrada">
+            <label for="saida">Saída:</label>
+            <input type="text" id="saida" name="saida">
+          </div>
 
           <div class="buttonAtualizar">
             <button type="submit" id="btnAtualizarModal">Atualizar</button>
@@ -110,3 +135,11 @@
   </script>
   </body>
 </html>
+
+especialidade;
+mes;
+numero de seçoes;
+
+data de entrada paciente;
+data de saida paciente;
+
