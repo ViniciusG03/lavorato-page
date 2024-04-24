@@ -1,28 +1,26 @@
-const switchModal = () => {
-    const modal = document.querySelector('.modal')
-    const modalAtualizar = document.querySelector('.modalAtualizar')
-    const actualStyle = modal.style.display
+const modalCadastrar = document.querySelector('.modal');
+const modalAtualizar = document.querySelector('.modal-atualizar');
 
-    if(actualStyle == "block") {
-        modalAtualizar.style.display = 'block'
-        modal.style.display = 'none'
-    } else {
-        modalAtualizar.style.display = 'none';
-        modal.style.display = 'block';
+const switchModalCadastrar = () => {
+    modalCadastrar.style.display = modalCadastrar.style.display === 'block' ? 'none' : 'block';
+};
+
+const switchModalAtualizar = () => {
+    modalAtualizar.style.display = modalAtualizar.style.display === 'block' ? 'none' : 'block';
+};
+
+const btnCadastrar = document.querySelector('#btn-cadastrar');
+btnCadastrar.addEventListener('click', switchModalCadastrar);
+
+const btnAtualizar = document.querySelector('#btn-atualizar');
+btnAtualizar.addEventListener('click', switchModalAtualizar);
+
+window.addEventListener('click', (event) => {
+    if (event.target === modalCadastrar) {
+        switchModalCadastrar();
     }
-}
 
-const btnCadastrar = document.querySelector('#btn-cadastrar')
-btnCadastrar.addEventListener('click', switchModal)
-
-const btnAtualizar = document.querySelector('#btn-atualizar')
-btnAtualizar.addEventListener('click', switchModal)
-
-window.onclick = function(event) {
-    const modal = document.querySelector('.modal')
-    const modalAtualizar = document.querySelector('.modalAtualizar')
-    if(event.target == modal) { switchModal() }
-
-    if (event.target == modalAtualizar) { switchModal() }
-}   
-
+    if (event.target === modalAtualizar) {
+        switchModalAtualizar();
+    }
+});
