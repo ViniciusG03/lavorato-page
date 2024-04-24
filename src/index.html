@@ -6,7 +6,7 @@
     <title>Lavorato</title>
     <link
       rel="shortcut icon"
-      href="/src/assets/Logo-Lavorato-alfa.png"
+      href="../src/assets/Logo-Lavorato-alfa.png"
       type="image/x-icon" />
     <link rel="stylesheet" href="../src/stylesheet/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,12 +17,12 @@
   </head>
   <body>
     <div class="nav">
-        <h1>Lavorato's System</h1>
+      <h1>Lavorato's System</h1>
     </div>
     <div class="container">
       <div class="image-logo">
         <img
-          src="/src/assets/Logo-Lavorato-alfa.png"
+          src="../src/assets/Logo-Lavorato-alfa.png"
           width="1028px"
           height="364px"
           alt="Lavorato Logo" />
@@ -35,54 +35,69 @@
     </div>
 
     <div class="modal">
-        <div class="content">
-            <h1>Cadastro de Guia!</h1>
+      <div class="content">
+        <h1>Cadastro de Guia!</h1>
 
-                <label for="">Nome:</label>
-                <input type="text">
-                <label for="">Convênio:</label>
-                <input type="text">
-                <label for="">Número da Guia:</label>
-                <input type="text">
-                <label for="">Status:</label>
-                <input list="statusGuia">
+        <form action="../src/database/cadastrar.php" method="post">
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" name="nome" />
+          <label for="convenio">Convênio:</label>
+          <input type="text" id="convenio" name="convenio" />
+          <label for="numero_guia">Número da Guia:</label>
+          <input type="text" id="numero_guia" name="numero_guia" /><br>
+          <div class="status_guia">
+            <label for="status_guia">Status:</label>
+            <input
+              list="statusGuia"
+              type="text"
+              id="status_guia"
+              name="status_guia" />
+  
+            <datalist id="statusGuia">
+              <option>Solicitado</option>
+              <option>Emitido</option>
+              <option>Descida</option>
+              <option>Assinado</option>
+            </datalist>
+          </div>
 
-                <datalist id="statusGuia">
-                    <option>Solicitado</option>
-                    <option>Emitido</option>
-                    <option>Descida</option>
-                    <option>Assinado</option>
-                </datalist>
-
-            <div class="buttonCadastro">
-                <button id="btnCadastrarModal">Cadastrar</button>
-            </div>
-        </div>
+          <div class="buttonCadastro">
+            <button id="btnCadastrarModal">Cadastrar</button>
+          </div>
+        </form>
       </div>
+    </div>
 
-      <div class="modal-atualizar">
-        <div class="content-atualizar">
-            <h1>Atualização de Guia!</h1>
+    <div class="modal-atualizar">
+      <div class="content-atualizar">
+        <h1>Atualização de Guia!</h1>
 
-                <label for="">Número da Guia:</label>
-                <input type="text">
-                <label for="">Status:</label>
-                <input list="statusGuia">
-                <label for="">Número do lote:</label>
-                <input type="text">
+        <form action="../src/database/atualizar.php" method="post">
+          <label for="numero_guia">Número da Guia:</label>
+          <input type="text" id="numero_guia" name="numero_guia" />
+          <label for="status_guia">Status:</label>
+          <input
+            type="text"
+            id="status_guia"
+            name="status_guia"
+            list="statusGuia" />
 
-                <datalist id="statusGuia">
-                    <option>Solicitado</option>
-                    <option>Emitido</option>
-                    <option>Descida</option>
-                    <option>Assinado</option>
-                </datalist>
+          <label for="numero_lote">Número do lote:</label>
+          <input type="text" id="numero_lote" name="numero_lote" />
 
-            <div class="buttonAtualizar">
-                <button id="btnAtualizarModal">Atualizar</button>
-            </div>
-        </div>
+          <datalist id="statusGuia">
+            <option>Solicitado</option>
+            <option>Emitido</option>
+            <option>Descida</option>
+            <option>Assinado</option>
+          </datalist>
+
+          <div class="buttonAtualizar">
+            <button type="submit" id="btnAtualizarModal">Atualizar</button>
+          </div>
+        </form>
       </div>
+    </div>
 
     <script src="index.js"></script>
   </body>

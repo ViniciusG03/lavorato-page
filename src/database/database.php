@@ -1,0 +1,17 @@
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "lavorato@admin2024";
+$database = "lavoratoDB";
+
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Verificar a conexão
+if ($conn->connect_error) {
+    die("Erro na conexão: " . $conn->connect_error);
+} else {
+    echo "Conexão bem-sucedida";
+}
+
+$conn -> close();
+?>

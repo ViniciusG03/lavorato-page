@@ -168,6 +168,27 @@ img {
     box-shadow: 0px 8px 12px rgba(148.23, 64.33, 255, 0.20);
 }
 
+.buttonAtualizar {
+    padding-top: 10px;
+    margin-left: 40%;
+}
+
+.buttonCadastro {
+    padding-top: 10px;
+    margin-left: 40%;
+}
+
 h1 {
     color: white;
 }
+
+#numero_guia {
+    padding-bottom: 5px;
+}
+
+.status_guia {
+    margin-left: 32%;
+}
+
+
+
