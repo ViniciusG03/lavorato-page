@@ -47,13 +47,14 @@ body {
 img {
     max-width: 100%;
     height: auto;
+    padding-top: 20px;
 }
 
 .buttons {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    
+    height: 100vh;
 }
 
 #btn-cadastrar {

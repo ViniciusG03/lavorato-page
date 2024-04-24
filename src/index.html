@@ -30,7 +30,7 @@
       <div class="buttons">
         <button id="btn-cadastrar">Cadastrar</button>
         <button id="btn-atualizar">Atualizar</button>
-        <button id="btn-listar">Listar</button>
+        <button type="button" id="btn-listar">Listar</button>
       </div>
     </div>
 
@@ -44,7 +44,7 @@
           <label for="convenio">Convênio:</label>
           <input type="text" id="convenio" name="convenio" />
           <label for="numero_guia">Número da Guia:</label>
-          <input type="text" id="numero_guia" name="numero_guia" /><br>
+          <input type="text" id="numero_guia" name="numero_guia" /><br />
           <div class="status_guia">
             <label for="status_guia">Status:</label>
             <input
@@ -52,7 +52,7 @@
               type="text"
               id="status_guia"
               name="status_guia" />
-  
+
             <datalist id="statusGuia">
               <option>Solicitado</option>
               <option>Emitido</option>
@@ -100,5 +100,13 @@
     </div>
 
     <script src="index.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          const btnListar = document.getElementById('btn-listar');
+          btnListar.addEventListener('click', () => {
+            window.location.href = 'listar.php';
+          });
+      });
+  </script>
   </body>
 </html>
