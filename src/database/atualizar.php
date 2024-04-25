@@ -40,7 +40,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $entrada = $_POST["entrada"];
     $saida = $_POST["saida"];
 
-    // Verificar se algum dos campos obrigatórios está vazio
     if (empty($numero_guia) || empty($status_guia) || empty($numero_lote) || empty($entrada) || empty($saida)) {
         echo "<h1>Por favor, preencha todos os campos!</h1>";
     } else {
@@ -48,7 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = $conn->query($sql_select);
 
         if ($result->num_rows > 0) {
-            // Executar SQL de atualização apenas se os campos necessários estiverem preenchidos
             $sql_update = "UPDATE pacientes SET paciente_status = '$status_guia', paciente_lote = '$numero_lote', paciente_entrada = '$entrada', paciente_saida = '$saida' WHERE paciente_guia = '$numero_guia'";
 
             if ($conn->query($sql_update) === TRUE) {
