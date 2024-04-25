@@ -66,9 +66,38 @@
             </div>
             <div class="f3">
               <label for="especialidade">Especialidade:</label>
-              <input type="text" id="especialidade" name="especialidade">
+              <input id="especialidade" name="especialidade" list="listEspec">
+
+              <datalist id="listEspec">
+                <option>Fonoaudiologia</option>
+                <option>Psicologia</option>
+                <option>ABA</option>
+                <option>Psicomotriciade</option>
+                <option>Músico Terapia</option>
+                <option>Fisioterapia</option>
+                <option>Nutrição</option>
+                <option>Arte Terapia</option>
+                <option>Psicologia</option>
+                <option>Consulta</option>
+              </datalist>
+
               <label for="mes">Mês:</label>
-              <input type="text" id="mes" name="mes">
+              <input type="text" id="mes" name="mes" list="mesList">
+
+              <datalist id="mesList">
+                <option>Janeiro</option>
+                <option>Fevereiro</option>
+                <option>Março</option>
+                <option>Abril</option>
+                <option>Maio</option>
+                <option>Junho</option>
+                <option>Julho</option>
+                <option>Agosto</option>
+                <option>Setembro</option>
+                <option>Outubro</option>
+                <option>Novembro</option>
+                <option>Dezembro</option>
+              </datalist>
             </div>
             <div class="f4">
               <label for="entrada">Entrada:</label>
@@ -76,6 +105,9 @@
               <label for="saida">Saída:</label>
               <input type="text" id="saida" name="saida">
             </div>
+            
+            <label for="numero_section">Número de seções:</label>
+            <input type="text" name="numero_section" id="numero_section">
       
 
           <div class="buttonCadastro">
@@ -129,17 +161,9 @@
       document.addEventListener('DOMContentLoaded', () => {
           const btnListar = document.getElementById('btn-listar');
           btnListar.addEventListener('click', () => {
-            window.location.href = 'listar.php';
+            window.location.href = 'database/listar.php';
           });
       });
   </script>
   </body>
 </html>
-
-especialidade;
-mes;
-numero de seçoes;
-
-data de entrada paciente;
-data de saida paciente;
-
