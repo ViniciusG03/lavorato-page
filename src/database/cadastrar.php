@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<h2>Erro: A guia já está cadastrada!</h2>";
         } else {
             if($conn->query($sql) === TRUE){
-                echo "<h1> Guia Cadastrada com sucesso!</h1>";
+                echo "<h1> Guia cadastrada com sucesso!</h1>";
                 echo "<h2>Nome do paciente:</h2> <p>$nome</p>";
                 echo "<h2>Convênio do paciente:</h2> <p>$convenio</p>";
                 echo "<h2>Número da Guia:</h2> <p>$numero_guia</p>";

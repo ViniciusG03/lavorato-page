@@ -6,7 +6,6 @@ $database = "lavoratoDB";
 
 $conn = new mysqli($servername, $username, $password, $database);
 
-// Verificar a conexão
 if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
 } else {

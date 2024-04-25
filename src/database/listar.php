@@ -43,52 +43,6 @@ $conn->close();
       <h1>Lavorato's System</h1>
     </div>
     <h1 id="title">Lista de Pacientes</h1>
-    <!-- <form action="buscar.php" method="get">
-        <div class="form-group">
-            <label for="nome">Nome do Paciente:</label>
-            <input type="text" id="nome" name="nome">
-        </div>
-        <div class="form-group">
-            <label for="numero_guia">Número da Guia:</label>
-            <input type="text" id="numero_guia" name="numero_guia">
-        </div>
-        <div class="form-group">
-            <label for="especialidade">Especialidade:</label>
-            <input type="text" name="especialidade" id="especialidade" list="listEspec">
-                <datalist id="listEspec">
-                    <option>Fonoaudiologia</option>
-                    <option>Psicologia</option>
-                    <option>ABA</option>
-                    <option>Psicomotriciade</option>
-                    <option>Músico Terapia</option>
-                    <option>Fisioterapia</option>
-                    <option>Nutrição</option>
-                    <option>Arte Terapia</option>
-                    <option>Psicologia</option>
-                    <option>Consulta</option>
-                </datalist>
-        </div>
-
-        <div class="form-group">
-            <label for="mes">Mês:</label>
-            <input type="text" id="mes" name="mes" list="mesList">
-                    <datalist id="mesList">
-                        <option>Janeiro</option>
-                        <option>Fevereiro</option>
-                        <option>Março</option>
-                        <option>Abril</option>
-                        <option>Maio</option>
-                        <option>Junho</option>
-                        <option>Julho</option>
-                        <option>Agosto</option>
-                        <option>Setembro</option>
-                        <option>Outubro</option>
-                        <option>Novembro</option>
-                        <option>Dezembro</option>
-                    </datalist>
-        </div>
-    <button type="submit">Buscar</button>
-</form> -->
 <form action="buscar.php" method="get">
         <div class="form-group">
             <label for="busca">Buscar por:</label>
@@ -100,7 +54,7 @@ $conn->close();
                 <option value="paciente_especialidade">Especialidade</option>
                 <option value="paciente_mes">Mês</option>
             </select>
-            <input type="text" id="termo" name="termo" placeholder="Digite o termo de busca">
+            <input type="text" id="termo" name="termo" placeholder="Digite o termo de busca" autocomplete="off">
         </div>
         <div class="buttonclass">
             <button type="submit">Buscar</button>

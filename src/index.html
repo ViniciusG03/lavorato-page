@@ -42,13 +42,13 @@
     
             <div class="f1">
               <label for="nome">Nome:</label>
-              <input type="text" id="nome" name="nome" />
+              <input type="text" id="nome" name="nome"  autocomplete="off"/>
               <label for="convenio">Convênio:</label>
-              <input type="text" id="convenio" name="convenio" />
+              <input type="text" id="convenio" name="convenio"  autocomplete="off"/>
             </div>
             <div class="f2">
               <label for="numero_guia">Número da Guia:</label>
-              <input type="text" id="numero_guia" name="numero_guia" />
+              <input type="text" id="numero_guia" name="numero_guia"  autocomplete="off"/>
                 <label for="status_guia">Status:</label>
                 <input
                   list="statusGuia"
@@ -101,13 +101,13 @@
             </div>
             <div class="f4">
               <label for="entrada">Entrada:</label>
-              <input type="text" id="entrada" name="entrada">
+              <input type="text" id="entrada" name="entrada" autocomplete="off">
               <label for="saida">Saída:</label>
-              <input type="text" id="saida" name="saida">
+              <input type="text" id="saida" name="saida" autocomplete="off">
             </div>
             
             <label for="numero_section">Número de seções:</label>
-            <input type="text" name="numero_section" id="numero_section">
+            <input type="text" name="numero_section" id="numero_section" autocomplete="off">
       
 
           <div class="buttonCadastro">
@@ -123,7 +123,7 @@
 
         <form action="../src/database/atualizar.php" method="post">
           <label for="numero_guia">Número da Guia:</label>
-          <input type="text" id="numero_guia" name="numero_guia" />
+          <input type="text" id="numero_guia" name="numero_guia" autocomplete="off"/>
           <label for="status_guia">Status:</label>
           <input
             type="text"
@@ -132,7 +132,7 @@
             list="statusGuia" />
 
           <label for="numero_lote">Número do lote:</label>
-          <input type="text" id="numero_lote" name="numero_lote" />
+          <input type="text" id="numero_lote" name="numero_lote" autocomplete="off"/>
 
           <datalist id="statusGuia">
             <option>Solicitado</option>
@@ -144,9 +144,9 @@
 
           <div class="f1-at">
             <label for="entrada">Entrada:</label>
-            <input type="text" id="entrada" name="entrada">
+            <input type="text" id="entrada" name="entrada" autocomplete="off">
             <label for="saida">Saída:</label>
-            <input type="text" id="saida" name="saida">
+            <input type="text" id="saida" name="saida" autocomplete="off">
           </div>
 
           <div class="buttonAtualizar">
