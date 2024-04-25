@@ -1,3 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link
+      rel="shortcut icon"
+      href="../assets/Logo-Lavorato-alfa.png"
+      type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="../stylesheet/cadastro.css">
+</head>
+<body>
+<div class="nav">
+      <button id="homeButton">Home</button>
+      <h1>Lavorato's System</h1>
+    </div>
+    <div class="box">
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $servername = "localhost";
@@ -15,20 +38,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $convenio = $_POST["convenio"];
     $numero_guia = $_POST["numero_guia"];
     $status_guia = $_POST["status_guia"];
+    $especialidade = $_POST["especialidade"];
+    $mes = $_POST["mes"];
+    $entrada = $_POST["entrada"];
+    $saida = $_POST["saida"];
+    $section = $_POST["numero_section"];
 
-    $sql = "INSERT INTO pacientes (paciente_nome, paciente_convenio, paciente_guia, paciente_status) VALUES ('$nome', '$convenio', '$numero_guia', '$status_guia')";
+    $sql = "INSERT INTO pacientes (paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_especialidade, paciente_mes, paciente_entrada, paciente_saida, paciente_section) VALUES ('$nome', '$convenio', '$numero_guia', '$status_guia', '$especialidade', '$mes', '$entrada', '$saida', '$section')";
+    
+    $verifica_sql = "SELECT COUNT(*) as count FROM pacientes WHERE paciente_guia = '$numero_guia'";
+    $resultado_verificacao = $conn->query($verifica_sql);
 
-    if($conn->query($sql) === TRUE){
-        echo "<h1> Guia Cadastrada com sucesso!</h1><br>";
-        echo "<p>Nome do paciente: $nome</p><br>";
-        echo "<p>Convênio do paciente: $convenio</p><br>";
-        echo "<p>Número da Guia: $numero_guia</p><br>";
-        echo "<p>Status da Guia: $status_guia</p><br>";
-    } else {
-        echo "Erro ao cadastrar a guia: " . conn->error;
+    if($resultado_verificacao) {
+        $row = $resultado_verificacao->fetch_assoc();
+        $numero_de_registros = $row['count'];
+
+        if ($numero_de_registros > 0) {
+            echo "<h2>Erro: A guia já está cadastrada!</h2>";
+        } else {
+            if($conn->query($sql) === TRUE){
+                echo "<h1> Guia Cadastrada com sucesso!</h1>";
+                echo "<h2>Nome do paciente:</h2> <p>$nome</p>";
+                echo "<h2>Convênio do paciente:</h2> <p>$convenio</p>";
+                echo "<h2>Número da Guia:</h2> <p>$numero_guia</p>";
+                echo "<h2>Número de Seções:</h2> <p>$section</p>";
+                echo "<h2>Status da Guia:</h2> <p>$status_guia</p>";
+                echo "<h2>Especialidade:</h2> <p>$especialidade</p>";
+                echo "<h2>Mês:</h2> <p>$mes</p>";
+                echo "<h2>Entrada:</h2> <p>$entrada</p>";
+                echo "<h2>Saida:</h2> <p>$saida</p>";
+            } else {
+            echo "<p>Erro ao cadastrar a guia: </p>" . $conn->error;
+    
+            }    
+        }
     }
-
 
     $conn->close();
 }
-?>
+?>    
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const btnListar = document.getElementById('homeButton');
+          btnListar.addEventListener('click', () => {
+            window.location.href = '../index.html';
+          });
+      });
+    </script>
+</body>
+</html>
