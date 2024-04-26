@@ -44,7 +44,7 @@ body {
 }
 
 #title {
-    text-align: center; /* Centraliza o título */
+    text-align: center; 
     margin-top: 10px;
     margin-bottom: 5px;
     color: var(--main-color-btn);
@@ -53,8 +53,8 @@ body {
 table {
     border-collapse: collapse;
     width: 100%;
-    border: 1px solid black; /* Adiciona uma borda à tabela */
-    margin: 0 auto; /* Centraliza a tabela */
+    border: 1px solid black; 
+    margin: 0 auto; 
 }
 
 th, td {
@@ -74,16 +74,15 @@ select#busca {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    appearance: none; /* Remove o estilo padrão do elemento */
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23ccc" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5H7z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Adiciona uma seta para indicar que é um select */
+    appearance: none; 
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23ccc" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5H7z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); 
     background-repeat: no-repeat;
     background-position: right 8px center;
 }
 
-/* Estilo quando o select estiver focado */
 select:focus {
-    outline: none; /* Remove o contorno padrão ao focar */
-    border-color: var(--main-color-btn); /* Muda a cor da borda ao focar */
+    outline: none; 
+    border-color: var(--main-color-btn); 
 }
 
 

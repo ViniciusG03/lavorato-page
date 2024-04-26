@@ -37,53 +37,52 @@
     <div class="modal">
       <div class="content">
         <h1>Cadastro de Guia!</h1>
-
         <form action="../src/database/cadastrar.php" method="post">
-    
-            <div class="f1">
+          <div class="container-form">
+            <div class="form-left">
               <label for="nome">Nome:</label>
-              <input type="text" id="nome" name="nome"  autocomplete="off"/>
+              <input type="text" id="nome" name="nome" autocomplete="off"/>
               <label for="convenio">Convênio:</label>
-              <input type="text" id="convenio" name="convenio"  autocomplete="off"/>
-            </div>
-            <div class="f2">
+              <input type="text" id="convenio" name="convenio" autocomplete="off"/>
               <label for="numero_guia">Número da Guia:</label>
-              <input type="text" id="numero_guia" name="numero_guia"  autocomplete="off"/>
-                <label for="status_guia">Status:</label>
-                <input
-                  list="statusGuia"
-                  type="text"
-                  id="status_guia"
-                  name="status_guia" />
-    
-                <datalist id="statusGuia">
-                  <option>Solicitado</option>
-                  <option>Emitido</option>
-                  <option>Descida</option>
-                  <option>Assinado</option>
-                  <option>Faturado</option>
-                </datalist>
-            </div>
-            <div class="f3">
-              <label for="especialidade">Especialidade:</label>
-              <input id="especialidade" name="especialidade" list="listEspec">
-
-              <datalist id="listEspec">
-                <option>Fonoaudiologia</option>
-                <option>Psicologia</option>
-                <option>ABA</option>
-                <option>Psicomotriciade</option>
-                <option>Músico Terapia</option>
-                <option>Fisioterapia</option>
-                <option>Nutrição</option>
-                <option>Arte Terapia</option>
-                <option>Psicologia</option>
-                <option>Consulta</option>
+              <input type="text" id="numero_guia" name="numero_guia" autocomplete="off"/>
+              <label for="status_guia">Status:</label>
+              <input list="statusGuia" type="text" id="status_guia" name="status_guia" autocomplete="off"/>
+              <datalist id="statusGuia">
+                <option>Solicitado</option>
+                <option>Emitido</option>
+                <option>Descida</option>
+                <option>Assinado</option>
+                <option>Faturado</option>
               </datalist>
-
+              <label for="numero_section">Número de sessões:</label>
+              <input type="text" name="numero_section" id="numero_section" autocomplete="off">
+            </div>
+            <div class="form-right">
+              <label for="especialidade">Especialidade:</label>
+              <input id="especialidade" name="especialidade" list="listEspec" autocomplete="off">
+              <datalist id="listEspec">
+                <option>AVALIACAO NEUROPSICOLOGICA</option>
+                <option>SESSÃO DE ARTETERAPIA</option>
+                <option>SESSÃO DE EQUOTERAPIA</option>
+                <option>SESSÃO DE FISIOTERAPIA</option>
+                <option>SESSÃO DE FONOAUDIOLOGIA</option>
+                <option>SESSÃO DE FONOAUDIOLOGIA EM GRUPO</option>
+                <option>SESSÃO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                <option>SESSÃO DE MUSICOTERAPIA</option>
+                <option>SESSÃO DE NUTRIÇÃO</option>
+                <option>SESSÃO DE PSICOLOGIA DE CASAL</option>
+                <option>SESSÃO DE PSICOMOTRICIDADE</option>
+                <option>SESSÃO DE PSICOPEDAGOGIA</option>
+                <option>SESSÃO DE PSICOTERAPIA</option>
+                <option>SESSÃO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                <option>SESSÃO DE TERAPIA OCUPACIONAL</option>
+                <option>SESSÃO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                <option>TRATAMENTO SERIADO</option>
+              </datalist>
               <label for="mes">Mês:</label>
               <input type="text" id="mes" name="mes" list="mesList">
-
               <datalist id="mesList">
                 <option>Janeiro</option>
                 <option>Fevereiro</option>
@@ -98,18 +97,12 @@
                 <option>Novembro</option>
                 <option>Dezembro</option>
               </datalist>
-            </div>
-            <div class="f4">
               <label for="entrada">Entrada:</label>
               <input type="text" id="entrada" name="entrada" autocomplete="off">
               <label for="saida">Saída:</label>
               <input type="text" id="saida" name="saida" autocomplete="off">
             </div>
-            
-            <label for="numero_section">Número de seções:</label>
-            <input type="text" name="numero_section" id="numero_section" autocomplete="off">
-      
-
+          </div>
           <div class="buttonCadastro">
             <button id="btnCadastrarModal">Cadastrar</button>
           </div>
@@ -129,7 +122,9 @@
             type="text"
             id="status_guia"
             name="status_guia"
-            list="statusGuia" />
+            list="statusGuia" 
+            autocomplete="off"
+            />
 
           <label for="numero_lote">Número do lote:</label>
           <input type="text" id="numero_lote" name="numero_lote" autocomplete="off"/>
@@ -167,3 +162,4 @@
   </script>
   </body>
 </html>
+
