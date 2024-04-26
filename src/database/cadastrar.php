@@ -44,8 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $saida = $_POST["saida"];
     $section = $_POST["numero_section"];
 
-    if (empty($nome) || empty($convenio) || empty($numero_guia) || empty($status_guia) || empty($especialidade) || empty($mes) || empty($entrada) || empty($saida) || empty($section)) {
-        echo "<h1>Por favor, preencha todos os campos!</h1>";
+    if (empty($nome) || empty($convenio) || empty($numero_guia) || empty($status_guia) || empty($especialidade) || empty($mes) || empty($entrada) || empty($section)) {
+        echo "<h1>Todos os campos devem ser preenchidos, exceto 'Saída'!</h1>";
     } else {
         $verifica_sql = "SELECT COUNT(*) as count FROM pacientes WHERE paciente_guia = '$numero_guia'";
         $resultado_verificacao = $conn->query($verifica_sql);

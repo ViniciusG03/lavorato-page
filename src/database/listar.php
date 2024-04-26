@@ -10,7 +10,7 @@ if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
 }
 
-$sql = "SELECT id, paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_lote, paciente_especialidade, paciente_mes, paciente_section, paciente_entrada, paciente_saida FROM pacientes";
+$sql = "SELECT id, paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_lote, paciente_especialidade, paciente_mes, paciente_section, paciente_entrada, paciente_saida, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes";
 $result = $conn->query($sql);
 
 if ($result === false) {
@@ -64,16 +64,17 @@ $conn->close();
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nome do Paciente</th>
+                <th>Nome</th>
                 <th>Convênio</th>
-                <th>Número da Guia</th>
-                <th>Status da Guia</th>
-                <th>Número de Lote</th>
+                <th>Número</th>
+                <th>Status</th>
+                <th>Lote</th>
                 <th>Especialidade</th>
                 <th>Mês</th>
-                <th>Seções</th>
+                <th>Sessões</th>
                 <th>Entrada</th>
                 <th>Saida</th>
+                <th>Atualização</th>
             </tr>
         </thead>
         <tbody>
@@ -92,6 +93,7 @@ $conn->close();
                     echo "<td>" . $row["paciente_section"] . "</td>";
                     echo "<td>" . $row["paciente_entrada"] . "</td>";
                     echo "<td>" . $row["paciente_saida"] . "</td>";
+                    echo "<td>" . $row["data_hora_formatada"] . "</td>";
                     echo "</tr>";
                 }
             } else {

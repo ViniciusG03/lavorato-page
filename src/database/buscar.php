@@ -21,7 +21,8 @@
       <h1>Lavorato's System</h1>
     </div>
     <h1 id="title">Resultados da Busca</h1>
-<?php
+    <div class="container">
+    <?php
 $servername = "localhost";
 $username = "root";
 $password = "lavorato@admin2024";
@@ -38,83 +39,93 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $categoria = $_GET["categoria"];
         $termo = $_GET["termo"];
 
-        $sql = "SELECT * FROM pacientes WHERE ";
+        if (empty($termo)) {
+            echo '<h1>O termo não pode ser vazio!</h1><p>Clique em "Home" para voltar a página principal!</p>';
+        } else {
+            $sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes WHERE ";
 
-        switch ($categoria) {
-            case "paciente_nome":
-            case "paciente_convenio":
-            case "paciente_guia":
-            case "paciente_status":
-            case "paciente_especialidade":
-            case "paciente_mes":
-                $sql .= "$categoria LIKE ?";
-                break;
-            default:
-                die("Categoria inválida");
-        }
-
-        $stmt = $conn->prepare($sql);
-
-        if ($stmt) {
-            $termo = "%$termo%";
-            
-            $stmt->bind_param("s", $termo);
-            $stmt->execute();
-
-            $result = $stmt->get_result();
-
-            if ($result->num_rows > 0) {
-                echo "<table>";
-                echo "<thead><tr>";
-                echo "<th>ID</th>";
-                echo "<th>Nome do Paciente</th>";
-                echo "<th>Convênio</th>";
-                echo "<th>Número da Guia</th>";
-                echo "<th>Status</th>";
-                echo "<th>Número de Lote</th>";
-                echo "<th>Especialidade</th>";
-                echo "<th>Mês</th>";
-                echo "<th>Seções</th>";
-                echo "<th>Entrada</th>";
-                echo "<th>Saída</th>";
-                echo "</tr></thead>";
-                echo "<tbody>";
-                
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . $row["id"] . "</td>";
-                    echo "<td>" . $row["paciente_nome"] . "</td>";
-                    echo "<td>" . $row["paciente_convenio"] . "</td>";
-                    echo "<td>" . $row["paciente_guia"] . "</td>";
-                    echo "<td>" . $row["paciente_status"] . "</td>";
-                    echo "<td>" . $row["paciente_lote"] . "</td>";
-                    echo "<td>" . $row["paciente_especialidade"] . "</td>";
-                    echo "<td>" . $row["paciente_mes"] . "</td>";
-                    echo "<td>" . $row["paciente_section"] . "</td>";
-                    echo "<td>" . $row["paciente_entrada"] . "</td>";
-                    echo "<td>" . $row["paciente_saida"] . "</td>";
-                    echo "</tr>";
-                }
-                
-                echo "</tbody>";
-                echo "</table>";
-            } else {
-                echo "Nenhum paciente encontrado";
+            switch ($categoria) {
+                case "paciente_nome":
+                case "paciente_convenio":
+                case "paciente_guia":
+                case "paciente_status":
+                case "paciente_especialidade":
+                case "paciente_mes":
+                    $sql .= "$categoria LIKE ?";
+                    break;
+                default:
+                    die("Categoria inválida");
             }
 
-            $stmt->close();
-        } else {
-            echo "Erro na preparação da consulta: " . $conn->error;
+            $stmt = $conn->prepare($sql);
+
+            if ($stmt) {
+                $termo = "%$termo%";
+                
+                $stmt->bind_param("s", $termo);
+                $stmt->execute();
+
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    echo "<div class='table-responsive'>";
+                    echo "<table>";
+                    echo "<thead><tr>";
+                    echo "<th>ID</th>";
+                    echo "<th>Nome</th>";
+                    echo "<th>Convênio</th>";
+                    echo "<th>Número</th>";
+                    echo "<th>Status</th>";
+                    echo "<th>Lote</th>";
+                    echo "<th>Especialidade</th>";
+                    echo "<th>Mês</th>";
+                    echo "<th>Sessões</th>";
+                    echo "<th>Entrada</th>";
+                    echo "<th>Saída</th>";
+                    echo "<th>Atualização</th>";
+                    echo "</tr></thead>";
+                    echo "<tbody>";
+                    
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row["id"] . "</td>";
+                        echo "<td>" . $row["paciente_nome"] . "</td>";
+                        echo "<td>" . $row["paciente_convenio"] . "</td>";
+                        echo "<td>" . $row["paciente_guia"] . "</td>";
+                        echo "<td>" . $row["paciente_status"] . "</td>";
+                        echo "<td>" . $row["paciente_lote"] . "</td>";
+                        echo "<td>" . $row["paciente_especialidade"] . "</td>";
+                        echo "<td>" . $row["paciente_mes"] . "</td>";
+                        echo "<td>" . $row["paciente_section"] . "</td>";
+                        echo "<td>" . $row["paciente_entrada"] . "</td>";
+                        echo "<td>" . $row["paciente_saida"] . "</td>";
+                        echo "<td>" . $row["data_hora_formatada"] . "</td>";
+                        echo "</tr>";
+                    }
+                    
+                    echo "</tbody>";
+                    echo "</table>";
+                    echo "</div>";
+                } else {
+                    echo '<h1>Nenhum paciente encontrado</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+                }
+
+                $stmt->close();
+            } else {
+                echo "Erro na preparação da consulta: " . $conn->error;
+            }
         }
     } else {
-        echo "Parâmetros não especificados";
+        echo '<h1>Parâmetros não especificados</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
     }
 } else {
-    echo "Método de requisição inválido";
+    echo '<h1>Método de requisição inválido</h1><br><p>Clique em "Home para voltar a página principal</p>';
 }
 
 $conn->close();
 ?>
+
+    </div>    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
           const btnListar = document.getElementById('homeButton');
