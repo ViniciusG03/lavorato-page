@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Relatório</title>
     <link
       rel="shortcut icon"
-      href="../assets/Logo-Lavorato-alfa.png"
+      href="../src/assets/Logo-Lavorato-alfa.png"
       type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
