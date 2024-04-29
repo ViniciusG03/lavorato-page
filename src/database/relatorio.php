@@ -1,0 +1,154 @@
+<?php
+require_once '../vendor/autoload.php';
+
+use Dompdf\Dompdf;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $dataSelecionada = $_POST['data'];
+
+    $dataFormatada = date('d/m/Y', strtotime($dataSelecionada));
+    $dataAtual = date('Y-m-d');
+    $dataAtualFormatada = date('d/m/Y', strtotime($dataAtual)); 
+
+    $tituloRelatorio = "<h1>Relatório de Guias Emitidas</h1>";
+    $subtituloRelatorio = "<h3>Data: $dataAtualFormatada a $dataFormatada</h3>";
+
+    $servername = "localhost";
+    $username = "root";
+    $password = "lavorato@admin2024";
+    $database = "lavoratoDB";
+
+    $conn = new mysqli($servername, $username, $password, $database);
+
+    if ($conn->connect_error) {
+        die("Erro na conexão: " . $conn->connect_error);
+    }
+
+    $sql = "SELECT id, paciente_nome, paciente_guia, paciente_status, paciente_especialidade, paciente_mes, paciente_section, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes WHERE DATE(data_hora_insercao) = ?";
+
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt) {
+        $stmt->bind_param("s", $dataAtual);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $tabelaHTML = "<table style='border-collapse: collapse; border: 1px solid black;'>
+                <thead>
+                    <tr>
+                        <th style='border: 1px solid black;'>Nome</th>
+                        <th style='border: 1px solid black;'>Número</th>
+                        <th style='border: 1px solid black;'>Status</th>
+                        <th style='border: 1px solid black;'>Especialidade</th>
+                        <th style='border: 1px solid black;'>Mês</th>
+                        <th style='border: 1px solid black;'>Sessões</th>
+                        <th style='border: 1px solid black;'>Atualização</th>
+                    </tr>
+                </thead>
+                <tbody>";
+
+        while ($row = $result->fetch_assoc()) {
+            $tabelaHTML .= "<tr>";
+            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_nome"] . "</td>";
+            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_guia"] . "</td>";
+            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_status"] . "</td>";
+            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_especialidade"] . "</td>";
+            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_mes"] . "</td>";
+            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_section"] . "</td>";
+            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["data_hora_formatada"] . "</td>";
+            $tabelaHTML .= "</tr>";
+        }
+
+        $tabelaHTML .= "</tbody></table>";
+        } else {
+            echo '<h1>Nenhum registro encontrado!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+        }
+
+        $stmt->close();
+    } else {
+        echo "Erro na preparação da consulta: " . $conn->error;
+    }
+
+    $dompdf = new Dompdf();
+
+    $html = "<!DOCTYPE html>
+            <html lang='pt-BR'>
+            <head>
+                <meta charset='UTF-8'>
+                <title>Relatório</title>
+                <style>
+                    h1, h3 {
+                        color: black;
+                        margin-bottom: 10px;
+                        text-align: center;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>$tituloRelatorio</h1>
+                <h3>$subtituloRelatorio</h3>
+                $tabelaHTML
+            </body>
+            </html>";
+
+    $dompdf->loadHtml($html); 
+
+    $dompdf->render();
+
+    $dompdf->stream('relatorio.pdf', array('Attachment' => 0));
+
+    $conn->close();
+} else {
+    header("Location: index.html");
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório</title>
+    <link rel="stylesheet" href="../stylesheet/relatorio.css">
+</head>
+<style>
+    h1, h3 {
+        color: white;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+</style>
+<body>
+    <div class="nav">
+        <button id="homeButton">Home</button>
+        <button id="gerarPDF">PDF</button>
+        <h1>Lavorato's System</h1>
+    </div>
+    <div class="container">
+        <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            echo $tituloRelatorio;
+            echo $subtituloRelatorio;
+            echo $tabelaHTML;
+        } else {
+            echo "<p>Nenhum relatório gerado. Por favor, envie o formulário para gerar o relatório.</p>";
+        }
+        ?>
+    </div>
+
+    <script>
+        const btnListar = document.getElementById('homeButton');
+        btnListar.addEventListener('click', () => {
+            window.location.href = '../index.html';
+        });
+
+        const btnGerarPDF = document.getElementById('gerarPDF');
+        btnGerarPDF.addEventListener('click', () => {
+            window.location.href = '<?php echo $_SERVER["PHP_SELF"]; ?>';
+        });
+    </script>
+</body>
+</html>

@@ -39,27 +39,36 @@ $conn->close();
 </head>
 <body>
     <div class="nav">
-      <button id="homeButton">Home</button>
-      <h1>Lavorato's System</h1>
+        <button id="homeButton">Home</button>
+        <h1>Lavorato's System</h1>
     </div>
     <h1 id="title">Lista de Pacientes</h1>
-<form action="buscar.php" method="get">
-        <div class="form-group">
-            <label for="busca">Buscar por:</label>
-            <select id="busca" name="categoria">
-                <option value="paciente_nome">Nome do Paciente</option>
-                <option value="paciente_convenio">Convênio</option>
-                <option value="paciente_guia">Número da Guia</option>
-                <option value="paciente_status">Status</option>
-                <option value="paciente_especialidade">Especialidade</option>
-                <option value="paciente_mes">Mês</option>
-            </select>
-            <input type="text" id="termo" name="termo" placeholder="Digite o termo de busca" autocomplete="off">
-        </div>
-        <div class="buttonclass">
-            <button type="submit">Buscar</button>
-        </div>
-    </form>
+    <form action="buscar.php" method="get">
+    <div class="form-group">
+        <label for="busca">Buscar por:</label>
+        <select id="busca" name="categoria">
+            <option value="paciente_nome">Nome do Paciente</option>
+            <option value="paciente_convenio">Convênio</option>
+            <option value="paciente_guia">Número da Guia</option>
+            <option value="paciente_status">Status</option>
+            <option value="paciente_especialidade">Especialidade</option>
+            <option value="paciente_mes">Mês</option>
+        </select>
+        <input type="text" id="termo" name="termo" placeholder="Digite o termo de busca" autocomplete="off">
+        <button type="submit">Buscar</button>
+    </div>
+</form>
+
+<form action="relatorio.php" method="post">
+    <div class="form-group">
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data">
+    </div>
+    <div class="buttonclass">
+        <button type="submit" id="relatorioButton">Relatório</button>
+    </div>
+</form>
+
     <table>
         <thead>
             <tr>
