@@ -61,10 +61,33 @@ $conn->close();
     </div>
 </form>
 
+<h1 id="titleRelatorio">Relatório</h1>
 <form action="relatorio.php" method="post">
     <div class="form-group">
         <label for="data">Data:</label>
         <input type="date" id="data" name="data">
+        <label for="especialidade">Especialidade:</label>
+        <select id="especialidade" name="especialidade">
+            <option value="todas">Todas as Especialidades</option>
+                <option>AVALIACAO NEUROPSICOLOGICA</option>
+                <option>SESSÃO DE ARTETERAPIA</option>
+                <option>SESSÃO DE EQUOTERAPIA</option>
+                <option>SESSÃO DE FISIOTERAPIA</option>
+                <option>SESSÃO DE FONOAUDIOLOGIA</option>
+                <option>SESSÃO DE FONOAUDIOLOGIA EM GRUPO</option>
+                <option>SESSÃO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                <option>SESSÃO DE MUSICOTERAPIA</option>
+                <option>SESSÃO DE NUTRIÇÃO</option>
+                <option>SESSÃO DE PSICOLOGIA DE CASAL</option>
+                <option>SESSÃO DE PSICOMOTRICIDADE</option>
+                <option>SESSÃO DE PSICOPEDAGOGIA</option>
+                <option>SESSÃO DE PSICOTERAPIA</option>
+                <option>SESSÃO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                <option>SESSÃO DE TERAPIA OCUPACIONAL</option>
+                <option>SESSÃO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                <option>TRATAMENTO SERIADO</option>
+    </select>
     </div>
     <div class="buttonclass">
         <button type="submit" id="relatorioButton">Relatório</button>

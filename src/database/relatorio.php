@@ -5,6 +5,12 @@ use Dompdf\Dompdf;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dataSelecionada = $_POST['data'];
+    
+    if (isset($_POST['especialidade'])) {
+        $especialidadeSelecionada = $_POST['especialidade'];
+    } else {
+        $especialidadeSelecionada = 'todas'; 
+    }
 
     $dataFormatada = date('d/m/Y', strtotime($dataSelecionada));
     $dataAtual = date('Y-m-d');
@@ -24,21 +30,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Erro na conexão: " . $conn->connect_error);
     }
 
-    $sql = "SELECT id, paciente_nome, paciente_guia, paciente_status, paciente_especialidade, paciente_mes, paciente_section, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes WHERE DATE(data_hora_insercao) = ?";
+    $sql = "SELECT id, paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_especialidade, paciente_mes, paciente_section, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes WHERE DATE(data_hora_insercao) = ?";
+
+    if ($especialidadeSelecionada !== 'todas') {
+        $sql .= " AND paciente_especialidade = ?";
+    }
 
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        $stmt->bind_param("s", $dataAtual);
+        if ($especialidadeSelecionada !== 'todas') {
+            $stmt->bind_param("ss", $dataAtual, $especialidadeSelecionada);
+        } else {
+            $stmt->bind_param("s", $dataAtual);
+        }
+    
         $stmt->execute();
-
+    
         $result = $stmt->get_result();
-
+    
         if ($result->num_rows > 0) {
             $tabelaHTML = "<table style='border-collapse: collapse; border: 1px solid black;'>
                 <thead>
                     <tr>
                         <th style='border: 1px solid black;'>Nome</th>
+                        <th style='border: 1px solid black;'>Convênio</th>
                         <th style='border: 1px solid black;'>Número</th>
                         <th style='border: 1px solid black;'>Status</th>
                         <th style='border: 1px solid black;'>Especialidade</th>
@@ -52,6 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         while ($row = $result->fetch_assoc()) {
             $tabelaHTML .= "<tr>";
             $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_nome"] . "</td>";
+            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_convenio"] . "</td>";
             $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_guia"] . "</td>";
             $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_status"] . "</td>";
             $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_especialidade"] . "</td>";
@@ -83,6 +100,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         color: black;
                         margin-bottom: 10px;
                         text-align: center;
+                    }
+
+                    table {
+                        border-collapse: collapse;
+                        width: 100%;
+                    }
+                
+                    th, td {
+                        border: 1px solid black;
+                        padding: 8px;
+                        text-align: center; 
+                        vertical-align: middle; 
                     }
                 </style>
             </head>
@@ -161,3 +190,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
 </body>
 </html>
+
+
