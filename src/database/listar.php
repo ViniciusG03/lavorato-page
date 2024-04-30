@@ -55,7 +55,9 @@ $conn->close();
             <option value="paciente_mes">Mês</option>
         </select>
         <input type="text" id="termo" name="termo" placeholder="Digite o termo de busca" autocomplete="off">
-        <button type="submit">Buscar</button>
+        <div class="buttonclass">
+            <button type="submit" id="buscarButton">Buscar</button>
+        </div>
     </div>
 </form>
 

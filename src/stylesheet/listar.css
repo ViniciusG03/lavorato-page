@@ -33,7 +33,7 @@ body {
 }
 
 #homeButton, #relatorioButton {
-    width: 100px;
+    width: 130px;
     border-radius: 8px;
     font-size: 20px;
     font-weight: 500;
@@ -118,6 +118,11 @@ button {
 }
 
 .buttonclass {
-    margin-left: 30%;
-    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;        
+}
+
+#buscarButton {
+    margin-top: 10px;
 }

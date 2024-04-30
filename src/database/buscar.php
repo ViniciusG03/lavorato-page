@@ -39,11 +39,16 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $categoria = $_GET["categoria"];
         $termo = $_GET["termo"];
 
-        if (empty($termo)) {
-            echo '<h1>O termo não pode ser vazio!</h1><p>Clique em "Home" para voltar a página principal!</p>';
-        } else {
-            $sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes WHERE ";
+        $sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes WHERE ";
 
+        if (!empty($_GET["data"])) {
+            $data = $_GET["data"];
+            $sql .= "AND DATE_FORMAT(data_hora_insercao, '%Y-%m-%d') = ?";
+        }
+
+        if (empty($termo) && empty($data)) {
+            echo '<h1>O termo e a data não podem ser vazios!</h1><p>Clique em "Home" para voltar à página principal!</p>';
+        } else {
             switch ($categoria) {
                 case "paciente_nome":
                 case "paciente_convenio":
@@ -59,61 +64,62 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
             $stmt = $conn->prepare($sql);
 
-            if ($stmt) {
-                $termo = "%$termo%";
-                
-                $stmt->bind_param("s", $termo);
-                $stmt->execute();
-
-                $result = $stmt->get_result();
-
-                if ($result->num_rows > 0) {
-                    echo "<div class='table-responsive'>";
-                    echo "<table>";
-                    echo "<thead><tr>";
-                    echo "<th>ID</th>";
-                    echo "<th>Nome</th>";
-                    echo "<th>Convênio</th>";
-                    echo "<th>Número</th>";
-                    echo "<th>Status</th>";
-                    echo "<th>Lote</th>";
-                    echo "<th>Especialidade</th>";
-                    echo "<th>Mês</th>";
-                    echo "<th>Sessões</th>";
-                    echo "<th>Entrada</th>";
-                    echo "<th>Saída</th>";
-                    echo "<th>Atualização</th>";
-                    echo "</tr></thead>";
-                    echo "<tbody>";
-                    
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row["id"] . "</td>";
-                        echo "<td>" . $row["paciente_nome"] . "</td>";
-                        echo "<td>" . $row["paciente_convenio"] . "</td>";
-                        echo "<td>" . $row["paciente_guia"] . "</td>";
-                        echo "<td>" . $row["paciente_status"] . "</td>";
-                        echo "<td>" . $row["paciente_lote"] . "</td>";
-                        echo "<td>" . $row["paciente_especialidade"] . "</td>";
-                        echo "<td>" . $row["paciente_mes"] . "</td>";
-                        echo "<td>" . $row["paciente_section"] . "</td>";
-                        echo "<td>" . $row["paciente_entrada"] . "</td>";
-                        echo "<td>" . $row["paciente_saida"] . "</td>";
-                        echo "<td>" . $row["data_hora_formatada"] . "</td>";
-                        echo "</tr>";
-                    }
-                    
-                    echo "</tbody>";
-                    echo "</table>";
-                    echo "</div>";
-                } else {
-                    echo '<h1>Nenhum paciente encontrado</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
-                }
-
-                $stmt->close();
+            if (!empty($data)) {
+                $termo .= "%";
+                $stmt->bind_param("ss", $termo, $data);
             } else {
-                echo "Erro na preparação da consulta: " . $conn->error;
+                $termo = "%$termo%";
+                $stmt->bind_param("s", $termo);
             }
+            
+            $stmt->execute();
+
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                echo "<div class='table-responsive'>";
+                echo "<table>";
+                echo "<thead><tr>";
+                echo "<th>ID</th>";
+                echo "<th>Nome</th>";
+                echo "<th>Convênio</th>";
+                echo "<th>Número</th>";
+                echo "<th>Status</th>";
+                echo "<th>Lote</th>";
+                echo "<th>Especialidade</th>";
+                echo "<th>Mês</th>";
+                echo "<th>Sessões</th>";
+                echo "<th>Entrada</th>";
+                echo "<th>Saída</th>";
+                echo "<th>Atualização</th>";
+                echo "</tr></thead>";
+                echo "<tbody>";
+                
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $row["id"] . "</td>";
+                    echo "<td>" . $row["paciente_nome"] . "</td>";
+                    echo "<td>" . $row["paciente_convenio"] . "</td>";
+                    echo "<td>" . $row["paciente_guia"] . "</td>";
+                    echo "<td>" . $row["paciente_status"] . "</td>";
+                    echo "<td>" . $row["paciente_lote"] . "</td>";
+                    echo "<td>" . $row["paciente_especialidade"] . "</td>";
+                    echo "<td>" . $row["paciente_mes"] . "</td>";
+                    echo "<td>" . $row["paciente_section"] . "</td>";
+                    echo "<td>" . $row["paciente_entrada"] . "</td>";
+                    echo "<td>" . $row["paciente_saida"] . "</td>";
+                    echo "<td>" . $row["data_hora_formatada"] . "</td>";
+                    echo "</tr>";
+                }
+                
+                echo "</tbody>";
+                echo "</table>";
+                echo "</div>";
+            } else {
+                echo '<h1>Nenhum paciente encontrado</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+            }
+
+            $stmt->close();
         }
     } else {
         echo '<h1>Parâmetros não especificados</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
