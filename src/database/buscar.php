@@ -77,6 +77,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             $result = $stmt->get_result();
 
             if ($result->num_rows > 0) {
+                $numRows = $result->num_rows;
+                
+                echo "<p>Total de resultados encontrados: $numRows</p>";
+
                 echo "<div class='table-responsive'>";
                 echo "<table>";
                 echo "<thead><tr>";

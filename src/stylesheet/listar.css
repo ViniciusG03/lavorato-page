@@ -5,9 +5,9 @@
 }
 
 * {
-  margin: 0;
-  padding: 0;   
-  font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;   
+    font-family: "Poppins", sans-serif;
 }
 
 body {
@@ -32,18 +32,18 @@ body {
     margin-right: 20px;
 }
 
-#homeButton, #relatorioButton {
-    width: 130px;
+#homeButton {
+    width: 120px;
     border-radius: 8px;
     font-size: 20px;
-    font-weight: 500;
     border: none;
     background-color: var(--main-color-btn);
     cursor: pointer;
     color: white;
 }
 
-#title, #titleRelatorio {
+#title,
+#titleRelatorio {
     text-align: center; 
     margin-top: 10px;
     margin-bottom: 5px;
@@ -68,8 +68,12 @@ th {
     color: white;
 }
 
-select#busca {
-    width: 50%;
+select#busca,
+select#especialidade,
+select#convenio,
+input[type="text"],
+input[type="date"] {
+    width: 100%; 
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -80,23 +84,11 @@ select#busca {
     background-position: right 8px center;
 }
 
-select#especialidade {
-    width: 50%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    appearance: none; 
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23ccc" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5H7z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); 
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-}
-
-select:focus {
+select:focus,
+input:focus {
     outline: none; 
     border-color: var(--main-color-btn); 
 }
-
 
 td {
     background-color: #f9f9f9;
@@ -110,15 +102,6 @@ td {
 label {
     display: block;
     margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="date"] {
-    width: 50%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
 }
 
 button {
@@ -138,4 +121,14 @@ button {
 
 #buscarButton {
     margin-top: 10px;
+}
+
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+form {
+    width: 45%; 
 }

@@ -12,11 +12,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $especialidadeSelecionada = 'todas'; 
     }
 
+    if (isset($_POST['convenio'])) {
+        $convenioSelecionado = $_POST['convenio'];
+    } else {
+        $convenioSelecionado = 'todos'; 
+    }
+    
     $dataFormatada = date('d/m/Y', strtotime($dataSelecionada));
     $dataAtual = date('Y-m-d');
     $dataAtualFormatada = date('d/m/Y', strtotime($dataAtual)); 
 
-    $tituloRelatorio = "<h1>Relatório de Guias Emitidas</h1>";
+    $tituloRelatorio = "<h1>Relatório de Guias Emitidos</h1>";
     $subtituloRelatorio = "<h3>Data: $dataAtualFormatada a $dataFormatada</h3>";
 
     $servername = "localhost";
@@ -36,15 +42,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql .= " AND paciente_especialidade = ?";
     }
 
+    if ($convenioSelecionado !== 'todos') {
+        $sql .= " AND paciente_convenio = ?";
+    }
+
+    if (isset($_POST['excluir_convenio'])) {
+        $excluirConvenios = $_POST['excluir_convenio'];
+        $excluirConveniosStr = "'" . implode("','", $excluirConvenios) . "'";
+        $sql .= " AND paciente_convenio NOT IN ($excluirConveniosStr)";
+    }
+
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        if ($especialidadeSelecionada !== 'todas') {
+        if ($especialidadeSelecionada !== 'todas' && $convenioSelecionado !== 'todos') {
+            $stmt->bind_param("sss", $dataAtual, $especialidadeSelecionada, $convenioSelecionado);
+        } elseif ($especialidadeSelecionada !== 'todas') {
             $stmt->bind_param("ss", $dataAtual, $especialidadeSelecionada);
+        } elseif ($convenioSelecionado !== 'todos') {
+            $stmt->bind_param("ss", $dataAtual, $convenioSelecionado);
         } else {
             $stmt->bind_param("s", $dataAtual);
-        }
-    
+        }            
+        
         $stmt->execute();
     
         $result = $stmt->get_result();
@@ -190,5 +210,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
 </body>
 </html>
-
 

@@ -43,56 +43,76 @@ $conn->close();
         <h1>Lavorato's System</h1>
     </div>
     <h1 id="title">Lista de Pacientes</h1>
-    <form action="buscar.php" method="get">
-    <div class="form-group">
-        <label for="busca">Buscar por:</label>
-        <select id="busca" name="categoria">
-            <option value="paciente_nome">Nome do Paciente</option>
-            <option value="paciente_convenio">Convênio</option>
-            <option value="paciente_guia">Número da Guia</option>
-            <option value="paciente_status">Status</option>
-            <option value="paciente_especialidade">Especialidade</option>
-            <option value="paciente_mes">Mês</option>
-        </select>
-        <input type="text" id="termo" name="termo" placeholder="Digite o termo de busca" autocomplete="off">
-        <div class="buttonclass">
-            <button type="submit" id="buscarButton">Buscar</button>
-        </div>
-    </div>
-</form>
 
-<h1 id="titleRelatorio">Relatório</h1>
-<form action="relatorio.php" method="post">
-    <div class="form-group">
-        <label for="data">Data:</label>
-        <input type="date" id="data" name="data">
-        <label for="especialidade">Especialidade:</label>
-        <select id="especialidade" name="especialidade">
-            <option value="todas">Todas as Especialidades</option>
-                <option>AVALIACAO NEUROPSICOLOGICA</option>
-                <option>SESSÃO DE ARTETERAPIA</option>
-                <option>SESSÃO DE EQUOTERAPIA</option>
-                <option>SESSÃO DE FISIOTERAPIA</option>
-                <option>SESSÃO DE FONOAUDIOLOGIA</option>
-                <option>SESSÃO DE FONOAUDIOLOGIA EM GRUPO</option>
-                <option>SESSÃO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
-                <option>SESSÃO DE MUSICOTERAPIA</option>
-                <option>SESSÃO DE NUTRIÇÃO</option>
-                <option>SESSÃO DE PSICOLOGIA DE CASAL</option>
-                <option>SESSÃO DE PSICOMOTRICIDADE</option>
-                <option>SESSÃO DE PSICOPEDAGOGIA</option>
-                <option>SESSÃO DE PSICOTERAPIA</option>
-                <option>SESSÃO DE TERAPIA COMPORTAMENTAL APLICADA</option>
-                <option>SESSÃO DE TERAPIA OCUPACIONAL</option>
-                <option>SESSÃO DE TERAPIA OCUPACIONAL EM GRUPO</option>
-                <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
-                <option>TRATAMENTO SERIADO</option>
-    </select>
+    <div class=form-container>
+        <form action="buscar.php" method="get">
+        <div class="form-group">
+            <label for="busca">Buscar por:</label>
+            <select id="busca" name="categoria">
+                <option value="paciente_nome">Nome do Paciente</option>
+                <option value="paciente_convenio">Convênio</option>
+                <option value="paciente_guia">Número da Guia</option>
+                <option value="paciente_status">Status</option>
+                <option value="paciente_especialidade">Especialidade</option>
+                <option value="paciente_mes">Mês</option>
+            </select>
+            <input type="text" id="termo" name="termo" placeholder="Digite o termo de busca" autocomplete="off">
+            <div class="buttonclass">
+                <button type="submit" id="buscarButton">Buscar</button>
+            </div>
+        </div>
+    </form>
+    
+    <form action="relatorio.php" method="post">
+        <div class="form-group">
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data">
+            <select id="especialidade" name="especialidade">
+                <option value="todas">Todas as Especialidades</option>
+                    <option>AVALIACAO NEUROPSICOLOGICA</option>
+                    <option>SESSÃO DE ARTETERAPIA</option>
+                    <option>SESSÃO DE EQUOTERAPIA</option>
+                    <option>SESSÃO DE FISIOTERAPIA</option>
+                    <option>SESSÃO DE FONOAUDIOLOGIA</option>
+                    <option>SESSÃO DE FONOAUDIOLOGIA EM GRUPO</option>
+                    <option>SESSÃO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                    <option>SESSÃO DE MUSICOTERAPIA</option>
+                    <option>SESSÃO DE NUTRIÇÃO</option>
+                    <option>SESSÃO DE PSICOLOGIA DE CASAL</option>
+                    <option>SESSÃO DE PSICOMOTRICIDADE</option>
+                    <option>SESSÃO DE PSICOPEDAGOGIA</option>
+                    <option>SESSÃO DE PSICOTERAPIA</option>
+                    <option>SESSÃO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                    <option>SESSÃO DE TERAPIA OCUPACIONAL</option>
+                    <option>SESSÃO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                    <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                    <option>TRATAMENTO SERIADO</option>
+            </select>
+            <select id="convenio" name="convenio">
+                <option value="todos">TODOS OS CONVÊNIOS</option>
+                <option value="CASSI">CASSI</option>
+                <option value="FUSEX">FUSEX</option>
+                <option value="CBMDF">CBMDF</option>
+                <option value="ASMEPRO">ASMEPRO</option>
+                <option value="ASMCH">ASMCH</option>
+                <option value="AMHPDF">AMHPDF</option>
+                <option value="AMAI">AMAI</option>
+            </select>
+            <select id="excluir_convenio" name="excluir_convenio[]" multiple>
+                <option value="CASSI">CASSI</option>
+                <option value="FUSEX">FUSEX</option>
+                <option value="CBMDF">CBMDF</option>
+                <option value="ASMEPRO">ASMEPRO</option>
+                <option value="ASMCH">ASMCH</option>
+                <option value="AMHPDF">AMHPDF</option>
+                <option value="AMAI">AMAI</option>
+        </select>
+        </div>
+        <div class="buttonclass">
+            <button type="submit" id="relatorioButton">Relatorio</button>
+        </div>
+    </form>
     </div>
-    <div class="buttonclass">
-        <button type="submit" id="relatorioButton">Relatório</button>
-    </div>
-</form>
 
     <table>
         <thead>
