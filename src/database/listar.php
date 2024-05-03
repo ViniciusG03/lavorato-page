@@ -97,6 +97,7 @@ $conn->close();
                 <option value="ASMCH">ASMCH</option>
                 <option value="AMHPDF">AMHPDF</option>
                 <option value="AMAI">AMAI</option>
+                <option value="BRB">BRB</option>
             </select>
             <select id="excluir_convenio" name="excluir_convenio[]" multiple>
                 <option value="CASSI">CASSI</option>
@@ -106,6 +107,7 @@ $conn->close();
                 <option value="ASMCH">ASMCH</option>
                 <option value="AMHPDF">AMHPDF</option>
                 <option value="AMAI">AMAI</option>
+                <option value="BRB">BRB</option>
         </select>
         </div>
         <div class="buttonclass">
