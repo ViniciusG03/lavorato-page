@@ -5,6 +5,7 @@ use Dompdf\Dompdf;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dataSelecionada = $_POST['data'];
+    $status = isset($_POST['status']) ? $_POST['status'] : '';
     
     if (isset($_POST['especialidade'])) {
         $especialidadeSelecionada = $_POST['especialidade'];
@@ -17,12 +18,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $convenioSelecionado = 'todos'; 
     }
+
+    if (isset($_POST['mes'])) {
+        $mesSelecionado = $_POST['mes'];
+    } else {
+        $mesSelecionado = 'todos';
+    }
     
     $dataFormatada = date('d/m/Y', strtotime($dataSelecionada));
     $dataAtual = date('Y-m-d');
     $dataAtualFormatada = date('d/m/Y', strtotime($dataAtual)); 
 
-    $tituloRelatorio = "<h1>Relatório de Guias Emitidos</h1>";
+    $tituloRelatorio = "<h1>Relatório</h1>";
     $subtituloRelatorio = "<h3>Data: $dataAtualFormatada a $dataFormatada</h3>";
 
     $servername = "localhost";
@@ -46,6 +53,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql .= " AND paciente_convenio = ?";
     }
 
+    if ($mesSelecionado !== 'todos') {
+        $sql .= " AND MONTH(data_hora_insercao) = ?";
+    }
+    
+    if (!empty($status)) {
+        $sql .= " AND paciente_status = ?";
+    }
+    
     if (isset($_POST['excluir_convenio'])) {
         $excluirConvenios = $_POST['excluir_convenio'];
         $excluirConveniosStr = "'" . implode("','", $excluirConvenios) . "'";
@@ -55,50 +70,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        if ($especialidadeSelecionada !== 'todas' && $convenioSelecionado !== 'todos') {
-            $stmt->bind_param("sss", $dataAtual, $especialidadeSelecionada, $convenioSelecionado);
-        } elseif ($especialidadeSelecionada !== 'todas') {
-            $stmt->bind_param("ss", $dataAtual, $especialidadeSelecionada);
-        } elseif ($convenioSelecionado !== 'todos') {
-            $stmt->bind_param("ss", $dataAtual, $convenioSelecionado);
-        } else {
-            $stmt->bind_param("s", $dataAtual);
-        }            
-        
+        // Crie um array com os valores que precisam ser vinculados
+        $bindValues = array($dataAtual);
+
+        // Crie a string de definição de tipo com base nos valores a serem vinculados
+        $bindTypes = 's';
+
+        // Adicione os valores e tipos de ligação conforme necessário
+        if ($especialidadeSelecionada !== 'todas') {
+            $bindValues[] = $especialidadeSelecionada;
+            $bindTypes .= 's';
+        }
+        if ($convenioSelecionado !== 'todos') {
+            $bindValues[] = $convenioSelecionado;
+            $bindTypes .= 's';
+        }
+        if ($mesSelecionado !== 'todos') {
+            $bindValues[] = $mesSelecionado;
+            $bindTypes .= 's';
+        }
+        if (!empty($status)) {
+            $bindValues[] = $status;
+            $bindTypes .= 's';
+        }
+
+        // Use call_user_func_array para chamar bind_param com argumentos dinâmicos
+        $stmt->bind_param($bindTypes, ...$bindValues);
+
         $stmt->execute();
     
         $result = $stmt->get_result();
     
         if ($result->num_rows > 0) {
-            $tabelaHTML = "<table style='border-collapse: collapse; border: 1px solid black;'>
+            $tabelaHTML = "<table style='border-collapse: collapse; width: 100%;'>
                 <thead>
                     <tr>
-                        <th style='border: 1px solid black;'>Nome</th>
-                        <th style='border: 1px solid black;'>Convênio</th>
-                        <th style='border: 1px solid black;'>Número</th>
-                        <th style='border: 1px solid black;'>Status</th>
-                        <th style='border: 1px solid black;'>Especialidade</th>
-                        <th style='border: 1px solid black;'>Mês</th>
-                        <th style='border: 1px solid black;'>Sessões</th>
-                        <th style='border: 1px solid black;'>Atualização</th>
+                        <th style='border: 1px solid black; padding: 5px;'>Nome</th>
+                        <th style='border: 1px solid black; padding: 5px;'>Convênio</th>
+                        <th style='border: 1px solid black; padding: 5px;'>Número</th>
+                        <th style='border: 1px solid black; padding: 5px;'>Status</th>
+                        <th style='border: 1px solid black; padding: 5px;'>Especialidade</th>
+                        <th style='border: 1px solid black; padding: 5px;'>Mês</th>
+                        <th style='border: 1px solid black; padding: 5px;'>Sessões</th>
+                        <th style='border: 1px solid black; padding: 5px;'>Atualização</th>
                     </tr>
                 </thead>
                 <tbody>";
 
-        while ($row = $result->fetch_assoc()) {
-            $tabelaHTML .= "<tr>";
-            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_nome"] . "</td>";
-            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_convenio"] . "</td>";
-            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_guia"] . "</td>";
-            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_status"] . "</td>";
-            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_especialidade"] . "</td>";
-            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_mes"] . "</td>";
-            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["paciente_section"] . "</td>";
-            $tabelaHTML .= "<td style='border: 1px solid black;'>" . $row["data_hora_formatada"] . "</td>";
-            $tabelaHTML .= "</tr>";
-        }
+            while ($row = $result->fetch_assoc()) {
+                $tabelaHTML .= "<tr>";
+                $tabelaHTML .= "<td style='border: 1px solid black; padding: 5px;'>" . $row["paciente_nome"] . "</td>";
+                $tabelaHTML .= "<td style='border: 1px solid black; padding: 5px;'>" . $row["paciente_convenio"] . "</td>";
+                $tabelaHTML .= "<td style='border: 1px solid black; padding: 5px;'>" . $row["paciente_guia"] . "</td>";
+                $tabelaHTML .= "<td style='border: 1px solid black; padding: 5px;'>" . $row["paciente_status"] . "</td>";
+                $tabelaHTML .= "<td style='border: 1px solid black; padding: 5px;'>" . $row["paciente_especialidade"] . "</td>";
+                $tabelaHTML .= "<td style='border: 1px solid black; padding: 5px;'>" . $row["paciente_mes"] . "</td>";
+                $tabelaHTML .= "<td style='border: 1px solid black; padding: 5px;'>" . $row["paciente_section"] . "</td>";
+                $tabelaHTML .= "<td style='border: 1px solid black; padding: 5px;'>" . $row["data_hora_formatada"] . "</td>";
+                $tabelaHTML .= "</tr>";
+            }
 
-        $tabelaHTML .= "</tbody></table>";
+            $tabelaHTML .= "</tbody></table>";
         } else {
             echo '<h1>Nenhum registro encontrado!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
         }
@@ -116,22 +148,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <meta charset='UTF-8'>
                 <title>Relatório</title>
                 <style>
-                    h1, h3 {
-                        color: black;
-                        margin-bottom: 10px;
-                        text-align: center;
+                    body {
+                        margin: 10mm; /* Reduzir as margens para 10mm */
+                        font-size: 10pt; /* Reduzir o tamanho da fonte para 10pt */
                     }
-
                     table {
                         border-collapse: collapse;
                         width: 100%;
                     }
-                
                     th, td {
                         border: 1px solid black;
-                        padding: 8px;
-                        text-align: center; 
-                        vertical-align: middle; 
+                        padding: 5px; /* Reduzir o espaçamento entre células */
+                        text-align: center;
                     }
                 </style>
             </head>
@@ -143,6 +171,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </html>";
 
     $dompdf->loadHtml($html); 
+
+    // Configure o tamanho da página como A4 no formato retrato
+    $dompdf->setPaper('A4', 'portrait');
 
     $dompdf->render();
 
@@ -186,15 +217,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1>Lavorato's System</h1>
     </div>
     <div class="container">
-        <?php
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            echo $tituloRelatorio;
-            echo $subtituloRelatorio;
-            echo $tabelaHTML;
-        } else {
-            echo "<p>Nenhum relatório gerado. Por favor, envie o formulário para gerar o relatório.</p>";
-        }
-        ?>
+        <?php echo $tituloRelatorio; ?>
+        <?php echo $subtituloRelatorio; ?>
+        <?php echo isset($tabelaHTML) ? $tabelaHTML : "<p>Nenhum relatório gerado. Por favor, envie o formulário para gerar o relatório.</p>"; ?>
     </div>
 
     <script>
@@ -210,4 +235,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
 </body>
 </html>
-

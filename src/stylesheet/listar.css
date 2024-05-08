@@ -71,6 +71,8 @@ th {
 select#busca,
 select#especialidade,
 select#convenio,
+select#mes,
+select#excluir_convenio,
 input[type="text"],
 input[type="date"] {
     width: 100%; 
@@ -125,8 +127,10 @@ button {
 
 .form-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    /* justify-content: space-between; */
     margin: 20px;
+    margin-left: 550px;
 }
 
 form {

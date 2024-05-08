@@ -67,6 +67,7 @@ $conn->close();
         <div class="form-group">
             <label for="data">Data:</label>
             <input type="date" id="data" name="data">
+            <input type="text" id=status" name="status" placeholder="status...">
             <select id="especialidade" name="especialidade">
                 <option value="todas">Todas as Especialidades</option>
                     <option>AVALIACAO NEUROPSICOLOGICA</option>
@@ -100,6 +101,21 @@ $conn->close();
                 <option value="BRB">BRB</option>
                 <option value="BRBSAUDE">BRBSAUDE</option>
                 <option value="FUSEX(PNE)">FUSEX(PNE)</option>
+            </select>
+            <select id="mes" name="mes">
+                <option value="todos">TODOS OS MESES</option>
+                <option value="todos">JANEIRO</option>
+                <option value="todos">FEVEREIRO</option>
+                <option value="todos">MARÇO</option>
+                <option value="todos">ABRIL</option>
+                <option value="todos">MAIO</option>
+                <option value="todos">JUNHO</option>
+                <option value="todos">JULHO</option>
+                <option value="todos">AGOSTO</option>
+                <option value="todos">SETEMBRO</option>
+                <option value="todos">OUTUBRO</option>
+                <option value="todos">NOVEMBRO</option>
+                <option value="todos">DEZEMBRO</option>
             </select>
             <select id="excluir_convenio" name="excluir_convenio[]" multiple>
                 <option value="CASSI">CASSI</option>
