@@ -68,6 +68,7 @@ $conn->close();
             <label for="data">Data:</label>
             <input type="date" id="data" name="data">
             <input type="text" id=status" name="status" placeholder="status...">
+            <input type="text" id="hora" name="hora" placeholder="HH:MM">
             <select id="especialidade" name="especialidade">
                 <option value="todas">Todas as Especialidades</option>
                     <option>AVALIACAO NEUROPSICOLOGICA</option>

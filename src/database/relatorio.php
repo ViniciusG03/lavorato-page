@@ -25,6 +25,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mesSelecionado = 'todos';
     }
     
+    if (isset($_POST['hora']) && preg_match('/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/', $_POST['hora'])) {
+        $horaSelecionada = $_POST['hora'];
+    } else {
+        $horaSelecionada = null;
+    }
+
     $dataFormatada = date('d/m/Y', strtotime($dataSelecionada));
     $dataAtual = date('Y-m-d');
     $dataAtualFormatada = date('d/m/Y', strtotime($dataAtual)); 
@@ -61,6 +67,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql .= " AND paciente_status = ?";
     }
     
+    if ($horaSelecionada !== null) {
+        $sql .= " AND TIME(data_hora_insercao) >= ?";
+    }
+
     if (isset($_POST['excluir_convenio'])) {
         $excluirConvenios = $_POST['excluir_convenio'];
         $excluirConveniosStr = "'" . implode("','", $excluirConvenios) . "'";
@@ -70,13 +80,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        // Crie um array com os valores que precisam ser vinculados
         $bindValues = array($dataAtual);
 
-        // Crie a string de definição de tipo com base nos valores a serem vinculados
         $bindTypes = 's';
 
-        // Adicione os valores e tipos de ligação conforme necessário
         if ($especialidadeSelecionada !== 'todas') {
             $bindValues[] = $especialidadeSelecionada;
             $bindTypes .= 's';
@@ -93,8 +100,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $bindValues[] = $status;
             $bindTypes .= 's';
         }
+        
+        if ($horaSelecionada !== null) {
+            $bindValues[] = $horaSelecionada;
+            $bindTypes .= 's';
+        }
 
-        // Use call_user_func_array para chamar bind_param com argumentos dinâmicos
         $stmt->bind_param($bindTypes, ...$bindValues);
 
         $stmt->execute();
@@ -172,7 +183,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $dompdf->loadHtml($html); 
 
-    // Configure o tamanho da página como A4 no formato retrato
     $dompdf->setPaper('A4', 'portrait');
 
     $dompdf->render();
