@@ -235,7 +235,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script>
         const btnListar = document.getElementById('homeButton');
         btnListar.addEventListener('click', () => {
-            window.location.href = '../index.html';
+            window.location.href = '../index.php';
         });
 
         const btnGerarPDF = document.getElementById('gerarPDF');

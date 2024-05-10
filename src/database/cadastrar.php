@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         document.addEventListener('DOMContentLoaded', () => {
           const btnListar = document.getElementById('homeButton');
           btnListar.addEventListener('click', () => {
-            window.location.href = '../index.html';
+            window.location.href = '../index.php';
           });
       });
     </script>

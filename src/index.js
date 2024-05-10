@@ -17,6 +17,9 @@ btnCadastrar.addEventListener("click", switchModalCadastrar);
 const btnAtualizar = document.querySelector("#btn-atualizar");
 btnAtualizar.addEventListener("click", switchModalAtualizar);
 
+const btnRelatorio = document.querySelector('#btn-relatorio');
+btnRelatorio.addEventListener('click', switchModalAtualizar);
+
 window.addEventListener("click", (event) => {
   if (event.target === modalCadastrar) {
     switchModalCadastrar();

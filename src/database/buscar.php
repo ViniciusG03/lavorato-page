@@ -140,7 +140,7 @@ $conn->close();
         document.addEventListener('DOMContentLoaded', () => {
           const btnListar = document.getElementById('homeButton');
           btnListar.addEventListener('click', () => {
-            window.location.href = '../index.html';
+            window.location.href = '../index.php';
           });
       });
     </script>
