@@ -1,31 +1,39 @@
-const modalCadastrar = document.querySelector(".modal");
-const modalAtualizar = document.querySelector(".modal-atualizar");
+document.addEventListener("DOMContentLoaded", () => {
+  const btnCadastrar = document.getElementById("btn-cadastrar");
+  const modalCadastro = new bootstrap.Modal(
+    document.getElementById("modalCadastro")
+  );
+  btnCadastrar.addEventListener("click", () => {
+    modalCadastro.show();
+  });
 
-const switchModalCadastrar = () => {
-  modalCadastrar.style.display =
-    modalCadastrar.style.display === "block" ? "none" : "block";
-};
+  const btnAtualizar = document.getElementById("btn-atualizar");
+  const modalAtualizar = new bootstrap.Modal(
+    document.getElementById("modalAtualizacao")
+  );
+  btnAtualizar.addEventListener("click", () => {
+    modalAtualizar.show();
+  });
 
-const switchModalAtualizar = () => {
-  modalAtualizar.style.display =
-    modalAtualizar.style.display === "block" ? "none" : "block";
-};
+  const btnRelatorio = document.getElementById("btn-relatorio");
+  const modalRelatorio = new bootstrap.Modal(
+    document.getElementById("modalRelatorio")
+  );
+  btnRelatorio.addEventListener("click", () => {
+    modalRelatorio.show();
+  });
 
-const btnCadastrar = document.querySelector("#btn-cadastrar");
-btnCadastrar.addEventListener("click", switchModalCadastrar);
-
-const btnAtualizar = document.querySelector("#btn-atualizar");
-btnAtualizar.addEventListener("click", switchModalAtualizar);
-
-const btnRelatorio = document.querySelector('#btn-relatorio');
-btnRelatorio.addEventListener('click', switchModalAtualizar);
-
-window.addEventListener("click", (event) => {
-  if (event.target === modalCadastrar) {
-    switchModalCadastrar();
-  }
-
-  if (event.target === modalAtualizar) {
-    switchModalAtualizar();
-  }
+  const btnListar = document.getElementById("btn-listar");
+  btnListar.addEventListener("click", () => {
+    window.location.href = "database/listar.php";
+  });
 });
+
+function toggleSidebar() {
+  let sidebar = document.getElementById("sidebar");
+  if (sidebar.style.width === "250px") {
+    sidebar.style.width = "0";
+  } else {
+    sidebar.style.width = "250px";
+  }
+}
