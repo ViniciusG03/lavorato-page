@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lavorato</title>
+  <link rel="shortcut icon" href="../src/assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
+  <link rel="stylesheet" href="../src/stylesheet/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <script src="bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="stylesheet/controle.css">
+  <script src="../src/index.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #00b3ffde;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Lavorato's System</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto"> <!-- Adicionando ml-auto para alinhar à direita -->
+          <li class="nav-item">
+            <a class="nav-link" href="index.php">Home</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="image-logo">
+      <img src="../src/assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
+    </div>
+    <div class="buttons">
+      <button id="btn-cadastrar">Cadastrar</button>
+      <button type="button" id="btn-listar">Listar</button>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCadastroLabel">Cadastro de Paciente!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="../src/database/cadastrar_pacientes.php" method="post">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="nome" class="form-label">Nome:</label>
+                <input type="text" id="nome" name="nome" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="nome_goole" class="form-label">Nome Google:</label>
+                <input type="text" id="nome_google" name="nome_google" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="text" id="email" name="email" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="data_inicio" class="form-label">Data Inicio:</label>
+                <input type="text" id="data_inicio" name="data_inicio" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="data_final" class="form-label">Data Final:</label>
+                <input type="text" name="data_final" id="data_final" class="form-control" autocomplete="off">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="matricula" class="form-label">Matricula:</label>
+                <input id="matricula" name="matricula" class="form-control" autocomplete="off">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="documento" class="form-label">Documento:</label>
+                <input list="documentoTipo" type="text" id="documento" name="documento" class="form-control"
+                  autocomplete="off" />
+                <datalist id="documentoTipo">
+                  <option>Laudo Medico</option>
+                  <option>Pedido Medico</option>
+                  <option>Plano Terapeutico</option>
+                </datalist>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="especialidade_controle" class="form-label">Especialidade:</label>
+                <input id="especialidade_controle" name="especialidade_controle" class="form-control" type="text" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="data_emissao" class="form-label">Data de Emissão:</label>
+                <input type="text" name="data_emissao" id="data_emissao" class="form-control" autocomplete="off">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="data_validade" class="form-label">Data de Validade:</label>
+                <input type="text" name="data_validade" id="data_validade" class="form-control" autocomplete="off">
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const btnListar = document.getElementById("btn-listar");
+    btnListar.addEventListener("click", () => {
+      window.location.href = "database/listar_pacientes.php";
+    });
+  </script>
+</body>
+
+</html>
