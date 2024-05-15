@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lavorato</title>
+  <title>Controle</title>
   <link rel="shortcut icon" href="../src/assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
   <link rel="stylesheet" href="../src/stylesheet/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -92,7 +92,28 @@
               </div>
               <div class="col-md-6 mb-3">
                 <label for="especialidade_controle" class="form-label">Especialidade:</label>
-                <input id="especialidade_controle" name="especialidade_controle" class="form-control" type="text" />
+                <input list="especialidadeList" id="especialidade_controle" name="especialidade_controle"
+                  class="form-control" type="text" />
+                <datalist id="especialidadeList">
+                  <option>AVALIACAO NEUROPSICOLOGICA</option>
+                  <option>SESSÃO DE ARTETERAPIA</option>
+                  <option>SESSÃO DE EQUOTERAPIA</option>
+                  <option>SESSÃO DE FISIOTERAPIA</option>
+                  <option>SESSÃO DE FONOAUDIOLOGIA</option>
+                  <option>SESSÃO DE FONOAUDIOLOGIA EM GRUPO</option>
+                  <option>SESSÃO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                  <option>SESSÃO DE MUSICOTERAPIA</option>
+                  <option>SESSÃO DE NUTRIÇÃO</option>
+                  <option>SESSÃO DE PSICOLOGIA DE CASAL</option>
+                  <option>SESSÃO DE PSICOMOTRICIDADE</option>
+                  <option>SESSÃO DE PSICOPEDAGOGIA</option>
+                  <option>SESSÃO DE PSICOTERAPIA</option>
+                  <option>SESSÃO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                  <option>SESSÃO DE TERAPIA OCUPACIONAL</option>
+                  <option>SESSÃO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                  <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                  <option>TRATAMENTO SERIADO</option>
+                </datalist>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="data_emissao" class="form-label">Data de Emissão:</label>

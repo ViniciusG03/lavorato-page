@@ -20,6 +20,7 @@
       <button id="homeButton">Home</button>
       <h1>Lavorato's System</h1>
     </div>
+    
     <h1 id="title">Resultados da Busca</h1>
     <div class="container">
     <?php
