@@ -58,6 +58,7 @@ img {
 }
 
 #btn-cadastrar,
+#btn-documento,
 #btn-listar {
     width: 250px;
     border-radius: 8px;

@@ -22,18 +22,4 @@ document.addEventListener("DOMContentLoaded", () => {
   btnRelatorio.addEventListener("click", () => {
     modalRelatorio.show();
   });
-
-  const btnListar = document.getElementById("btn-listar");
-  btnListar.addEventListener("click", () => {
-    window.location.href = "database/listar.php";
-  });
 });
-
-function toggleSidebar() {
-  let sidebar = document.getElementById("sidebar");
-  if (sidebar.style.width === "250px") {
-    sidebar.style.width = "0";
-  } else {
-    sidebar.style.width = "250px";
-  }
-}
