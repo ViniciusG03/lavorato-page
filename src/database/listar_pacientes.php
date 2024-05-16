@@ -91,6 +91,7 @@ $conn->close();
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
+                        <th>Nome Google</th>
                         <th>Data Inicio</th>
                         <th>Data Final</th>
                         <th>Email</th>
@@ -108,6 +109,7 @@ $conn->close();
                                 echo "<tr>";
                                 echo "<td>" . $row["id"] . "</td>";
                                 echo "<td>" . $row["Nome_paciente"] . "</td>";
+                                echo "<td>" . $row["Nome_google"] . "</td>";
                                 echo "<td>" . $row["Data_inicio"] . "</td>";
                                 echo "<td>" . $row["Data_final"] . "</td>";
                                 echo "<td>" . $row["Email"] . "</td>";

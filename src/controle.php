@@ -86,9 +86,11 @@
                 <input list="documentoTipo" type="text" id="documento" name="documento" class="form-control"
                   autocomplete="off" />
                 <datalist id="documentoTipo">
-                  <option>Laudo Medico</option>
-                  <option>Pedido Medico</option>
-                  <option>Plano Terapeutico</option>
+                  <option>LD</option>
+                  <option>PM</option>
+                  <option>PT</option>
+                  <option>RG</option>
+                  <option>CPF</option>
                 </datalist>
               </div>
               <div class="col-md-6 mb-3">
@@ -147,16 +149,18 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="paciente_matricula" class="form-label">Matricula:</label>
-                <input type="text" id="paciente_matricula" name="paciente_matricula" class="form-control">
+                <input type="text" id="paciente_matricula" name="paciente_matricula" class="form-control" autocomplete="off">
               </div>
               <div class="col-md-6 mb-3">
                 <label for="documento" class="form-label">Documento:</label>
                 <input list="documentoTipo" type="text" id="documento" name="documento" class="form-control"
                   autocomplete="off" />
                 <datalist id="documentoTipo">
-                  <option>Laudo Medico</option>
-                  <option>Pedido Medico</option>
-                  <option>Plano Terapeutico</option>
+                  <option>LD</option>
+                  <option>PM</option>
+                  <option>PT</option>
+                  <option>RG</option>
+                  <option>CPF</option>
                 </datalist>
               </div>
               <div class="col-md-6 mb-3">

@@ -87,6 +87,7 @@
                             echo "<thead><tr>";
                             echo "<th>ID</th>";
                             echo "<th>Nome</th>";
+                            echo "<th>Nome Google</th>";
                             echo "<th>Data Inicio</th>";
                             echo "<th>Data Final</th>";
                             echo "<th>Email</th>";
@@ -102,6 +103,7 @@
                                 echo "<tr>";
                                 echo "<td>" . $row["id"] . "</td>";
                                 echo "<td>" . $row["Nome_paciente"] . "</td>";
+                                echo "<td>" . $row["Nome_google"] . "</td>";
                                 echo "<td>" . $row["Data_inicio"] . "</td>";
                                 echo "<td>" . $row["Data_final"] . "</td>";
                                 echo "<td>" . $row["Email"] . "</td>";
