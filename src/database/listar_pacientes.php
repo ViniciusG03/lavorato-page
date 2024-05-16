@@ -10,7 +10,11 @@ if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
 }
 
-$sql = "SELECT id, Nome_paciente, Nome_google, Data_inicio, Data_final, Email, Matricula FROM paciente";
+$sql = "SELECT p.id, p.Nome_paciente, p.Nome_google, p.Data_inicio, p.Data_final, p.Email, p.Matricula,
+        d.Documento_tipo, d.Especialidade, d.Data_emissao, d.Data_validade
+        FROM paciente p
+        LEFT JOIN documento d ON p.id = d.Paciente_ID"; // Ajuste o nome da coluna da chave estrangeira conforme necessário
+
 $result = $conn->query($sql);
 
 if ($result === false) {
@@ -60,17 +64,13 @@ $conn->close();
         <h1 class="mb-4">Lista de Pacientes</h1>
 
         <!-- Formulário de busca usando Bootstrap -->
-        <form action="buscar.php" method="get" class="mb-4">
+        <form action="buscar_paciente.php" method="get" class="mb-4">
             <div class="row g-3">
                 <div class="col-md-4">
                     <label for="busca" class="form-label">Buscar por:</label>
                     <select id="busca" name="categoria" class="form-select">
-                        <option value="paciente_nome">Nome do Paciente</option>
-                        <option value="paciente_convenio">Convênio</option>
-                        <option value="paciente_guia">Número da Guia</option>
-                        <option value="paciente_status">Status</option>
-                        <option value="paciente_especialidade">Especialidade</option>
-                        <option value="paciente_mes">Mês</option>
+                        <option value="Nome_paciente">Nome do Paciente</option>
+                        <option value="Matricula">Matricula</option>
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -86,7 +86,7 @@ $conn->close();
 
         <!-- Tabela de pacientes usando Bootstrap -->
         <div class="table-responsive mt-4">
-            <table class="table table-striped">
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -95,21 +95,29 @@ $conn->close();
                         <th>Data Final</th>
                         <th>Email</th>
                         <th>Matricula</th>
+                        <th>Documento</th>
+                        <th>Especialidade</th>
+                        <th>Data de Emissao</th>
+                        <th>Data de Validade</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $row["id"] . "</td>";
-                            echo "<td>" . $row["Nome_paciente"] . "</td>";
-                            echo "<td>" . $row["Data_inicio"] . "</td>";
-                            echo "<td>" . $row["Data_final"] . "</td>";
-                            echo "<td>" . $row["Email"] . "</td>";
-                            echo "<td>" . $row["Matricula"] . "</td>";
-                            echo "</tr>";
-                        }
+                            while($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . $row["id"] . "</td>";
+                                echo "<td>" . $row["Nome_paciente"] . "</td>";
+                                echo "<td>" . $row["Data_inicio"] . "</td>";
+                                echo "<td>" . $row["Data_final"] . "</td>";
+                                echo "<td>" . $row["Email"] . "</td>";
+                                echo "<td>" . $row["Matricula"] . "</td>";
+                                echo "<td>" . $row["Documento_tipo"] . "</td>";
+                                echo "<td>" . $row["Especialidade"] . "</td>";
+                                echo "<td>" . $row["Data_emissao"] . "</td>";
+                                echo "<td>" . $row["Data_validade"] . "</td>";
+                                echo "</tr>";
+                            }
                     } else {
                         echo "<tr><td colspan='6'>Nenhum paciente encontrado</td></tr>";
                     }

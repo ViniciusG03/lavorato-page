@@ -1,12 +1,3 @@
-<?php 
-  $login_cookie = $_COOKIE['login'];
-  if (isset($login_cookie)) {
-    
-  } else {
-    echo 'Você precisa estar logado para ver está pagina!';
-  }
-?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -317,6 +308,12 @@
       </div>
     </div>
   </div>
+  <script>
+    const btnListar = document.getElementById("btn-listar");
+    btnListar.addEventListener("click", () => {
+      window.location.href = "database/listar.php";
+    });
+  </script>
 </body>
 
 </html>

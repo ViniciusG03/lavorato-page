@@ -86,7 +86,7 @@ $conn->close();
 
         <!-- Tabela de pacientes usando Bootstrap -->
         <div class="table-responsive mt-4">
-            <table class="table table-striped">
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>

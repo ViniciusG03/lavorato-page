@@ -43,6 +43,7 @@
     <div class="buttons">
       <button id="btn-cadastrar">Cadastrar</button>
       <button type="button" id="btn-listar">Listar</button>
+      <button id="btn-documento">Documento</button>
     </div>
   </div>
 
@@ -134,11 +135,85 @@
     </div>
   </div>
 
+  <div class="modal fade" id="modalDocumento" tabindex="-1" aria-labelledby="modalDocumentoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalDocumentoLabel">Cadastro de Documento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="../src/database/cadastrar_documento.php" method="post">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="paciente_matricula" class="form-label">Matricula:</label>
+                <input type="text" id="paciente_matricula" name="paciente_matricula" class="form-control">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="documento" class="form-label">Documento:</label>
+                <input list="documentoTipo" type="text" id="documento" name="documento" class="form-control"
+                  autocomplete="off" />
+                <datalist id="documentoTipo">
+                  <option>Laudo Medico</option>
+                  <option>Pedido Medico</option>
+                  <option>Plano Terapeutico</option>
+                </datalist>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="especialidade_documento" class="form-label">Especialidade:</label>
+                <input list="especialidadeListDoc" id="especialidade_documento" name="especialidade_documento"
+                  class="form-control" type="text" />
+                <datalist id="especialidadeListDoc">
+                  <option>AVALIACAO NEUROPSICOLOGICA</option>
+                  <option>SESSÃO DE ARTETERAPIA</option>
+                  <option>SESSÃO DE EQUOTERAPIA</option>
+                  <option>SESSÃO DE FISIOTERAPIA</option>
+                  <option>SESSÃO DE FONOAUDIOLOGIA</option>
+                  <option>SESSÃO DE FONOAUDIOLOGIA EM GRUPO</option>
+                  <option>SESSÃO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                  <option>SESSÃO DE MUSICOTERAPIA</option>
+                  <option>SESSÃO DE NUTRIÇÃO</option>
+                  <option>SESSÃO DE PSICOLOGIA DE CASAL</option>
+                  <option>SESSÃO DE PSICOMOTRICIDADE</option>
+                  <option>SESSÃO DE PSICOPEDAGOGIA</option>
+                  <option>SESSÃO DE PSICOTERAPIA</option>
+                  <option>SESSÃO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                  <option>SESSÃO DE TERAPIA OCUPACIONAL</option>
+                  <option>SESSÃO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                  <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                  <option>TRATAMENTO SERIADO</option>
+                </datalist>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="data_emissao" class="form-label">Data de Emissão:</label>
+                <input type="text" name="data_emissao" id="data_emissao" class="form-control" autocomplete="off">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="data_validade" class="form-label">Data de Validade:</label>
+                <input type="text" name="data_validade" id="data_validade" class="form-control" autocomplete="off">
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const btnListar = document.getElementById("btn-listar");
     btnListar.addEventListener("click", () => {
       window.location.href = "database/listar_pacientes.php";
     });
+
+    const btnDocumento = document.getElementById('btn-documento');
+    const modalDocumento = new bootstrap.Modal(document.getElementById('modalDocumento'));
+    btnDocumento.addEventListener('click', () => {
+      modalDocumento.show()
+    })
   </script>
 </body>
 
