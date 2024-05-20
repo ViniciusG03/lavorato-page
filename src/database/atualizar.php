@@ -46,30 +46,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
   
         if ($entrada !== "" || $saida !== "" || $status_guia !== "" || $numero_lote !== "") {
+            $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numero_guia'";
+            $result = $conn->query($sql);
             $sql_check = "SELECT * FROM pacientes WHERE paciente_lote = '$numero_lote' AND paciente_guia != '$numero_guia'";
             $result_check = $conn->query($sql_check);
 
-            if ($result_check->num_rows > 0) {
-                echo '<h1>Número de lote já existe!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+            if ($result->num_rows == 0) {
+                echo '<h1>Número da guia não existe!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
             } else {
-            
-                $sql_update = "UPDATE pacientes SET paciente_status = '$status_guia', ";
-                if (!empty($numero_lote)) {
-                    $sql_update .= "paciente_lote = '$numero_lote', ";
-                }
-                if (!empty($entrada)) {
-                    $sql_update .= "paciente_entrada = '$entrada', ";
-                }
-                if (!empty($saida)) {
-                    $sql_update .= "paciente_saida = '$saida', ";
-                }
-                
-                $sql_update = rtrim($sql_update, ", ") . " WHERE paciente_guia = '$numero_guia'";
-
-                if ($conn->query($sql_update) === TRUE) {
-                    echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+                if ($result_check->num_rows > 0) {
+                    echo '<h1>Número de lote já existe!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
                 } else {
-                    echo "Erro ao atualizar: " . $conn->error;
+                
+                    $sql_update = "UPDATE pacientes SET paciente_status = '$status_guia', ";
+                    if (!empty($numero_lote)) {
+                        $sql_update .= "paciente_lote = '$numero_lote', ";
+                    }
+                    if (!empty($entrada)) {
+                        $sql_update .= "paciente_entrada = '$entrada', ";
+                    }
+                    if (!empty($saida)) {
+                        $sql_update .= "paciente_saida = '$saida', ";
+                    }
+                    
+                    $sql_update = rtrim($sql_update, ", ") . " WHERE paciente_guia = '$numero_guia'";
+    
+                    if ($conn->query($sql_update) === TRUE) {
+                        echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+                    } else {
+                        echo "Erro ao atualizar: " . $conn->error;
+                    }
                 }
             }
         } else {
