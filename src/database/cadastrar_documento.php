@@ -64,7 +64,7 @@
 
                             $dest_path = $uploadDir . $newFileName;
 
-                    
+                            //mudar o caminho amanhã e adicionar ifs
                             if (move_uploaded_file($fileTmpPath, $dest_path)) {
                                 $sql = "INSERT INTO documento (Documento_tipo, Especialidade, Data_emissao, Data_validade, Paciente_ID) VALUES ('$documento', '$especialidade', '$data_emissao', '$data_validade', '$pacienteID')";
                                 if ($conn->query($sql) === TRUE) {
