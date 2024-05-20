@@ -28,7 +28,6 @@
             $database = "lavoratoDB";
 
             $conn = new mysqli($servername, $username, $password, $database);
-
             if ($conn->connect_error) {
                 die("Erro na conexão: " . $conn->connect_error);
             }
@@ -39,26 +38,72 @@
             $data_emissao = $_POST["data_emissao"];
             $data_validade = $_POST["data_validade"];
 
+            $uploadDir = "C:/xampp/htdocs/lavorato-page/src/database/documents/";
+
             if (empty($matricula) || empty($documento) || empty($especialidade) || empty($data_emissao) || empty($data_validade)) {
-                echo "<h1>Todos os campos devem ser preenchido!</h1>";
+                echo "<h1>Todos os campos devem ser preenchidos!</h1>";
             } else {
                 $verifica_sql = "SELECT id FROM paciente WHERE Matricula = '$matricula'";
                 $resultado_verificacao = $conn->query($verifica_sql);
 
-                if ($resultado_verificacao) {
+                if ($resultado_verificacao->num_rows > 0) {
                     $row = $resultado_verificacao->fetch_assoc();
                     $pacienteID = $row['id'];
 
-                    $sql = "INSERT INTO documento (Documento_tipo, Especialidade, Data_emissao, Data_validade, Paciente_ID) VALUES ('$documento', '$especialidade', '$data_emissao', '$data_validade', '$pacienteID')";
-                    if ($conn->query($sql) === TRUE) {
-                        echo "<h1> Documento cadastrado com sucesso!</h1>";
-                        echo "<h2>Matricula:</h2> <p>$matricula</p>";
-                        echo "<h2>Documento:</h2> <p>$documento</p>";
-                        echo "<h2>Especialidade:</h2> <p>$especialidade</p>";
-                        echo "<h2>Data de Emissão:</h2> <p>$data_emissao</p>";
-                        echo "<h2>Data de Validade:</h2> <p>$data_validade</p>";
+                    if (isset($_FILES['documento_arquivo'])) {
+                        $fileError = $_FILES['documento_arquivo']['error'];
+
+                        if ($fileError === UPLOAD_ERR_OK) {
+                            $fileTmpPath = $_FILES['documento_arquivo']['tmp_name'];
+                            $fileName = $_FILES['documento_arquivo']['name'];
+                            $fileNameCmps = explode(".", $fileName);
+                            $fileExtension = strtolower(end($fileNameCmps));
+
+                            // Nome do arquivo renomeado
+                            $newFileName = $documento . $matricula . '.' . $fileExtension;
+
+                            $dest_path = $uploadDir . $newFileName;
+
+                    
+                            if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                                $sql = "INSERT INTO documento (Documento_tipo, Especialidade, Data_emissao, Data_validade, Paciente_ID) VALUES ('$documento', '$especialidade', '$data_emissao', '$data_validade', '$pacienteID')";
+                                if ($conn->query($sql) === TRUE) {
+                                    header("Location: https://drive.google.com/drive/u/0/folders/1X0KvaN3qUj-4x4lUs6e7IhEJou88wNvW");
+                                    exit();
+                                } else {
+                                    echo "<p>Erro ao cadastrar o documento: " . $conn->error . "</p>";
+                                }
+                            } else {
+                                echo "<p>Erro ao mover o arquivo para o diretório de destino.</p>";
+                            }
+                        } else {
+                            switch ($fileError) {
+                                case UPLOAD_ERR_INI_SIZE:
+                                case UPLOAD_ERR_FORM_SIZE:
+                                    echo "<p>O arquivo é muito grande.</p>";
+                                    break;
+                                case UPLOAD_ERR_PARTIAL:
+                                    echo "<p>O upload do arquivo foi feito parcialmente.</p>";
+                                    break;
+                                case UPLOAD_ERR_NO_FILE:
+                                    echo "<p>Nenhum arquivo foi enviado.</p>";
+                                    break;
+                                case UPLOAD_ERR_NO_TMP_DIR:
+                                    echo "<p>Pasta temporária ausente.</p>";
+                                    break;
+                                case UPLOAD_ERR_CANT_WRITE:
+                                    echo "<p>Falha em escrever o arquivo no disco.</p>";
+                                    break;
+                                case UPLOAD_ERR_EXTENSION:
+                                    echo "<p>Upload de arquivo interrompido por uma extensão PHP.</p>";
+                                    break;
+                                default:
+                                    echo "<p>Erro desconhecido no upload do arquivo.</p>";
+                                    break;
+                            }
+                        }
                     } else {
-                        echo "<p>Erro ao cadastrar o documento: </p>" . $conn->error;
+                        echo "<p>Arquivo de upload não encontrado.</p>";
                     }
                 } else {
                     echo "<p>Paciente com Matricula '$matricula' não encontrado.</p>";
@@ -68,6 +113,7 @@
             $conn->close();
         }
         ?>
+
     </div>
 
     <script>

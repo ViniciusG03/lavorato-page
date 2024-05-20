@@ -145,11 +145,12 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="../src/database/cadastrar_documento.php" method="post">
+          <form action="../src/database/cadastrar_documento.php" method="post" enctype="multipart/form-data">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="paciente_matricula" class="form-label">Matricula:</label>
-                <input type="text" id="paciente_matricula" name="paciente_matricula" class="form-control" autocomplete="off">
+                <input type="text" id="paciente_matricula" name="paciente_matricula" class="form-control"
+                  autocomplete="off">
               </div>
               <div class="col-md-6 mb-3">
                 <label for="documento" class="form-label">Documento:</label>
@@ -195,6 +196,11 @@
               <div class="col-md-6 mb-3">
                 <label for="data_validade" class="form-label">Data de Validade:</label>
                 <input type="text" name="data_validade" id="data_validade" class="form-control" autocomplete="off">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="documento_arquivo" class="form-label">Arquivo do Documento:</label>
+                <input type="file" id="documento_arquivo" name="documento_arquivo" class="form-control"
+                  accept="image/*,.pdf">
               </div>
             </div>
         </div>
