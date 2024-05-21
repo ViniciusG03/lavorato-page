@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['login'])) {
+    header("Location: /lavorato-page/src/login/login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -82,16 +90,12 @@
                                     $dest_path = $uploadDir . $newFileName;
 
                                     if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                                        $sql = "INSERT INTO documento (Documento_tipo, Especialidade, Data_emissao, Data_validade, Paciente_ID) VALUES ('$documento', '$especialidade', '$data_emissao', '$data_validade', '$pacienteID')";
-                                        if ($conn->query($sql) === TRUE) {
-                                            $_SESSION['download_file'] = $dest_path;
-                                            $_SESSION['documento'] = $documento;
+                                        $_SESSION['download_file'] = $dest_path;
+                                        $_SESSION['documento'] = $documento;
 
-                                            header("Location: download.php?documento=$documento");
-                                            exit;
-                                        } else {
-                                            echo "<p>Erro ao cadastrar o documento: " . $conn->error . "</p>";
-                                        }
+                                        header("Location: download.php?documento=$documento");
+                                        exit;
+
                                     } else {
                                         echo "<p>Erro ao mover o arquivo para o diretório de destino.</p>";
                                     }

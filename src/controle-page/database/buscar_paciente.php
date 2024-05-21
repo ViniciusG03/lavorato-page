@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['login'])) {
+    header("Location: /lavorato-page/src/login/login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -27,7 +36,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.php">Home</a>
+                    <a class="nav-link" href="/lavorato-page/src/controle-page/controle.php">Controle</a>
                     </li>
                 </ul>
             </div>

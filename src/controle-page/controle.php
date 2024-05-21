@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['login'])) {
+  header("Location: /lavorato-page/src/login/login.php");
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -55,7 +64,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="/lavorato-page/src/controle-page/database/cadastrar_pacientes.php" method="post" enctype="multipart/form-data">
+          <form action="/lavorato-page/src/controle-page/database/cadastrar_pacientes.php" method="post"
+            enctype="multipart/form-data">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="nome" class="form-label">Nome:</label>
@@ -150,7 +160,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="/lavorato-page/src/controle-page/database/cadastrar_documento.php" method="post" enctype="multipart/form-data">
+          <form action="/lavorato-page/src/controle-page/database/cadastrar_documento.php" method="post"
+            enctype="multipart/form-data">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="paciente_matricula" class="form-label">Matricula:</label>

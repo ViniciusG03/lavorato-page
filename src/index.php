@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['login'])) {
+  header("Location: /lavorato-page/src/login/login.php");
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -15,7 +24,7 @@
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
   <script src="bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="stylesheet/controle.css">
-  <script src="../src/index.js"></script>
+  <script src="/lavorato-page/src/index.js"></script>
 </head>
 
 <body>
@@ -27,15 +36,26 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto"> <!-- Adicionando ml-auto para alinhar à direita -->
-          <li class="nav-item">
-            <a class="nav-link" href="controle-page\controle.php">Controle</a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Opções
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="controle-page\controle.php">Controle</a></li>
+              <?php
+              if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+                echo '<li><a class="dropdown-item" href="/lavorato-page/src/login/cadastro.php">Cadastro</a></li>';
+              }
+              ?>
+              <li><a class="dropdown-item" href="/lavorato-page/src/login/logout.php">Logout</a></li>
+            </ul>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-
   <div class="container">
     <div class="image-logo">
       <img src="../src/assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
@@ -311,9 +331,25 @@
   <script>
     const btnListar = document.getElementById("btn-listar");
     btnListar.addEventListener("click", () => {
-      window.location.href = "database/listar.php";
+      window.location.href = "/lavorato-page/src/database/listar.php";
     });
-  </script>
+
+    var idleTime = 0;
+    var idleInterval = setInterval(timerIncrement, 60000); // 1 minuto (60000 milissegundos)
+
+    document.addEventListener("mousemove", function () {
+      idleTime = 0;
+    });
+
+    function timerIncrement() {
+      idleTime++;
+      if (idleTime >= 15) { // 15 minutos
+        window.location.href = "/lavorato-page/src/login/logout.php";
+      }
+    }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </body>
 
 </html>

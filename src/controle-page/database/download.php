@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+if (!isset($_SESSION['login'])) {
+    header("Location: /lavorato-page/src/login/login.php");
+    exit();
+}
+
+
 if (isset($_GET['documento'])) {
     $documento = $_GET['documento'];
     $uploadDir = "C:/xampp/htdocs/lavorato-page/src/controle-page/database/documents/";
@@ -9,10 +15,9 @@ if (isset($_GET['documento'])) {
         $filePath = $_SESSION['download_file'];
         $fileName = basename($filePath);
 
-        // Define a URL do arquivo para download
         $downloadUrl = "download_helper.php?file=" . urlencode($fileName);
 
-        // Define a URL de redirecionamento com base no documento
+        
         switch ($documento) {
             case "RG":
                 $redirectUrl = "https://drive.google.com/drive/u/1/folders/1KCT5rULPHRPswa5HffhUhtnfoJIfoB5z";
@@ -34,7 +39,7 @@ if (isset($_GET['documento'])) {
                 exit;
         }
 
-        // Redirecionar e iniciar o download usando JavaScript
+    
         echo "<!DOCTYPE html>
         <html>
         <head>

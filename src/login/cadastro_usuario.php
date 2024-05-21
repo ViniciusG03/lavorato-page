@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($select->num_rows > 0) {
         echo "<script language='javascript' type='text/javascript'>
           alert('Login já cadastrado!');
-          window.location.href='cadastro.html';
+          window.location.href='/lavorato-page/src/login/cadastro.php';
         </script>";
     } else {
         $query = "INSERT INTO usuarios (login,senha) VALUES ('$login','$senha')";
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($insert) {
             echo "<script language='javascript' type='text/javascript'>
               alert('Usuário cadastrado com sucesso!');
-              window.location.href='cadastro.html';  // Redirecionar para página de cadastro
+              window.location.href='/lavorato-page/src/login/login.php';  
             </script>";
         }
 

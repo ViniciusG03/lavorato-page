@@ -1,12 +1,18 @@
 <?php
 session_start();
 
+
+if (!isset($_SESSION['login'])) {
+    header("Location: /lavorato-page/src/login/login.php");
+    exit();
+}
+
+
 if (isset($_GET['file'])) {
     $file = urldecode($_GET['file']);
     $filePath = "C:/xampp/htdocs/lavorato-page/src/controle-page/database/documents/" . $file;
 
     if (file_exists($filePath)) {
-        // Força o download do arquivo
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');

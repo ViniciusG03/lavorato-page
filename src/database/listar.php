@@ -1,4 +1,13 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['login'])) {
+    header("Location: /lavorato-page/src/login/login.php");
+    exit();
+}
+?>
+
+<?php
 $servername = "localhost";
 $username = "root";
 $password = "lavorato@admin2024";

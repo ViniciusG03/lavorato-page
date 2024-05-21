@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['login'])) {
+    header("Location: /lavorato-page/src/login/login.php");
+    exit();
+}
+
 $servername = "localhost";
 $username = "root";
 $password = "lavorato@admin2024";
@@ -13,7 +20,7 @@ if ($conn->connect_error) {
 $sql = "SELECT p.id, p.Nome_paciente, p.Nome_google, p.Data_inicio, p.Data_final, p.Email, p.Matricula,
         d.Documento_tipo, d.Especialidade, d.Data_emissao, d.Data_validade
         FROM paciente p
-        LEFT JOIN documento d ON p.id = d.Paciente_ID"; 
+        LEFT JOIN documento d ON p.id = d.Paciente_ID";
 
 $result = $conn->query($sql);
 
@@ -53,7 +60,7 @@ $conn->close();
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../../index.php">Home</a>
+                        <a class="nav-link" href="/lavorato-page/src/controle-page/controle.php">Controle</a>
                     </li>
                 </ul>
             </div>
@@ -63,7 +70,6 @@ $conn->close();
     <div class="container mt-4">
         <h1 class="mb-4">Lista de Pacientes</h1>
 
-        <!-- Formulário de busca usando Bootstrap -->
         <form action="buscar_paciente.php" method="get" class="mb-4">
             <div class="row g-3">
                 <div class="col-md-4">
@@ -84,7 +90,6 @@ $conn->close();
             </div>
         </form>
 
-        <!-- Tabela de pacientes usando Bootstrap -->
         <div class="table-responsive mt-4">
             <table>
                 <thead>
@@ -105,21 +110,21 @@ $conn->close();
                 <tbody>
                     <?php
                     if ($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . $row["id"] . "</td>";
-                                echo "<td>" . $row["Nome_paciente"] . "</td>";
-                                echo "<td>" . $row["Nome_google"] . "</td>";
-                                echo "<td>" . $row["Data_inicio"] . "</td>";
-                                echo "<td>" . $row["Data_final"] . "</td>";
-                                echo "<td>" . $row["Email"] . "</td>";
-                                echo "<td>" . $row["Matricula"] . "</td>";
-                                echo "<td>" . $row["Documento_tipo"] . "</td>";
-                                echo "<td>" . $row["Especialidade"] . "</td>";
-                                echo "<td>" . $row["Data_emissao"] . "</td>";
-                                echo "<td>" . $row["Data_validade"] . "</td>";
-                                echo "</tr>";
-                            }
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row["id"] . "</td>";
+                            echo "<td>" . $row["Nome_paciente"] . "</td>";
+                            echo "<td>" . $row["Nome_google"] . "</td>";
+                            echo "<td>" . $row["Data_inicio"] . "</td>";
+                            echo "<td>" . $row["Data_final"] . "</td>";
+                            echo "<td>" . $row["Email"] . "</td>";
+                            echo "<td>" . $row["Matricula"] . "</td>";
+                            echo "<td>" . $row["Documento_tipo"] . "</td>";
+                            echo "<td>" . $row["Especialidade"] . "</td>";
+                            echo "<td>" . $row["Data_emissao"] . "</td>";
+                            echo "<td>" . $row["Data_validade"] . "</td>";
+                            echo "</tr>";
+                        }
                     } else {
                         echo "<tr><td colspan='6'>Nenhum paciente encontrado</td></tr>";
                     }

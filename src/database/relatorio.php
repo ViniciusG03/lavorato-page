@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['login'])) {
+    header("Location: /lavorato-page/src/login/login.php");
+    exit();
+}
+
 require_once '../vendor/autoload.php';
 
 use Dompdf\Dompdf;
@@ -6,17 +13,17 @@ use Dompdf\Dompdf;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dataSelecionada = $_POST['data'];
     $status = isset($_POST['status']) ? $_POST['status'] : '';
-    
+
     if (isset($_POST['especialidade'])) {
         $especialidadeSelecionada = $_POST['especialidade'];
     } else {
-        $especialidadeSelecionada = 'todas'; 
+        $especialidadeSelecionada = 'todas';
     }
 
     if (isset($_POST['convenio'])) {
         $convenioSelecionado = $_POST['convenio'];
     } else {
-        $convenioSelecionado = 'todos'; 
+        $convenioSelecionado = 'todos';
     }
 
     if (isset($_POST['mes'])) {
@@ -24,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $mesSelecionado = 'todos';
     }
-    
+
     if (isset($_POST['hora']) && preg_match('/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/', $_POST['hora'])) {
         $horaSelecionada = $_POST['hora'];
     } else {
@@ -33,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $dataFormatada = date('d/m/Y', strtotime($dataSelecionada));
     $dataAtual = date('Y-m-d');
-    $dataAtualFormatada = date('d/m/Y', strtotime($dataAtual)); 
+    $dataAtualFormatada = date('d/m/Y', strtotime($dataAtual));
 
     $tituloRelatorio = "<h1>Relatório</h1>";
     $subtituloRelatorio = "<h3>Data: $dataAtualFormatada a $dataFormatada</h3>";
@@ -62,11 +69,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($mesSelecionado !== 'todos') {
         $sql .= " AND MONTH(data_hora_insercao) = ?";
     }
-    
+
     if (!empty($status)) {
         $sql .= " AND paciente_status = ?";
     }
-    
+
     if ($horaSelecionada !== null) {
         $sql .= " AND TIME(data_hora_insercao) >= ?";
     }
@@ -100,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $bindValues[] = $status;
             $bindTypes .= 's';
         }
-        
+
         if ($horaSelecionada !== null) {
             $bindValues[] = $horaSelecionada;
             $bindTypes .= 's';
@@ -109,9 +116,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param($bindTypes, ...$bindValues);
 
         $stmt->execute();
-    
+
         $result = $stmt->get_result();
-    
+
         if ($result->num_rows > 0) {
             $tabelaHTML = "<table style='border-collapse: collapse; width: 100%;'>
                 <thead>
@@ -181,7 +188,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </body>
             </html>";
 
-    $dompdf->loadHtml($html); 
+    $dompdf->loadHtml($html);
 
     $dompdf->setPaper('A4', 'portrait');
 
@@ -198,28 +205,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatório</title>
-    <link
-      rel="shortcut icon"
-      href="../src/assets/Logo-Lavorato-alfa.png"
-      type="image/x-icon" />
+    <link rel="shortcut icon" href="../src/assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet" />
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet" />
     <link rel="stylesheet" href="../stylesheet/relatorio.css">
 </head>
 <style>
-    h1, h3 {
+    h1,
+    h3 {
         color: white;
         margin-bottom: 10px;
         text-align: center;
     }
 </style>
+
 <body>
     <div class="nav">
         <button id="homeButton">Home</button>
@@ -244,4 +251,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     </script>
 </body>
+
 </html>
