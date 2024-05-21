@@ -12,10 +12,10 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-  <script src="bootstrap/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="stylesheet/controle.css">
-  <script src="../src/index.js"></script>
+  <link rel="stylesheet" href="/lavorato-page/src/bootstrap/css/bootstrap.min.css">
+  <script src="/lavorato-page/src/bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/lavorato-page/src/stylesheet/controle.css">
+  <script src="/lavorato-page/src/index.js"></script>
 </head>
 
 <body>
@@ -29,7 +29,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto"> <!-- Adicionando ml-auto para alinhar à direita -->
           <li class="nav-item">
-            <a class="nav-link" href="index.php">Home</a>
+            <a class="nav-link" href="/lavorato-page/src/index.php">Home</a>
           </li>
         </ul>
       </div>
@@ -38,7 +38,7 @@
 
   <div class="container">
     <div class="image-logo">
-      <img src="../src/assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
+      <img src="/lavorato-page/src/assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
     </div>
     <div class="buttons">
       <button id="btn-cadastrar">Cadastrar</button>
@@ -55,7 +55,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="../src/database/cadastrar_pacientes.php" method="post">
+          <form action="/lavorato-page/src/controle-page/database/cadastrar_pacientes.php" method="post" enctype="multipart/form-data">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="nome" class="form-label">Nome:</label>
@@ -92,6 +92,11 @@
                   <option>RG</option>
                   <option>CPF</option>
                 </datalist>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="documento_arquivo" class="form-label">Arquivo do Documento:</label>
+                <input type="file" id="documento_arquivo" name="documento_arquivo" class="form-control"
+                  accept="image/*,.pdf">
               </div>
               <div class="col-md-6 mb-3">
                 <label for="especialidade_controle" class="form-label">Especialidade:</label>
@@ -145,7 +150,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="../src/database/cadastrar_documento.php" method="post" enctype="multipart/form-data">
+          <form action="/lavorato-page/src/controle-page/database/cadastrar_documento.php" method="post" enctype="multipart/form-data">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="paciente_matricula" class="form-label">Matricula:</label>

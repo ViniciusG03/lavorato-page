@@ -29,7 +29,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto"> <!-- Adicionando ml-auto para alinhar à direita -->
           <li class="nav-item">
-            <a class="nav-link" href="controle.php">Controle</a>
+            <a class="nav-link" href="controle-page\controle.php">Controle</a>
           </li>
         </ul>
       </div>

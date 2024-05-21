@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet" />
-    <link rel="stylesheet" href="../stylesheet/cadastro.css">
+    <link rel="stylesheet" href="/lavorato-page/src/stylesheet/cadastro.css">
 </head>
 
 <body>
@@ -21,6 +21,8 @@
     </div>
     <div class="box">
         <?php
+        session_start();
+
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $servername = "localhost";
             $username = "root";
@@ -38,7 +40,7 @@
             $data_emissao = $_POST["data_emissao"];
             $data_validade = $_POST["data_validade"];
 
-            $uploadDir = "C:/xampp/htdocs/lavorato-page/src/database/documents/";
+            $uploadDir = "C:/xampp/htdocs/lavorato-page/src/controle-page/database/documents/";
 
             if (empty($matricula) || empty($documento) || empty($especialidade) || empty($data_emissao) || empty($data_validade)) {
                 echo "<h1>Todos os campos devem ser preenchidos!</h1>";
@@ -59,17 +61,17 @@
                             $fileNameCmps = explode(".", $fileName);
                             $fileExtension = strtolower(end($fileNameCmps));
 
-                            // Nome do arquivo renomeado
                             $newFileName = $documento . $matricula . '.' . $fileExtension;
-
                             $dest_path = $uploadDir . $newFileName;
 
-                            //mudar o caminho amanhã e adicionar ifs
                             if (move_uploaded_file($fileTmpPath, $dest_path)) {
                                 $sql = "INSERT INTO documento (Documento_tipo, Especialidade, Data_emissao, Data_validade, Paciente_ID) VALUES ('$documento', '$especialidade', '$data_emissao', '$data_validade', '$pacienteID')";
                                 if ($conn->query($sql) === TRUE) {
-                                    header("Location: https://drive.google.com/drive/u/0/folders/1X0KvaN3qUj-4x4lUs6e7IhEJou88wNvW");
-                                    exit();
+                                    $_SESSION['download_file'] = $dest_path;
+                                    $_SESSION['documento'] = $documento;
+
+                                    header("Location: download.php?documento=$documento");
+                                    exit;
                                 } else {
                                     echo "<p>Erro ao cadastrar o documento: " . $conn->error . "</p>";
                                 }
@@ -102,8 +104,6 @@
                                     break;
                             }
                         }
-                    } else {
-                        echo "<p>Arquivo de upload não encontrado.</p>";
                     }
                 } else {
                     echo "<p>Paciente com Matricula '$matricula' não encontrado.</p>";
@@ -113,6 +113,8 @@
             $conn->close();
         }
         ?>
+
+
 
     </div>
 
