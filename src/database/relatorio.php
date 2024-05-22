@@ -167,8 +167,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <title>Relatório</title>
                 <style>
                     body {
-                        margin: 10mm; /* Reduzir as margens para 10mm */
-                        font-size: 10pt; /* Reduzir o tamanho da fonte para 10pt */
+                        margin: 10mm; 
+                        font-size: 10pt; 
                     }
                     table {
                         border-collapse: collapse;
@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                     th, td {
                         border: 1px solid black;
-                        padding: 5px; /* Reduzir o espaçamento entre células */
+                        padding: 5px; 
                         text-align: center;
                     }
                 </style>
@@ -217,6 +217,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="../stylesheet/relatorio.css">
+    <link rel="shortcut icon" href="/lavorato-page/src/assets/Logo-Lavorato-alfa.png" type="image/x-icon">
 </head>
 <style>
     h1,

@@ -47,6 +47,7 @@ $conn->close();
     <link rel="stylesheet" href="/lavorato-page/src/bootstrap/css/bootstrap.min.css">
     <script src="/lavorato-page/src/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/lavorato-page/src/stylesheet/listar.css">
+    <link rel="shortcut icon" href="/lavorato-page/src/assets/Logo-Lavorato-alfa.png" type="image/x-icon">
 </head>
 
 <body>
@@ -126,7 +127,7 @@ $conn->close();
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='6'>Nenhum paciente encontrado</td></tr>";
+                        echo "<tr><td colspan='11'>Nenhum paciente encontrado</td></tr>";
                     }
                     ?>
                 </tbody>

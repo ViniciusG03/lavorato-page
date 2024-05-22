@@ -23,6 +23,7 @@ if (!isset($_SESSION['login'])) {
     <link rel="stylesheet" href="/lavorato-page/src/bootstrap/css/bootstrap.min.css">
     <script src="/lavorato-page/src/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/lavorato-page/src/stylesheet/buscar.css">
+    <link rel="shortcut icon" href="/lavorato-page/src/assets/Logo-Lavorato-alfa.png" type="image/x-icon">
 </head>
 
 <body>

@@ -25,6 +25,7 @@ if (!isset($_SESSION['login'])) {
   <script src="/lavorato-page/src/bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="/lavorato-page/src/stylesheet/controle.css">
   <script src="/lavorato-page/src/index.js"></script>
+  <link rel="shortcut icon" href="/lavorato-page/src/assets/Logo-Lavorato-alfa.png" type="image/x-icon">
 </head>
 
 <body>
@@ -36,7 +37,7 @@ if (!isset($_SESSION['login'])) {
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto"> <!-- Adicionando ml-auto para alinhar à direita -->
+        <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="nav-link" href="/lavorato-page/src/index.php">Home</a>
           </li>
