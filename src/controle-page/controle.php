@@ -54,6 +54,11 @@ if (!isset($_SESSION['login'])) {
       <button id="btn-cadastrar">Cadastrar</button>
       <button type="button" id="btn-listar">Listar</button>
       <button id="btn-documento">Documento</button>
+      <?php 
+        if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+        echo '<button type="button" id="btn-removerPaciente">Remover</button>';
+      }
+      ?>
     </div>
   </div>
 
@@ -68,7 +73,7 @@ if (!isset($_SESSION['login'])) {
           <form action="/lavorato-page/src/controle-page/database/cadastrar_pacientes.php" method="post"
             enctype="multipart/form-data">
             <div class="row">
-              <div class="col-md-6 mb-3">
+              <div class="mb-3">
                 <label for="nome" class="form-label">Nome:</label>
                 <input type="text" id="nome" name="nome" class="form-control" autocomplete="off" />
               </div>
@@ -230,6 +235,33 @@ if (!isset($_SESSION['login'])) {
     </div>
   </div>
 
+  <div class="modal fade" id="modalRemoverPaciente" tabindex="-1" aria-labelledby="modalRemoverPacienteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalRemoverPacienteLabel">Remoção de Pacientes e Documentos!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/lavorato-page/src/controle-page/database/remover_paciente.php" method="post">
+            <div class="mb-3">
+              <label for="numero_matricula" class="form-label">Número da Matricula:</label>
+              <input type="text" id="numero_matricula" name="numero_matricula" class="form-control" autocomplete="off" />
+            </div>
+            <div class="mb-3">
+              <label for="id_paciente" class="form-label">ID do Paciente:</label>
+              <input type="text" id="id_paciente" name="id_paciente" class="form-control" autocomplete="off" />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const btnListar = document.getElementById("btn-listar");
     btnListar.addEventListener("click", () => {
@@ -241,6 +273,13 @@ if (!isset($_SESSION['login'])) {
     btnDocumento.addEventListener('click', () => {
       modalDocumento.show()
     })
+
+    const btnRemover = document.getElementById('btn-removerPaciente');
+    const modalRemover = new bootstrap.Modal(document.getElementById('modalRemoverPaciente'));
+    btnRemover.addEventListener('click', () => {
+      modalRemover.show()
+    })  
+    
   </script>
 </body>
 

@@ -23,7 +23,7 @@ if (!isset($_SESSION['login'])) {
     rel="stylesheet" />
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
   <script src="bootstrap/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="stylesheet/controle.css">
+  <link rel="stylesheet" href="/lavorato-page/src/stylesheet/style.css" />
   <script src="/lavorato-page/src/index.js"></script>
 </head>
 
@@ -65,6 +65,11 @@ if (!isset($_SESSION['login'])) {
       <button id="btn-atualizar">Atualizar</button>
       <button type="button" id="btn-listar">Listar</button>
       <button type="button" id="btn-relatorio">Relatorio</button>
+      <?php
+      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+        echo '<button type="button" id="btn-remover">Remover</button>';
+      }
+      ?>
     </div>
   </div>
 
@@ -78,7 +83,7 @@ if (!isset($_SESSION['login'])) {
         <div class="modal-body">
           <form action="../src/database/cadastrar.php" method="post">
             <div class="row">
-              <div class="col-md-6 mb-3">
+              <div class="mb-3">
                 <label for="nome" class="form-label">Nome:</label>
                 <input type="text" id="nome" name="nome" class="form-control" autocomplete="off" />
               </div>
@@ -179,6 +184,10 @@ if (!isset($_SESSION['login'])) {
           <form action="../src/database/atualizar.php" method="post">
             <div class="mb-3">
               <label for="numero_guia" class="form-label">Número da Guia:</label>
+              <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
+            </div>
+            <div class="mb-3">
+              <label for="numero_guia" class="form-label">Correção da Guia:</label>
               <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
             </div>
             <div class="mb-3">
@@ -318,6 +327,33 @@ if (!isset($_SESSION['login'])) {
                 <option value="BRBSAUDE">BRBSAUDE</option>
                 <option value="FUSEX(PNE)">FUSEX(PNE)</option>
               </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalRemover" tabindex="-1" aria-labelledby="modalRemoverLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalRemoverLabel">Remoção de Guias!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/lavorato-page/src/database/remover.php" method="post">
+            <div class="mb-3">
+              <label for="numero_guia" class="form-label">Número da Guia:</label>
+              <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
+            </div>
+            <div class="mb-3">
+              <label for="id_guia" class="form-label">ID da Guia:</label>
+              <input type="text" id="id_guia" name="id_guia" class="form-control" autocomplete="off" />
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>

@@ -22,4 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
   btnRelatorio.addEventListener("click", () => {
     modalRelatorio.show();
   });
+
+  const btnRemover = document.getElementById("btn-remover");
+  const modalRemover = new bootstrap.Modal(
+    document.getElementById("modalRemover")
+  )
+  btnRemover.addEventListener("click", () => {
+    modalRemover.show();
+  });
 });

@@ -60,6 +60,7 @@ img {
 #btn-cadastrar,
 #btn-atualizar,
 #btn-listar,
+#btn-remover,
 #btn-relatorio {
     width: 250px;
     border-radius: 8px;

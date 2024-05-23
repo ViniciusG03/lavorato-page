@@ -59,6 +59,7 @@ img {
 
 #btn-cadastrar,
 #btn-documento,
+#btn-removerPaciente,
 #btn-listar {
     width: 250px;
     border-radius: 8px;
