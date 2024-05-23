@@ -181,14 +181,14 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="../src/database/atualizar.php" method="post">
+          <form id="updateForm" action="../src/database/atualizar.php" method="post" enctype="multipart/form-data">
             <div class="mb-3">
               <label for="numero_guia" class="form-label">Número da Guia:</label>
               <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
             </div>
             <div class="mb-3">
-              <label for="numero_guia" class="form-label">Correção da Guia:</label>
-              <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
+              <label for="correcao_guia" class="form-label">Correção da Guia:</label>
+              <input type="text" id="correcao_guia" name="correcao_guia" class="form-control" autocomplete="off" />
             </div>
             <div class="mb-3">
               <label for="status_guia" class="form-label">Status:</label>
@@ -201,6 +201,10 @@ if (!isset($_SESSION['login'])) {
                 <option>Assinado</option>
                 <option>Faturado</option>
               </datalist>
+            </div>
+            <div class="mb-3">
+              <label for="excelFile" class="form-label">Importar arquivo Excel:</label>
+              <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls" class="form-control" />
             </div>
             <div class="mb-3">
               <label for="numero_lote" class="form-label">Número do lote:</label>
@@ -364,6 +368,7 @@ if (!isset($_SESSION['login'])) {
       </div>
     </div>
   </div>
+
   <script>
     const btnListar = document.getElementById("btn-listar");
     btnListar.addEventListener("click", () => {
@@ -383,6 +388,23 @@ if (!isset($_SESSION['login'])) {
         window.location.href = "/lavorato-page/src/login/logout.php";
       }
     }
+
+    // document.getElementById('updateForm').addEventListener('submit', function (event) {
+    //   event.preventDefault();
+
+    //   var formData = new FormData(this);
+
+    //   fetch('/lavorato-page/src/database/atualizar.php', {
+    //     method: 'POST',
+    //     body: formData
+    //   }).then(response => response.text())
+    //     .then(data => {
+    //       console.log(data); // Você pode processar a resposta aqui
+    //       alert('Guias atualizadas com sucesso!');
+    //       // Atualize a interface do usuário ou redirecione conforme necessário
+    //     })
+    //     .catch(error => console.error('Erro:', error));
+    // });
   </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
