@@ -1,9 +1,9 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $servername = "localhost";
-    $username = "root";
-    $password = "lavorato@admin2024";
-    $database = "lavoratoDB";
+    $servername = "mysql.lavoratoguias.kinghost.net";
+    $username = "lavoratoguias";
+    $password = "A3g7K2m9T5p8L4v6";
+    $database = "lavoratoguias";
 
     $conn = new mysqli($servername, $username, $password, $database);
 
@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Erro na conexão: " . $conn->connect_error);
     }
 
-    $login = trim($_POST['login']); 
+    $login = trim($_POST['login']);
     $senha = md5($_POST['senha']);
 
     if (empty($login) || empty($senha)) {
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($select->num_rows > 0) {
         echo "<script language='javascript' type='text/javascript'>
           alert('Login já cadastrado!');
-          window.location.href='/lavorato-page/src/login/cadastro.php';
+          window.location.href='../login/cadastro.php';
         </script>";
     } else {
         $query = "INSERT INTO usuarios (login,senha) VALUES ('$login','$senha')";
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($insert) {
             echo "<script language='javascript' type='text/javascript'>
               alert('Usuário cadastrado com sucesso!');
-              window.location.href='/lavorato-page/src/login/login.php';  
+              window.location.href='../login/login.php';  
             </script>";
         }
 

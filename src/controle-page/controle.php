@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-  header("Location: /lavorato-page/src/login/login.php");
+  header("Location: ../../login/login.php");
   exit();
 }
 ?>
@@ -14,18 +14,18 @@ if (!isset($_SESSION['login'])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Controle</title>
-  <link rel="shortcut icon" href="../src/assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
-  <link rel="stylesheet" href="../src/stylesheet/style.css" />
+  <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
+  <link rel="stylesheet" href="../stylesheet/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="/lavorato-page/src/bootstrap/css/bootstrap.min.css">
-  <script src="/lavorato-page/src/bootstrap/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="/lavorato-page/src/stylesheet/controle.css">
-  <script src="/lavorato-page/src/index.js"></script>
-  <link rel="shortcut icon" href="/lavorato-page/src/assets/Logo-Lavorato-alfa.png" type="image/x-icon">
+  <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+  <script src="../bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="../stylesheet/controle.css">
+  <script src="../index.js"></script>
+  <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon">
 </head>
 
 <body>
@@ -39,7 +39,7 @@ if (!isset($_SESSION['login'])) {
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="/lavorato-page/src/index.php">Home</a>
+            <a class="nav-link" href="../index.php">Home</a>
           </li>
         </ul>
       </div>
@@ -48,14 +48,14 @@ if (!isset($_SESSION['login'])) {
 
   <div class="container">
     <div class="image-logo">
-      <img src="/lavorato-page/src/assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
+      <img src="../assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
     </div>
     <div class="buttons">
       <button id="btn-cadastrar">Cadastrar</button>
       <button type="button" id="btn-listar">Listar</button>
       <button id="btn-documento">Documento</button>
-      <?php 
-        if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+      <?php
+      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
         echo '<button type="button" id="btn-removerPaciente">Remover</button>';
       }
       ?>
@@ -70,8 +70,7 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="/lavorato-page/src/controle-page/database/cadastrar_pacientes.php" method="post"
-            enctype="multipart/form-data">
+          <form action="../controle-page/database/cadastrar_pacientes.php" method="post" enctype="multipart/form-data">
             <div class="row">
               <div class="mb-3">
                 <label for="nome" class="form-label">Nome:</label>
@@ -166,8 +165,7 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="/lavorato-page/src/controle-page/database/cadastrar_documento.php" method="post"
-            enctype="multipart/form-data">
+          <form action="../controle-page/database/cadastrar_documento.php" method="post" enctype="multipart/form-data">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="paciente_matricula" class="form-label">Matricula:</label>
@@ -235,7 +233,8 @@ if (!isset($_SESSION['login'])) {
     </div>
   </div>
 
-  <div class="modal fade" id="modalRemoverPaciente" tabindex="-1" aria-labelledby="modalRemoverPacienteLabel" aria-hidden="true">
+  <div class="modal fade" id="modalRemoverPaciente" tabindex="-1" aria-labelledby="modalRemoverPacienteLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -243,10 +242,11 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="/lavorato-page/src/controle-page/database/remover_paciente.php" method="post">
+          <form action="../controle-page/database/remover_paciente.php" method="post">
             <div class="mb-3">
               <label for="numero_matricula" class="form-label">Número da Matricula:</label>
-              <input type="text" id="numero_matricula" name="numero_matricula" class="form-control" autocomplete="off" />
+              <input type="text" id="numero_matricula" name="numero_matricula" class="form-control"
+                autocomplete="off" />
             </div>
             <div class="mb-3">
               <label for="id_paciente" class="form-label">ID do Paciente:</label>
@@ -278,8 +278,8 @@ if (!isset($_SESSION['login'])) {
     const modalRemover = new bootstrap.Modal(document.getElementById('modalRemoverPaciente'));
     btnRemover.addEventListener('click', () => {
       modalRemover.show()
-    })  
-    
+    })
+
   </script>
 </body>
 

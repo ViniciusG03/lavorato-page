@@ -2,14 +2,14 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-    header("Location: /lavorato-page/src/login/login.php");
+    header("Location: ../../login/login.php");
     exit();
 }
 
-$servername = "localhost";
-$username = "root";
-$password = "lavorato@admin2024";
-$database = "lavoratoDB";
+$servername = "mysql.lavoratoguias.kinghost.net";
+$username = "lavoratoguias";
+$password = "A3g7K2m9T5p8L4v6";
+$database = "lavoratoguias";
 
 $conn = new mysqli($servername, $username, $password, $database);
 
@@ -44,10 +44,10 @@ $conn->close();
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet" />
-    <link rel="stylesheet" href="/lavorato-page/src/bootstrap/css/bootstrap.min.css">
-    <script src="/lavorato-page/src/bootstrap/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/lavorato-page/src/stylesheet/listar.css">
-    <link rel="shortcut icon" href="/lavorato-page/src/assets/Logo-Lavorato-alfa.png" type="image/x-icon">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
+    <script src="../../bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../../stylesheet/listar.css">
+    <link rel="shortcut icon" href="../../assets/Logo-Lavorato-alfa.png" type="image/x-icon">
 </head>
 
 <body>
@@ -61,7 +61,7 @@ $conn->close();
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/lavorato-page/src/controle-page/controle.php">Controle</a>
+                        <a class="nav-link" href="../../controle-page/controle.php">Controle</a>
                     </li>
                 </ul>
             </div>
@@ -140,7 +140,7 @@ $conn->close();
         document.addEventListener('DOMContentLoaded', () => {
             const btnListar = document.getElementById('homeButton');
             btnListar.addEventListener('click', () => {
-                window.location.href = '../index.php';
+                window.location.href = '../../index.php';
             });
         });
     </script>

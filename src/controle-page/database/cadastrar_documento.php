@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-    header("Location: /lavorato-page/src/login/login.php");
+    header("Location: ../login/login.php");
     exit();
 }
 ?>
@@ -19,7 +19,7 @@ if (!isset($_SESSION['login'])) {
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet" />
-    <link rel="stylesheet" href="/lavorato-page/src/stylesheet/cadastro.css">
+    <link rel="stylesheet" href="../stylesheet/cadastro.css">
 </head>
 
 <body>
@@ -32,10 +32,10 @@ if (!isset($_SESSION['login'])) {
         session_start();
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $servername = "localhost";
-            $username = "root";
-            $password = "lavorato@admin2024";
-            $database = "lavoratoDB";
+            $servername = "mysql.lavoratoguias.kinghost.net";
+            $username = "lavoratoguias";
+            $password = "A3g7K2m9T5p8L4v6";
+            $database = "lavoratoguias";
 
             $conn = new mysqli($servername, $username, $password, $database);
             if ($conn->connect_error) {
@@ -48,7 +48,7 @@ if (!isset($_SESSION['login'])) {
             $data_emissao = $_POST["data_emissao"];
             $data_validade = $_POST["data_validade"];
 
-            $uploadDir = "C:/xampp/htdocs/lavorato-page/src/controle-page/database/documents/";
+            $uploadDir = "../controle-page/database/documents/";
 
             if (empty($matricula) || empty($documento) || empty($especialidade) || empty($data_emissao) || empty($data_validade)) {
                 echo "<h1>Todos os campos devem ser preenchidos!</h1>";

@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-    header("Location: /lavorato-page/src/login/login.php");
+    header("Location: ../login/login.php");
     exit();
 }
 ?>
@@ -35,10 +35,10 @@ if (!isset($_SESSION['login'])) {
         use PhpOffice\PhpSpreadsheet\IOFactory;
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $servername = "localhost";
-            $username = "root";
-            $password = "lavorato@admin2024";
-            $database = "lavoratoDB";
+            $servername = "mysql.lavoratoguias.kinghost.net";
+            $username = "lavoratoguias";
+            $password = "A3g7K2m9T5p8L4v6";
+            $database = "lavoratoguias";
 
             $conn = new mysqli($servername, $username, $password, $database);
 
@@ -108,7 +108,7 @@ if (!isset($_SESSION['login'])) {
                                 if (!empty($saida)) {
                                     $sql_update .= ", paciente_saida = '$saida'";
                                 }
-                                if (!empty($correcao_guia)){
+                                if (!empty($correcao_guia)) {
                                     $sql_update .= ", paciente_guia = '$correcao_guia'";
                                 }
                                 $sql_update .= " WHERE paciente_guia = '$numero_guia'";
@@ -135,7 +135,7 @@ if (!isset($_SESSION['login'])) {
             document.addEventListener('DOMContentLoaded', () => {
                 const btnListar = document.getElementById('homeButton');
                 btnListar.addEventListener('click', () => {
-                    window.location.href = '/lavorato-page/src/index.php';
+                    window.location.href = '../index.php';
                 });
             });
         </script>

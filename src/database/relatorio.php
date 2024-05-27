@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-    header("Location: /lavorato-page/src/login/login.php");
+    header("Location: ../login/login.php");
     exit();
 }
 
@@ -45,10 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tituloRelatorio = "<h1>Relatório</h1>";
     $subtituloRelatorio = "<h3>Data: $dataAtualFormatada a $dataFormatada</h3>";
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "lavorato@admin2024";
-    $database = "lavoratoDB";
+    $servername = "mysql.lavoratoguias.kinghost.net";
+    $username = "lavoratoguias";
+    $password = "A3g7K2m9T5p8L4v6";
+    $database = "lavoratoguias";
 
     $conn = new mysqli($servername, $username, $password, $database);
 
@@ -217,7 +217,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="../stylesheet/relatorio.css">
-    <link rel="shortcut icon" href="/lavorato-page/src/assets/Logo-Lavorato-alfa.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon">
 </head>
 <style>
     h1,

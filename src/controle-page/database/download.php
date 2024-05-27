@@ -2,14 +2,14 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-    header("Location: /lavorato-page/src/login/login.php");
+    header("Location: ../login/login.php");
     exit();
 }
 
 
 if (isset($_GET['documento'])) {
     $documento = $_GET['documento'];
-    $uploadDir = "C:/xampp/htdocs/lavorato-page/src/controle-page/database/documents/";
+    $uploadDir = "../controle-page/database/documents/";
 
     if (isset($_SESSION['download_file']) && file_exists($_SESSION['download_file'])) {
         $filePath = $_SESSION['download_file'];
@@ -17,7 +17,7 @@ if (isset($_GET['documento'])) {
 
         $downloadUrl = "download_helper.php?file=" . urlencode($fileName);
 
-        
+
         switch ($documento) {
             case "RG":
                 $redirectUrl = "https://drive.google.com/drive/u/1/folders/1KCT5rULPHRPswa5HffhUhtnfoJIfoB5z";
@@ -39,7 +39,7 @@ if (isset($_GET['documento'])) {
                 exit;
         }
 
-    
+
         echo "<!DOCTYPE html>
         <html>
         <head>

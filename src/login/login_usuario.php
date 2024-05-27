@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-$servername = "localhost";
-$username = "root";
-$password = "lavorato@admin2024";
-$dbname = "lavoratoDB";
+$servername = "mysql.lavoratoguias.kinghost.net";
+$username = "lavoratoguias";
+$password = "A3g7K2m9T5p8L4v6";
+$dbname = "lavoratoguias";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -22,19 +22,19 @@ if (isset($_POST["entrar"])) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $_SESSION['login'] = $login;
-        
+
         // Definir como admin se o login for "admin"
         $_SESSION['is_admin'] = ($login === 'admin');
 
         setcookie("login", $login, time() + (86400 * 30), "/"); // 86400 = 1 day
-        header("Location: /lavorato-page/src/index.php");
-        exit(); 
+        header("Location: ../index.php");
+        exit();
     } else {
         echo "<script language='javascript' type='text/javascript'>
                 alert('Login e/ou senha incorretos');
-                window.location.href='/lavorato-page/src/login/login.php';
+                window.location.href='../login/login.php';
               </script>";
-        exit(); 
+        exit();
     }
 }
 

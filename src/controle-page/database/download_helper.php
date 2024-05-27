@@ -3,14 +3,14 @@ session_start();
 
 
 if (!isset($_SESSION['login'])) {
-    header("Location: /lavorato-page/src/login/login.php");
+    header("Location: ../login/login.php");
     exit();
 }
 
 
 if (isset($_GET['file'])) {
     $file = urldecode($_GET['file']);
-    $filePath = "C:/xampp/htdocs/lavorato-page/src/controle-page/database/documents/" . $file;
+    $filePath = "../controle-page/database/documents/" . $file;
 
     if (file_exists($filePath)) {
         header('Content-Description: File Transfer');

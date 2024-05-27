@@ -2,14 +2,14 @@
 session_start();
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (!isset($_SESSION['login'])) {
-        header("Location: /lavorato-page/src/login/login.php");
+        header("Location: ../login/login.php");
         exit();
     }
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "lavorato@admin2024";
-    $database = "lavoratoDB";
+    $servername = "mysql.lavoratoguias.kinghost.net";
+    $username = "lavoratoguias";
+    $password = "A3g7K2m9T5p8L4v6";
+    $database = "lavoratoguias";
 
     $conn = new mysqli($servername, $username, $password, $database);
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $id_paciente = $_POST['id_paciente'];
 
     if (empty($numero_matricula) || empty($id_paciente)) {
-        echo "<script language='javascript' type='text/javascript'>alert('Preencha todos os campos');window.location.href='/lavorato-page/src/index.php';</script>";
+        echo "<script language='javascript' type='text/javascript'>alert('Preencha todos os campos');window.location.href='../index.php';</script>";
         exit();
     } else {
         $stmt = $conn->prepare("DELETE FROM documento WHERE Paciente_ID = ?");
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
         $stmt->bind_param("i", $id_paciente);
         if (!$stmt->execute()) {
-            echo "<script language='javascript' type='text/javascript'>alert('Erro ao remover');window.location.href='/lavorato-page/src/index.php';</script>";
+            echo "<script language='javascript' type='text/javascript'>alert('Erro ao remover');window.location.href='../index.php';</script>";
             exit();
         }
         $stmt->close();
@@ -43,10 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
         $stmt->bind_param("ii", $numero_matricula, $id_paciente);
         if (!$stmt->execute()) {
-            echo "<script language='javascript' type='text/javascript'>alert('Erro ao remover');window.location.href='/lavorato-page/src/index.php';</script>";
+            echo "<script language='javascript' type='text/javascript'>alert('Erro ao remover');window.location.href='../index.php';</script>";
             exit();
         } else {
-            echo "<script language='javascript' type='text/javascript'>alert('Removido com sucesso');window.location.href='/lavorato-page/src/index.php';</script>";
+            echo "<script language='javascript' type='text/javascript'>alert('Removido com sucesso');window.location.href='../index.php';</script>";
         }
         $stmt->close();
     }
