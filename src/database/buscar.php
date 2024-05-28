@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-    header("Location: ../login/login.php");
+    header("Location: ../src/login/login.php");
     exit();
 }
 ?>
@@ -36,7 +36,7 @@ if (!isset($_SESSION['login'])) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../index.php">Home</a>
+                        <a class="nav-link" href="../src/index.php">Home</a>
                     </li>
                 </ul>
             </div>
@@ -46,10 +46,10 @@ if (!isset($_SESSION['login'])) {
     <h1 id="title">Resultados da Busca</h1>
     <div class="container">
         <?php
-        $servername = "mysql.lavoratoguias.kinghost.net";
-        $username = "lavoratoguias";
-        $password = "A3g7K2m9T5p8L4v6";
-        $database = "lavoratoguias";
+        $servername = "localhost";
+        $username = "root";
+        $password = "lavorato@admin2024";
+        $database = "lavoratodb";
 
         $conn = new mysqli($servername, $username, $password, $database);
 
@@ -163,7 +163,7 @@ if (!isset($_SESSION['login'])) {
         document.addEventListener('DOMContentLoaded', () => {
             const btnListar = document.getElementById('homeButton');
             btnListar.addEventListener('click', () => {
-                window.location.href = '../index.php';
+                window.location.href = '../src/index.php';
             });
         });
     </script>

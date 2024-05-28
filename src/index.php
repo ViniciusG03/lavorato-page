@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-  header("Location: ../login/login.php");
+  header("Location: ../src/login/login.php");
   exit();
 }
 ?>
@@ -14,8 +14,8 @@ if (!isset($_SESSION['login'])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lavorato</title>
-  <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
-  <link rel="stylesheet" href="../stylesheet/style.css" />
+  <link rel="shortcut icon" href="../src/assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
+  <link rel="stylesheet" href="../src/stylesheet/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -23,7 +23,7 @@ if (!isset($_SESSION['login'])) {
     rel="stylesheet" />
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
   <script src="bootstrap/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="../stylesheet/style.css" />
+  <link rel="stylesheet" href="../src/stylesheet/style.css" />
   <script src="index.js"></script>
 </head>
 
@@ -46,10 +46,10 @@ if (!isset($_SESSION['login'])) {
               <li><a class="dropdown-item" href="controle-page\controle.php">Controle</a></li>
               <?php
               if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
-                echo '<li><a class="dropdown-item" href="../login/cadastro.php">Cadastro</a></li>';
+                echo '<li><a class="dropdown-item" href="../src/login/cadastro.php">Cadastro</a></li>';
               }
               ?>
-              <li><a class="dropdown-item" href="../login/logout.php">Logout</a></li>
+              <li><a class="dropdown-item" href="../src/login/logout.php">Logout</a></li>
             </ul>
           </li>
         </ul>
@@ -58,7 +58,7 @@ if (!isset($_SESSION['login'])) {
   </nav>
   <div class="container">
     <div class="image-logo">
-      <img src="../assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
+      <img src="../src/assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
     </div>
     <div class="buttons">
       <button id="btn-cadastrar">Cadastrar</button>
@@ -81,7 +81,7 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="../database/cadastrar.php" method="post">
+          <form action="../src/database/cadastrar.php" method="post">
             <div class="row">
               <div class="mb-3">
                 <label for="nome" class="form-label">Nome:</label>
@@ -181,7 +181,7 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="updateForm" action="../database/atualizar.php" method="post" enctype="multipart/form-data">
+          <form id="updateForm" action="../src/database/atualizar.php" method="post" enctype="multipart/form-data">
             <div class="mb-3">
               <label for="numero_guia" class="form-label">Número da Guia:</label>
               <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
@@ -238,7 +238,7 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="../database/relatorio.php" method="post">
+          <form action="../src/database/relatorio.php" method="post">
             <div class="mb-3">
               <label for="data" class="form-label">Data:</label>
               <input type="date" id="data" name="data" class="form-control">
@@ -350,7 +350,7 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="../database/remover.php" method="post">
+          <form action="../src/database/remover.php" method="post">
             <div class="mb-3">
               <label for="numero_guia" class="form-label">Número da Guia:</label>
               <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
@@ -372,7 +372,7 @@ if (!isset($_SESSION['login'])) {
   <script>
     const btnListar = document.getElementById("btn-listar");
     btnListar.addEventListener("click", () => {
-      window.location.href = "../database/listar.php";
+      window.location.href = "../src/database/listar.php";
     });
 
     var idleTime = 0;
@@ -385,26 +385,9 @@ if (!isset($_SESSION['login'])) {
     function timerIncrement() {
       idleTime++;
       if (idleTime >= 15) { // 15 minutos
-        window.location.href = "../login/logout.php";
+        window.location.href = "../src/login/logout.php";
       }
     }
-
-    // document.getElementById('updateForm').addEventListener('submit', function (event) {
-    //   event.preventDefault();
-
-    //   var formData = new FormData(this);
-
-    //   fetch('/lavorato-page/src/database/atualizar.php', {
-    //     method: 'POST',
-    //     body: formData
-    //   }).then(response => response.text())
-    //     .then(data => {
-    //       console.log(data); // Você pode processar a resposta aqui
-    //       alert('Guias atualizadas com sucesso!');
-    //       // Atualize a interface do usuário ou redirecione conforme necessário
-    //     })
-    //     .catch(error => console.error('Erro:', error));
-    // });
   </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

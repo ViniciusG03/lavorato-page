@@ -47,10 +47,10 @@ if (!isset($_SESSION['login'])) {
     <h1 id="title">Resultados da Busca</h1>
     <div class="container">
         <?php
-        $servername = "mysql.lavoratoguias.kinghost.net";
-        $username = "lavoratoguias";
-        $password = "A3g7K2m9T5p8L4v6";
-        $database = "lavoratoguias";
+        $servername = "localhost";
+        $username = "root";
+        $password = "lavorato@admin2024";
+        $database = "lavoratodb";
 
         $conn = new mysqli($servername, $username, $password, $database);
 

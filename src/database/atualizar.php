@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-    header("Location: ../login/login.php");
+    header("Location: ../src/login/login.php");
     exit();
 }
 ?>
@@ -14,13 +14,13 @@ if (!isset($_SESSION['login'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atualização de Guias</title>
-    <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="../src/assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet" />
-    <link rel="stylesheet" href="../stylesheet/atualizar.css">
+    <link rel="stylesheet" href="../src/stylesheet/atualizar.css">
 </head>
 
 <body>
@@ -35,10 +35,10 @@ if (!isset($_SESSION['login'])) {
         use PhpOffice\PhpSpreadsheet\IOFactory;
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $servername = "mysql.lavoratoguias.kinghost.net";
-            $username = "lavoratoguias";
-            $password = "A3g7K2m9T5p8L4v6";
-            $database = "lavoratoguias";
+            $servername = "localhost";
+            $username = "root";
+            $password = "lavorato@admin2024";
+            $database = "lavoratodb";
 
             $conn = new mysqli($servername, $username, $password, $database);
 
@@ -135,7 +135,7 @@ if (!isset($_SESSION['login'])) {
             document.addEventListener('DOMContentLoaded', () => {
                 const btnListar = document.getElementById('homeButton');
                 btnListar.addEventListener('click', () => {
-                    window.location.href = '../index.php';
+                    window.location.href = '../src/index.php';
                 });
             });
         </script>

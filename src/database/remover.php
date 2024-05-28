@@ -2,14 +2,14 @@
 session_start();
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (!isset($_SESSION['login'])) {
-        header("Location: ../login/login.php");
+        header("Location: ../src/login/login.php");
         exit();
     }
 
-    $servername = "mysql.lavoratoguias.kinghost.net";
-    $username = "lavoratoguias";
-    $password = "A3g7K2m9T5p8L4v6";
-    $database = "lavoratoguias";
+    $servername = "localhost";
+    $username = "root";
+    $password = "lavorato@admin2024";
+    $database = "lavoratodb";
 
     $conn = new mysqli($servername, $username, $password, $database);
 
