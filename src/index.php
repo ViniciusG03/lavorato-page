@@ -24,7 +24,7 @@ if (!isset($_SESSION['login'])) {
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
   <script src="bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="../src/stylesheet/style.css" />
-  <script src="index.js"></script>
+  <script src="../src/scripts/index.js"></script>
 </head>
 
 <body>
@@ -72,7 +72,7 @@ if (!isset($_SESSION['login'])) {
       ?>
     </div>
   </div>
-
+  <!-- Modal para cadastro de guias -->
   <div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -85,7 +85,11 @@ if (!isset($_SESSION['login'])) {
             <div class="row">
               <div class="mb-3">
                 <label for="nome" class="form-label">Nome:</label>
-                <input type="text" id="nome" name="nome" class="form-control" autocomplete="off" />
+                <input type="text" id="nome" name="nome" class="form-control" list="nome-list" autocomplete="off" />
+                <datalist id="nome-list" style="display: none;">
+                  <select id="nome-dropdown"></select>
+                </datalist>
+
               </div>
               <div class="col-md-6 mb-3">
                 <label for="convenio" class="form-label">Convênio:</label>
@@ -171,6 +175,70 @@ if (!isset($_SESSION['login'])) {
       </div>
     </div>
   </div>
+
+  <!-- Script para autocomplete dos cadastros -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      let dropdown = $('#nome-dropdown');
+
+      $('#nome').on('input', function () {
+        let nome = $(this).val();
+        if (nome.length > 2) { // Busca após 3 caracteres
+          $.ajax({
+            url: '../src/database/autocomplete.php',
+            method: 'POST',
+            data: { nome: nome },
+            success: function (data) {
+              try {
+                let usuario = JSON.parse(data);
+                if (usuario.error) {
+                  console.error(usuario.error);
+                  alert(usuario.error);
+                } else if (usuario) {
+                  dropdown.empty();
+                  dropdown.append($('<option>').text(usuario.paciente_nome).val(usuario.paciente_nome));
+                }
+              } catch (e) {
+                console.error("Erro ao analisar JSON: ", e);
+              }
+            },
+            error: function (xhr, status, error) {
+              console.error("Erro na requisição AJAX: ", status, error);
+            }
+          });
+        }
+      });
+
+      dropdown.on('change', function () {
+        let selectedNome = $(this).val();
+        $.ajax({
+          url: '../src/database/autocomplete.php',
+          method: 'POST',
+          data: { nome: selectedNome },
+          success: function (data) {
+            try {
+              let usuario = JSON.parse(data);
+              if (usuario.error) {
+                console.error(usuario.error);
+                alert(usuario.error);
+              } else if (usuario) {
+                $('#nome').val(usuario.paciente_nome || '');
+                $('#convenio').val(usuario.paciente_convenio || '');
+                $('#entrada').val(usuario.paciente_entrada || '');
+                $('#saida').val(usuario.paciente_saida || '');
+              }
+            } catch (e) {
+              console.error("Erro ao analisar JSON: ", e);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error("Erro na requisição AJAX: ", status, error);
+          }
+        });
+      });
+    });
+  </script>
 
   <div class="modal fade" id="modalAtualizacao" tabindex="-1" aria-labelledby="modalAtualizacaoLabel"
     aria-hidden="true">
@@ -389,7 +457,6 @@ if (!isset($_SESSION['login'])) {
       }
     }
   </script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
