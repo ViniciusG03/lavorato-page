@@ -2,44 +2,32 @@
 $servername = "localhost";
 $username = "root";
 $password = "lavorato@admin2024";
-$dbname = "lavoratodb";
+$database = "lavoratodb";
 
-// Criar conexão
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $database);
 
-// Verificar conexão
 if ($conn->connect_error) {
-    die(json_encode(["error" => "Falha na conexão: " . $conn->connect_error]));
+    die("Erro na conexão: " . $conn->connect_error);
 }
 
-if (isset($_POST['nome'])) {
-    $nome = $_POST['nome'];
-    $sql = "SELECT paciente_nome, paciente_convenio, paciente_entrada, paciente_saida FROM pacientes WHERE paciente_nome LIKE ?";
-    $stmt = $conn->prepare($sql);
-    
-    if (!$stmt) {
-        die(json_encode(["error" => "Erro na preparação da consulta: " . $conn->error]));
-    }
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["nome"])) {
+    $nome = $_POST["nome"];
 
-    $searchTerm = "%" . $nome . "%";
-    $stmt->bind_param("s", $searchTerm);
-    
-    if (!$stmt->execute()) {
-        die(json_encode(["error" => "Erro na execução da consulta: " . $stmt->error]));
-    }
+    $sql = "SELECT DISTINCT paciente_nome, paciente_convenio, paciente_entrada, paciente_saida FROM pacientes WHERE paciente_nome LIKE '%$nome%' LIMIT 10"; // Limita a 10 resultados para performance
 
-    $result = $stmt->get_result();
+    $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        $usuario = $result->fetch_assoc();
-        echo json_encode($usuario);
+        $pacientes = array();
+        while ($row = $result->fetch_assoc()) {
+            $pacientes[] = $row;
+        }
+        echo json_encode($pacientes);
     } else {
-        echo json_encode(null);
+        echo json_encode(array('error' => 'Nenhum paciente encontrado.'));
     }
-
-    $stmt->close();
 } else {
-    echo json_encode(["error" => "Nome não fornecido"]);
+    echo json_encode(array('error' => 'Requisição inválida.'));
 }
 
 $conn->close();
