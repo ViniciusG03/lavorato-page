@@ -25,6 +25,8 @@ if (!isset($_SESSION['login'])) {
   <script src="bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="../src/stylesheet/style.css" />
   <script src="../src/scripts/index.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="../src/scripts/autocomplete.js"></script>
 </head>
 
 <body>
@@ -85,11 +87,8 @@ if (!isset($_SESSION['login'])) {
             <div class="row">
               <div class="mb-3">
                 <label for="nome" class="form-label">Nome:</label>
-                <input type="text" id="nome" name="nome" class="form-control" list="nome-list" autocomplete="off" />
-                <datalist id="nome-list" style="display: none;">
-                  <select id="nome-dropdown"></select>
-                </datalist>
-
+                <input type="text" id="nome" name="nome" class="form-control" autocomplete="off" />
+                <div id="nome-suggestions" class="dropdown-menu"></div>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="convenio" class="form-label">Convênio:</label>
@@ -175,10 +174,6 @@ if (!isset($_SESSION['login'])) {
       </div>
     </div>
   </div>
-
-  <!-- Script para autocomplete dos cadastros -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="../src/scripts/autocomplete.js"></script>
 
   <div class="modal fade" id="modalAtualizacao" tabindex="-1" aria-labelledby="modalAtualizacaoLabel"
     aria-hidden="true">
