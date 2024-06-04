@@ -23,10 +23,17 @@ if (!isset($_SESSION['login'])) {
     rel="stylesheet" />
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
   <script src="bootstrap/js/bootstrap.min.js"></script>
+<<<<<<< Updated upstream
   <link rel="stylesheet" href="../src/stylesheet/style.css" />
   <script src="../src/scripts/index.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="../src/scripts/autocomplete.js"></script>
+=======
+  <link rel="stylesheet" href="../stylesheet/style.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="../scripts/autocomplete.js"></script>
+  <script src="index.js"></script>
+>>>>>>> Stashed changes
 </head>
 
 <body>
@@ -156,6 +163,10 @@ if (!isset($_SESSION['login'])) {
                   <option>Dezembro</option>
                 </datalist>
               </div>
+              <div class="mb-3">
+                <label for="validade" class="form-label">Validade:</label>
+                <input type="text" id="validade" name="validade" class="form-control" autocomplete="off">
+              </div>
               <div class="col-md-6 mb-3">
                 <label for="entrada" class="form-label">Entrada:</label>
                 <input type="text" id="entrada" name="entrada" class="form-control" autocomplete="off">
@@ -177,13 +188,14 @@ if (!isset($_SESSION['login'])) {
 
   <div class="modal fade" id="modalAtualizacao" tabindex="-1" aria-labelledby="modalAtualizacaoLabel"
     aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modalAtualizacaoLabel">Atualização de Guias!</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+<<<<<<< Updated upstream
           <form id="updateForm" action="../src/database/atualizar.php" method="post" enctype="multipart/form-data">
             <div class="mb-3">
               <label for="numero_guia" class="form-label">Número da Guia:</label>
@@ -204,6 +216,71 @@ if (!isset($_SESSION['login'])) {
                 <option>Assinado</option>
                 <option>Faturado</option>
               </datalist>
+=======
+          <form id="updateForm" action="../database/atualizar.php" method="post" enctype="multipart/form-data">
+            <div class="row mb-3">
+              <div class="col-md-6 mb-3">
+                <label for="numero_guia" class="form-label">ID do Paciente:</label>
+                <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="correcao_guia" class="form-label">Correção da Guia:</label>
+                <input type="text" id="correcao_guia" name="correcao_guia" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="status_guia" class="form-label">Status:</label>
+                <input type="text" id="status_guia" name="status_guia" list="statusGuia" class="form-control"
+                  autocomplete="off" />
+                <datalist id="statusGuia">
+                  <option>Solicitado</option>
+                  <option>Emitido</option>
+                  <option>Descida</option>
+                  <option>Assinado</option>
+                  <option>Faturado</option>
+                </datalist>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="valor_guia" class="form-label">Valor da Guia:</label>
+                <input type="text" id="valor_guia" name="valor_guia" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="validade" class="form-label">Data da Remessa:</label>
+                <input type="text" id="data_remessa" name="data_remessa" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="validade" class="form-label">Validade:</label>
+                <input type="text" id="validade" name="validade" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="section" class="form-label">Seção:</label>
+                <input type="text" id="section" name="section" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="especialidade" class="form-label">Especialidade:</label>
+                <input type="text" id="especialidade" name="especialidade" class="form-control" list="EspecList"
+                  autocomplete="off" />
+                <datalist id="EspecList">
+                  <option>AVALIACAO NEUROPSICOLOGICA</option>
+                  <option>SESSÃO DE ARTETERAPIA</option>
+                  <option>SESSÃO DE EQUOTERAPIA</option>
+                  <option>SESSÃO DE FISIOTERAPIA</option>
+                  <option>SESSÃO DE FONOAUDIOLOGIA</option>
+                  <option>SESSÃO DE FONOAUDIOLOGIA EM GRUPO</option>
+                  <option>SESSÃO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                  <option>SESSÃO DE MUSICOTERAPIA</option>
+                  <option>SESSÃO DE NUTRIÇÃO</option>
+                  <option>SESSÃO DE PSICOLOGIA DE CASAL</option>
+                  <option>SESSÃO DE PSICOMOTRICIDADE</option>
+                  <option>SESSÃO DE PSICOPEDAGOGIA</option>
+                  <option>SESSÃO DE PSICOTERAPIA</option>
+                  <option>SESSÃO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                  <option>SESSÃO DE TERAPIA OCUPACIONAL</option>
+                  <option>SESSÃO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                  <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                  <option>TRATAMENTO SERIADO</option>
+                </datalist>
+              </div>
+>>>>>>> Stashed changes
             </div>
             <div class="mb-3">
               <label for="excelFile" class="form-label">Importar arquivo Excel:</label>
@@ -306,18 +383,18 @@ if (!isset($_SESSION['login'])) {
               <label for="mes" class="form-label">Mês:</label>
               <select id="mes" name="mes" class="form-select">
                 <option value="todos">TODOS OS MESES</option>
-                <option value="Janeiro">JANEIRO</option>
-                <option value="Fevereiro">FEVEREIRO</option>
-                <option value="Março">MARÇO</option>
-                <option value="Abril">ABRIL</option>
-                <option value="Maio">MAIO</option>
-                <option value="Junho">JUNHO</option>
-                <option value="Julho">JULHO</option>
-                <option value="Agosto">AGOSTO</option>
-                <option value="Setembro">SETEMBRO</option>
-                <option value="Outubro">OUTUBRO</option>
-                <option value="Novembro">NOVEMBRO</option>
-                <option value="Dezembro">DEZEMBRO</option>
+                <option value="Janeiro">Janeiro</option>
+                <option value="Fevereiro">Fevereiro</option>
+                <option value="Março">Março</option>
+                <option value="Abril">Abril</option>
+                <option value="Maio">Maio</option>
+                <option value="Junho">Junho</option>
+                <option value="Julho">Julho</option>
+                <option value="Agosto">Agosto</option>
+                <option value="Setembro">Setembro</option>
+                <option value="Outubro">Outubro</option>
+                <option value="Novembro">Novembro</option>
+                <option value="Dezembro">Dezembro</option>
               </select>
             </div>
             <div class="mb-3">

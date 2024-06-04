@@ -116,6 +116,9 @@ if (!isset($_SESSION['login'])) {
                         echo "<th>Especialidade</th>";
                         echo "<th>Mês</th>";
                         echo "<th>Sessões</th>";
+                        echo "<th>Valor</th>";
+                        echo "<th>Remessa</th>";
+                        echo "<th>Validade</th>";
                         echo "<th>Entrada</th>";
                         echo "<th>Saída</th>";
                         echo "<th>Atualização</th>";
@@ -133,6 +136,9 @@ if (!isset($_SESSION['login'])) {
                             echo "<td>" . $row["paciente_especialidade"] . "</td>";
                             echo "<td>" . $row["paciente_mes"] . "</td>";
                             echo "<td>" . $row["paciente_section"] . "</td>";
+                            echo "<td>" . $row["paciente_valor"] . "</td>";
+                            echo "<td>" . $row["paciente_data_remessa"] . "</td>";
+                            echo "<td>" . $row["paciente_validade"] . "</td>";
                             echo "<td>" . $row["paciente_entrada"] . "</td>";
                             echo "<td>" . $row["paciente_saida"] . "</td>";
                             echo "<td>" . $row["data_hora_formatada"] . "</td>";

@@ -3,7 +3,11 @@ $(document).ready(function () {
     let nome = $(this).val();
     if (nome.length > 2) {
       $.ajax({
+<<<<<<< Updated upstream
         url: "../src/database/autocomplete.php",
+=======
+        url: "../database/autocomplete.php",
+>>>>>>> Stashed changes
         method: "POST",
         data: { nome: nome },
         success: function (data) {

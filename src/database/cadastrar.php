@@ -51,11 +51,12 @@ if (!isset($_SESSION['login'])) {
             $entrada = $_POST["entrada"];
             $saida = $_POST["saida"];
             $section = $_POST["numero_section"];
+            $validade = $_POST["validade"];
 
             if (empty($nome) || empty($convenio) || empty($numero_guia) || empty($status_guia) || empty($especialidade) || empty($mes) || empty($entrada) || empty($section)) {
                 echo "<h1>Todos os campos devem ser preenchidos, exceto 'Saída'!</h1>";
             } else {
-                $verifica_sql = "SELECT COUNT(*) as count FROM pacientes WHERE paciente_guia = '$numero_guia'";
+                $verifica_sql = "SELECT COUNT(*) as count FROM pacientes WHERE paciente_guia = '$numero_guia' AND paciente_mes = '$mes'";
                 $resultado_verificacao = $conn->query($verifica_sql);
 
                 if ($resultado_verificacao) {
@@ -65,7 +66,7 @@ if (!isset($_SESSION['login'])) {
                     if ($numero_de_registros > 0) {
                         echo "<h2>Erro: A guia já está cadastrada!</h2>";
                     } else {
-                        $sql = "INSERT INTO pacientes (paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_especialidade, paciente_mes, paciente_entrada, paciente_saida, paciente_section) VALUES ('$nome', '$convenio', '$numero_guia', '$status_guia', '$especialidade', '$mes', '$entrada', '$saida', '$section')";
+                        $sql = "INSERT INTO pacientes (paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_especialidade, paciente_mes, paciente_entrada, paciente_saida, paciente_section, paciente_validade) VALUES ('$nome', '$convenio', '$numero_guia', '$status_guia', '$especialidade', '$mes', '$entrada', '$saida', '$section', '$validade')";
 
                         if ($conn->query($sql) === TRUE) {
                             echo "<h1> Guia cadastrada com sucesso!</h1>";
@@ -75,6 +76,7 @@ if (!isset($_SESSION['login'])) {
                             echo "<h2>Número de Seções:</h2> <p>$section</p>";
                             echo "<h2>Status da Guia:</h2> <p>$status_guia</p>";
                             echo "<h2>Especialidade:</h2> <p>$especialidade</p>";
+                            echo "<h2>Validade:</h2> <p>$validade</p>";
                             echo "<h2>Mês:</h2> <p>$mes</p>";
                             echo "<h2>Entrada:</h2> <p>$entrada</p>";
                             echo "<h2>Saida:</h2> <p>$saida</p>";

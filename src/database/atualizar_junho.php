@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-    header("Location: ../src/login/login.php");
+    header("Location: ../login/login.php");
     exit();
 }
 ?>
@@ -14,13 +14,13 @@ if (!isset($_SESSION['login'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atualização de Guias</title>
-    <link rel="shortcut icon" href="../src/assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet" />
-    <link rel="stylesheet" href="../src/stylesheet/atualizar.css">
+    <link rel="stylesheet" href="../stylesheet/atualizar.css">
 </head>
 
 <body>
@@ -35,10 +35,10 @@ if (!isset($_SESSION['login'])) {
         use PhpOffice\PhpSpreadsheet\IOFactory;
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $servername = "localhost";
-            $username = "root";
-            $password = "lavorato@admin2024";
-            $database = "lavoratodb";
+            $servername = "mysql.lavoratoguias.kinghost.net";
+            $username = "lavoratoguias";
+            $password = "A3g7K2m9T5p8L4v6";
+            $database = "lavoratoguias";
 
             $conn = new mysqli($servername, $username, $password, $database);
 
@@ -86,14 +86,16 @@ if (!isset($_SESSION['login'])) {
                 $valor_guia = $_POST["valor_guia"];
                 $data_remessa = $_POST["data_remessa"];
                 $validade = $_POST["validade"];
+                $section = $_POST["section"];
+                $especialidade = $_POST["especialidade"];
 
                 if (empty($numero_guia) || empty($status_guia)) {
                     echo '<h1>Por favor, informe o <strong>ID</strong> do paciente e status!</h1><p>Clique em "Home" para voltar a página principal!</p>';
                 } else {
                     if ($entrada !== "" || $saida !== "" || $status_guia !== "" || $numero_lote !== "") {
-                        $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numero_guia'";
+                        $sql = "SELECT * FROM pacientes WHERE id = '$numero_guia'";
                         $result = $conn->query($sql);
-                        $sql_check = "SELECT * FROM pacientes WHERE paciente_lote = '$numero_lote' AND paciente_guia != '$numero_guia'";
+                        $sql_check = "SELECT * FROM pacientes WHERE paciente_lote = '$numero_lote' AND id != '$numero_guia'";
                         $result_check = $conn->query($sql_check);
 
                         if ($result->num_rows == 0) {
@@ -118,13 +120,19 @@ if (!isset($_SESSION['login'])) {
                                 if (!empty($valor_guia)) {
                                     $sql_update .= ", paciente_valor = '$valor_guia'";
                                 }
-                                if(!empty($data_remessa)) {
+                                if (!empty($data_remessa)) {
                                     $sql_update .= ", paciente_data_remessa = '$data_remessa'";
                                 }
-                                if(!empty($data_remessa)) {
+                                if (!empty($validade)) {
                                     $sql_update .= ", paciente_validade = '$validade'";
                                 }
-                                $sql_update .= " WHERE paciente_guia = '$numero_guia'";
+                                if (!empty($section)) {
+                                    $sql_update .= ", paciente_section = '$section'";
+                                }
+                                if (!empty($section)) {
+                                    $sql_update .= ", paciente_especialidade = '$especialidade'";
+                                }
+                                $sql_update .= " WHERE id = '$numero_guia'";
 
                                 if ($conn->query($sql_update) === TRUE) {
                                     echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
@@ -148,7 +156,7 @@ if (!isset($_SESSION['login'])) {
             document.addEventListener('DOMContentLoaded', () => {
                 const btnListar = document.getElementById('homeButton');
                 btnListar.addEventListener('click', () => {
-                    window.location.href = '../src/index.php';
+                    window.location.href = '../index.php';
                 });
             });
         </script>
