@@ -31,3 +31,20 @@ document.addEventListener("DOMContentLoaded", () => {
     modalRemover.show();
   });
 });
+
+document.getElementById('updateForm').addEventListener('submit', function(event) {
+  event.preventDefault(); 
+  var checkbox = document.getElementById('checkbox_guia');
+  var isChecked = checkbox.checked ? 1 : 0;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'atualizar_junho.php', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.send('checkbox_guia=' + isChecked);
+
+  xhr.onload = function() {
+    if (this.status == 200) {
+      console.log(this.responseText);
+    }
+  };
+});

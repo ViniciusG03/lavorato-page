@@ -77,6 +77,7 @@ if (!isset($_SESSION['login'])) {
                 exit();
             } else {
                 // Se não houver arquivo Excel, usa os dados do formulário
+                $section = $_POST["section"];
                 $numero_guia = $_POST["numero_guia"];
                 $status_guia = $_POST["status_guia"];
                 $correcao_guia = $_POST["correcao_guia"];
@@ -123,6 +124,9 @@ if (!isset($_SESSION['login'])) {
                                 }
                                 if(!empty($data_remessa)) {
                                     $sql_update .= ", paciente_validade = '$validade'";
+                                }
+                                if(!empty($section)) {
+                                    $sql_update .= ", paciente_secao = '$section'";
                                 }
                                 $sql_update .= " WHERE paciente_guia = '$numero_guia'";
 

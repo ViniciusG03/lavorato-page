@@ -1,6 +1,10 @@
 <?php
 session_start();
 $is_admin = isset($_SESSION['is_admin']) ? $_SESSION['is_admin'] : false;
+if (isset($_SESSION['login'])) {
+    header("Location: ../index.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>

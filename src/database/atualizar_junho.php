@@ -46,7 +46,6 @@ if (!isset($_SESSION['login'])) {
                 die("Erro na conexão: " . $conn->connect_error);
             }
 
-            // Verifica se um arquivo Excel foi enviado
             if (isset($_FILES['excelFile']) && $_FILES['excelFile']['size'] > 0) {
                 $fileName = $_FILES['excelFile']['tmp_name'];
                 $spreadsheet = IOFactory::load($fileName);
@@ -54,29 +53,77 @@ if (!isset($_SESSION['login'])) {
                 $data = $sheet->toArray();
 
                 foreach ($data as $row) {
-                    $id = $row[0];
-                    $numeroGuia = $row[1];
-                    $statusGuia = $row[2];
+                    $numeroGuia = $row[0];
+                    $statusGuia = $row[1];
+                    $valorGuia = $row[2];
+                    $numeroLote = $row[3];
+                    $dataRemessa = $row[4];
+                    // $quantidadeFaturada = $row[5];
+                    $mes = $_POST["mes"];
 
-                    // Prepare sua consulta SQL de atualização
-                    $sqlUpdate = "UPDATE pacientes SET paciente_status=?, paciente_guia=? WHERE id=?";
-                    $stmt = $conn->prepare($sqlUpdate);
+                    if (empty($statusGuia) && empty($valorGuia) && empty($numeroLote) && empty($dataRemessa) && empty($quantidadeFaturada)) {
+                        $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numeroGuia' AND paciente_mes = '$mes'";
+                        $result = $conn->query($sql);
 
-                    if ($stmt === false) {
-                        die('Prepare failed: ' . $conn->error);
+                        if ($result->num_rows == 0) {
+                            echo '<h1>NÚMERO NÃO ENCONTRADO!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+                            exit();
+                        }
+
+                        $sqlUpdate = "UPDATE pacientes SET paciente_faturado=? WHERE paciente_guia=? AND paciente_mes =?";
+                        $stmt = $conn->prepare($sqlUpdate);
+
+                        if ($stmt === false) {
+                            die('Prepare failed: ' . $conn->error);
+                        }
+
+                        $stmt->bind_param("sss", $quantidadeFaturada, $numeroGuia, $mes);
+
+                        if (!$stmt->execute()) {
+                            echo "Erro ao atualizar: " . $stmt->error;
+                        }
+                    } else if (empty($valor_guia) && empty($numeroLote) && empty($dataRemessa) && empty($quantidadeFaturada)) {
+                        $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numeroGuia' AND paciente_mes = '$mes'";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows == 0) {
+                            echo '<h1>NÚMERO NÃO ENCONTRADO!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+                            exit();
+                        }
+
+                        $sqlUpdate = "UPDATE pacientes SET paciente_status=? WHERE paciente_guia=? AND paciente_mes =?";
+                        $stmt = $conn->prepare($sqlUpdate);
+
+                        if ($stmt === false) {
+                            die('Prepare failed: ' . $conn->error);
+                        }
+
+                        $stmt->bind_param("sss", $statusGuia, $numeroGuia, $mes);
+
+                        if (!$stmt->execute()) {
+                            echo "Erro ao atualizar: " . $stmt->error;
+                        }
+                    } else {
+                        $sqlUpdate = "UPDATE pacientes SET paciente_status=?, paciente_valor=?, paciente_lote=?, paciente_data_remessa=?, paciente_faturado=? WHERE paciente_guia=? AND paciente_mes =?";
+                        $stmt = $conn->prepare($sqlUpdate);
+
+                        if ($stmt === false) {
+                            die('Prepare failed: ' . $conn->error);
+                        }
+
+                        $stmt->bind_param("sssssss", $statusGuia, $valorGuia, $numeroLote, $dataRemessa, $quantidadeFaturada, $numeroGuia, $mes);
+
+                        if (!$stmt->execute()) {
+                            echo "Erro ao atualizar: " . $stmt->error;
+                        }
                     }
 
-                    $stmt->bind_param("ss", $statusGuia, $numeroGuia);
 
-                    if (!$stmt->execute()) {
-                        echo "Erro ao atualizar: " . $stmt->error;
-                    }
                 }
 
                 echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
                 exit();
             } else {
-                // Se não houver arquivo Excel, usa os dados do formulário
                 $numero_guia = $_POST["numero_guia"];
                 $status_guia = $_POST["status_guia"];
                 $correcao_guia = $_POST["correcao_guia"];
@@ -88,57 +135,67 @@ if (!isset($_SESSION['login'])) {
                 $validade = $_POST["validade"];
                 $section = $_POST["section"];
                 $especialidade = $_POST["especialidade"];
+                $quantidadeFaturada = $_POST["qtd_faturada"];
+                $checkbox_guia = isset($_POST['checkbox_guia']) ? $_POST['checkbox_guia'] : 0;
+                $mes = $_POST["mes"];
 
                 if (empty($numero_guia) || empty($status_guia)) {
                     echo '<h1>Por favor, informe o <strong>ID</strong> do paciente e status!</h1><p>Clique em "Home" para voltar a página principal!</p>';
                 } else {
                     if ($entrada !== "" || $saida !== "" || $status_guia !== "" || $numero_lote !== "") {
-                        $sql = "SELECT * FROM pacientes WHERE id = '$numero_guia'";
+                        if ($checkbox_guia) {
+                            $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numero_guia' AND paciente_mes = '$mes'";
+                        } else {
+                            $sql = "SELECT * FROM pacientes WHERE id = '$numero_guia'";
+                        }
                         $result = $conn->query($sql);
-                        $sql_check = "SELECT * FROM pacientes WHERE paciente_lote = '$numero_lote' AND id != '$numero_guia'";
-                        $result_check = $conn->query($sql_check);
 
                         if ($result->num_rows == 0) {
-                            echo '<h1>ID não existe!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+                            echo '<h1>NÚMERO NÃO ENCONTRADO!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
                         } else {
-                            if ($result_check->num_rows > 0) {
-                                echo '<h1>Número de lote já existe!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
-                            } else {
-                                $sql_update = "UPDATE pacientes SET paciente_status = '$status_guia'";
-                                if (!empty($numero_lote)) {
-                                    $sql_update .= ", paciente_lote = '$numero_lote'";
-                                }
-                                if (!empty($entrada)) {
-                                    $sql_update .= ", paciente_entrada = '$entrada'";
-                                }
-                                if (!empty($saida)) {
-                                    $sql_update .= ", paciente_saida = '$saida'";
-                                }
-                                if (!empty($correcao_guia)) {
-                                    $sql_update .= ", paciente_guia = '$correcao_guia'";
-                                }
-                                if (!empty($valor_guia)) {
-                                    $sql_update .= ", paciente_valor = '$valor_guia'";
-                                }
-                                if (!empty($data_remessa)) {
-                                    $sql_update .= ", paciente_data_remessa = '$data_remessa'";
-                                }
-                                if (!empty($validade)) {
-                                    $sql_update .= ", paciente_validade = '$validade'";
-                                }
-                                if (!empty($section)) {
-                                    $sql_update .= ", paciente_section = '$section'";
-                                }
-                                if (!empty($section)) {
-                                    $sql_update .= ", paciente_especialidade = '$especialidade'";
-                                }
-                                $sql_update .= " WHERE id = '$numero_guia'";
+                            $sql_update = "UPDATE pacientes SET paciente_status = '$status_guia'";
+                            if (!empty($numero_lote)) {
+                                $sql_update .= ", SET paciente_lote = '$numero_lote'";
+                            }
+                            if (!empty($entrada)) {
+                                $sql_update .= ", SET paciente_entrada = '$entrada'";
+                            }
+                            if (!empty($saida)) {
+                                $sql_update .= ", paciente_saida = '$saida'";
+                            }
+                            if (!empty($correcao_guia)) {
+                                $sql_update .= ", paciente_guia = '$correcao_guia'";
+                            }
+                            if (!empty($valor_guia)) {
+                                $sql_update .= ", paciente_valor = '$valor_guia'";
+                            }
+                            if (!empty($data_remessa)) {
+                                $sql_update .= ", paciente_data_remessa = '$data_remessa'";
+                            }
+                            if (!empty($validade)) {
+                                $sql_update .= ", paciente_validade = '$validade'";
+                            }
+                            if (!empty($section)) {
+                                $sql_update .= ", paciente_section = '$section'";
+                            }
+                            if (!empty($especialidade)) {
+                                $sql_update .= ", paciente_especialidade = '$especialidade'";
+                            }
+                            if (!empty($quantidadeFaturada)) {
+                                $sql_update .= ", paciente_faturado = '$quantidadeFaturada'";
+                            }
 
-                                if ($conn->query($sql_update) === TRUE) {
-                                    echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
-                                } else {
-                                    echo "Erro ao atualizar: " . $conn->error;
-                                }
+                            if ($checkbox_guia) {
+                                $sql_update .= " WHERE paciente_guia = '$numero_guia'";
+                            } else {
+                                $sql_update .= " WHERE id = '$numero_guia'";
+                            }
+
+
+                            if ($conn->query($sql_update) === TRUE) {
+                                echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+                            } else {
+                                echo "Erro ao atualizar: " . $conn->error;
                             }
                         }
                     } else {

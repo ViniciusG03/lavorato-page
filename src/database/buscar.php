@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-    header("Location: ../src/login/login.php");
+    header("Location: ../login/login.php");
     exit();
 }
 ?>
@@ -36,20 +36,46 @@ if (!isset($_SESSION['login'])) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../src/index.php">Home</a>
+                        <a class="nav-link" href="../index.php">Home</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
+    <div class="container mt-4">
+        <form action="buscar.php" method="get" class="mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="busca" class="form-label">Buscar por:</label>
+                    <select id="busca" name="categoria" class="form-select">
+                        <option value="paciente_nome">Nome do Paciente</option>
+                        <option value="paciente_convenio">Convênio</option>
+                        <option value="paciente_guia">Número da Guia</option>
+                        <option value="paciente_status">Status</option>
+                        <option value="paciente_especialidade">Especialidade</option>
+                        <option value="paciente_mes">Mês</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="termo" class="form-label">Termo de busca:</label>
+                    <input type="text" id="termo" name="termo" class="form-control"
+                        placeholder="Digite o termo de busca" autocomplete="off">
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <h1 id="title">Resultados da Busca</h1>
     <div class="container">
         <?php
-        $servername = "localhost";
-        $username = "root";
-        $password = "lavorato@admin2024";
-        $database = "lavoratodb";
+        $servername = "mysql.lavoratoguias.kinghost.net";
+        $username = "lavoratoguias";
+        $password = "A3g7K2m9T5p8L4v6";
+        $database = "lavoratoguias";
 
         $conn = new mysqli($servername, $username, $password, $database);
 
@@ -116,6 +142,7 @@ if (!isset($_SESSION['login'])) {
                         echo "<th>Especialidade</th>";
                         echo "<th>Mês</th>";
                         echo "<th>Sessões</th>";
+                        echo "<th>Qtd. Faturada</th>";
                         echo "<th>Valor</th>";
                         echo "<th>Remessa</th>";
                         echo "<th>Validade</th>";
@@ -136,6 +163,7 @@ if (!isset($_SESSION['login'])) {
                             echo "<td>" . $row["paciente_especialidade"] . "</td>";
                             echo "<td>" . $row["paciente_mes"] . "</td>";
                             echo "<td>" . $row["paciente_section"] . "</td>";
+                            echo "<td>" . $row["paciente_faturado"] . "</td>";
                             echo "<td>" . $row["paciente_valor"] . "</td>";
                             echo "<td>" . $row["paciente_data_remessa"] . "</td>";
                             echo "<td>" . $row["paciente_validade"] . "</td>";

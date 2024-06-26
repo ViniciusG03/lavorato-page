@@ -8,10 +8,10 @@ if (!isset($_SESSION['login'])) {
 ?>
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "lavorato@admin2024";
-$database = "lavoratodb";
+$servername = "mysql.lavoratoguias.kinghost.net";
+$username = "lavoratoguias";
+$password = "A3g7K2m9T5p8L4v6";
+$database = "lavoratoguias";
 
 $conn = new mysqli($servername, $username, $password, $database);
 
@@ -107,6 +107,7 @@ $conn->close();
                         <th>Especialidade</th>
                         <th>Mês</th>
                         <th>Sessões</th>
+                        <th>Qtd. Faturada</th>
                         <th>Valor</th>
                         <th>Remessa</th>
                         <th>Validade</th>
@@ -129,6 +130,7 @@ $conn->close();
                             echo "<td>" . $row["paciente_especialidade"] . "</td>";
                             echo "<td>" . $row["paciente_mes"] . "</td>";
                             echo "<td>" . $row["paciente_section"] . "</td>";
+                            echo "<td>" . $row["paciente_faturado"] . "</td>";
                             echo "<td>" . $row["paciente_valor"] . "</td>";
                             echo "<td>" . $row["paciente_data_remessa"] . "</td>";
                             echo "<td>" . $row["paciente_validade"] . "</td>";
@@ -151,7 +153,7 @@ $conn->close();
         document.addEventListener('DOMContentLoaded', () => {
             const btnListar = document.getElementById('homeButton');
             btnListar.addEventListener('click', () => {
-                window.location.href = '../src/index.php';
+                window.location.href = '../index.php';
             });
         });
     </script>

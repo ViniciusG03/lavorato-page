@@ -6,10 +6,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         exit();
     }
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "lavorato@admin2024";
-    $database = "lavoratodb";
+    $servername = "mysql.lavoratoguias.kinghost.net";
+    $username = "lavoratoguias";
+    $password = "A3g7K2m9T5p8L4v6";
+    $database = "lavoratoguias";
 
     $conn = new mysqli($servername, $username, $password, $database);
 
@@ -19,18 +19,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         echo "<script language='javascript' type='text/javascript'>console.log('Conectado com sucesso');</script>";
     }
 
-    $numero_guia = $_POST['numero_guia'];
     $id_guia = $_POST['id_guia'];
 
-    if (empty($numero_guia) || empty($id_guia)) {
+    if (empty($id_guia)) {
         echo "<script language='javascript' type='text/javascript'>alert('Preencha todos os campos');window.location.href='../index.php';</script>";
         exit();
     } else {
-        $stmt = $conn->prepare("DELETE FROM pacientes WHERE id_guia = ? AND numero_guia = ?");
+        $stmt = $conn->prepare("DELETE FROM pacientes WHERE id = ?");
         if ($stmt === false) {
             die("Erro na preparação da consulta: " . $conn->error);
         }
-        $stmt->bind_param("ii", $id_guia, $numero_guia);
+        $stmt->bind_param("i", $id_guia);
         if (!$stmt->execute()) {
             echo "<script language='javascript' type='text/javascript'>alert('Erro ao remover: " . $stmt->error . "');window.location.href='../index.php';</script>";
             exit();

@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-  header("Location: ../src/login/login.php");
+  header("Location: ../login/login.php");
   exit();
 }
 ?>
@@ -14,8 +14,8 @@ if (!isset($_SESSION['login'])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lavorato</title>
-  <link rel="shortcut icon" href="../src/assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
-  <link rel="stylesheet" href="../src/stylesheet/style.css" />
+  <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
+  <link rel="stylesheet" href="../stylesheet/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -23,17 +23,10 @@ if (!isset($_SESSION['login'])) {
     rel="stylesheet" />
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
   <script src="bootstrap/js/bootstrap.min.js"></script>
-<<<<<<< Updated upstream
-  <link rel="stylesheet" href="../src/stylesheet/style.css" />
-  <script src="../src/scripts/index.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="../src/scripts/autocomplete.js"></script>
-=======
   <link rel="stylesheet" href="../stylesheet/style.css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="../scripts/autocomplete.js"></script>
   <script src="index.js"></script>
->>>>>>> Stashed changes
 </head>
 
 <body>
@@ -55,10 +48,10 @@ if (!isset($_SESSION['login'])) {
               <li><a class="dropdown-item" href="controle-page\controle.php">Controle</a></li>
               <?php
               if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
-                echo '<li><a class="dropdown-item" href="../src/login/cadastro.php">Cadastro</a></li>';
+                echo '<li><a class="dropdown-item" href="../login/cadastro.php">Cadastro</a></li>';
               }
               ?>
-              <li><a class="dropdown-item" href="../src/login/logout.php">Logout</a></li>
+              <li><a class="dropdown-item" href="../login/logout.php">Logout</a></li>
             </ul>
           </li>
         </ul>
@@ -67,7 +60,7 @@ if (!isset($_SESSION['login'])) {
   </nav>
   <div class="container">
     <div class="image-logo">
-      <img src="../src/assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
+      <img src="../assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
     </div>
     <div class="buttons">
       <button id="btn-cadastrar">Cadastrar</button>
@@ -81,7 +74,6 @@ if (!isset($_SESSION['login'])) {
       ?>
     </div>
   </div>
-  <!-- Modal para cadastro de guias -->
   <div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -90,7 +82,7 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="../src/database/cadastrar.php" method="post">
+          <form action="../database/cadastrar.php" method="post">
             <div class="row">
               <div class="mb-3">
                 <label for="nome" class="form-label">Nome:</label>
@@ -188,43 +180,23 @@ if (!isset($_SESSION['login'])) {
 
   <div class="modal fade" id="modalAtualizacao" tabindex="-1" aria-labelledby="modalAtualizacaoLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modalAtualizacaoLabel">Atualização de Guias!</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-<<<<<<< Updated upstream
-          <form id="updateForm" action="../src/database/atualizar.php" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-              <label for="numero_guia" class="form-label">Número da Guia:</label>
-              <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
-            </div>
-            <div class="mb-3">
-              <label for="correcao_guia" class="form-label">Correção da Guia:</label>
-              <input type="text" id="correcao_guia" name="correcao_guia" class="form-control" autocomplete="off" />
-            </div>
-            <div class="mb-3">
-              <label for="status_guia" class="form-label">Status:</label>
-              <input type="text" id="status_guia" name="status_guia" list="statusGuia" class="form-control"
-                autocomplete="off" />
-              <datalist id="statusGuia">
-                <option>Solicitado</option>
-                <option>Emitido</option>
-                <option>Descida</option>
-                <option>Assinado</option>
-                <option>Faturado</option>
-              </datalist>
-=======
           <form id="updateForm" action="../database/atualizar.php" method="post" enctype="multipart/form-data">
             <div class="row mb-3">
               <div class="col-md-6 mb-3">
-                <label for="numero_guia" class="form-label">ID do Paciente:</label>
+                <label for="numero_guia" class="form-label">ID:</label>
                 <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
+                <label for="checkbox_guia" class="form-label">Usar numeração da guia:</label>
+                <input type="checkbox" id="checkbox_guia" name="checkbox_guia"/>
               </div>
               <div class="col-md-6 mb-3">
-                <label for="correcao_guia" class="form-label">Correção da Guia:</label>
+                <label for="correcao_guia" class="form-label">Corrigir número da guia:</label>
                 <input type="text" id="correcao_guia" name="correcao_guia" class="form-control" autocomplete="off" />
               </div>
               <div class="col-md-6 mb-3">
@@ -244,6 +216,10 @@ if (!isset($_SESSION['login'])) {
                 <input type="text" id="valor_guia" name="valor_guia" class="form-control" autocomplete="off" />
               </div>
               <div class="col-md-6 mb-3">
+                <label for="qtd_faturada" class="form-label">Quantidade faturada:</label>
+                <input type="text" id="qtd_faturada" name="qtd_faturada" class="form-control" autocomplete="off" />
+              </div>
+              <div class="col-md-6 mb-3">
                 <label for="validade" class="form-label">Data da Remessa:</label>
                 <input type="text" id="data_remessa" name="data_remessa" class="form-control" autocomplete="off" />
               </div>
@@ -255,7 +231,7 @@ if (!isset($_SESSION['login'])) {
                 <label for="section" class="form-label">Seção:</label>
                 <input type="text" id="section" name="section" class="form-control" autocomplete="off" />
               </div>
-              <div class="col-md-6 mb-3">
+              <div class="mb-3">
                 <label for="especialidade" class="form-label">Especialidade:</label>
                 <input type="text" id="especialidade" name="especialidade" class="form-control" list="EspecList"
                   autocomplete="off" />
@@ -280,17 +256,34 @@ if (!isset($_SESSION['login'])) {
                   <option>TRATAMENTO SERIADO</option>
                 </datalist>
               </div>
->>>>>>> Stashed changes
             </div>
             <div class="mb-3">
               <label for="excelFile" class="form-label">Importar arquivo Excel:</label>
               <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls" class="form-control" />
             </div>
-            <div class="mb-3">
+            <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="mes" class="form-label">Mês de atualização:</label>
+              <input type="text" id="mes" name="mes" list="mesList" class="form-control" autocomplete="off" />
+              <datalist id="mesList">
+                <option>Janeiro</option>
+                <option>Fevereiro</option>
+                <option>Março</option>
+                <option>Abril</option>
+                <option>Maio</option>
+                <option>Junho</option>
+                <option>Julho</option>
+                <option>Agosto</option>
+                <option>Setembro</option>
+                <option>Outubro</option>
+                <option>Novembro</option>
+                <option>Dezembro</option>
+              </datalist>
+            </div>
+            <div class="col-md-6">
               <label for="numero_lote" class="form-label">Número do lote:</label>
               <input type="text" id="numero_lote" name="numero_lote" class="form-control" autocomplete="off" />
             </div>
-            <div class="row mb-3">
               <div class="col-md-6">
                 <label for="entrada" class="form-label">Entrada:</label>
                 <input type="text" id="entrada" name="entrada" class="form-control" autocomplete="off" />
@@ -318,7 +311,7 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="../src/database/relatorio.php" method="post">
+          <form action="../database/relatorio.php" method="post">
             <div class="mb-3">
               <label for="data" class="form-label">Data:</label>
               <input type="date" id="data" name="data" class="form-control">
@@ -430,11 +423,7 @@ if (!isset($_SESSION['login'])) {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="../src/database/remover.php" method="post">
-            <div class="mb-3">
-              <label for="numero_guia" class="form-label">Número da Guia:</label>
-              <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
-            </div>
+          <form action="../database/remover.php" method="post">
             <div class="mb-3">
               <label for="id_guia" class="form-label">ID da Guia:</label>
               <input type="text" id="id_guia" name="id_guia" class="form-control" autocomplete="off" />
@@ -452,7 +441,7 @@ if (!isset($_SESSION['login'])) {
   <script>
     const btnListar = document.getElementById("btn-listar");
     btnListar.addEventListener("click", () => {
-      window.location.href = "../src/database/listar.php";
+      window.location.href = "../database/listar.php";
     });
 
     var idleTime = 0;
@@ -465,7 +454,7 @@ if (!isset($_SESSION['login'])) {
     function timerIncrement() {
       idleTime++;
       if (idleTime >= 15) { // 15 minutos
-        window.location.href = "../src/login/logout.php";
+        window.location.href = "../login/logout.php";
       }
     }
   </script>
