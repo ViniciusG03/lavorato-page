@@ -10,3 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inserir'])) {
 }
 
 ?>
+
+Arthur andrade frança
+18- 2Mus, 2psicomot, 2teo
+19- 1Psi 2Fono 1Ped 
