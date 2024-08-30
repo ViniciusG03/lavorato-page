@@ -56,96 +56,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inserir'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['leitorXML'])) {
-    $xml = simplexml_load_file('LOTE_240805.xml', 'SimpleXMLElement', LIBXML_NOCDATA);
+    $xml = simplexml_load_file('LOTE_240804.xml');
 
-    // Criar uma nova planilha
+    // Definir o namespace
+    $namespaces = $xml->getNamespaces(true);
+    $xml->registerXPathNamespace('ans', $namespaces['ans']);
+
+    // Encontrar todas as tags <ans:senha> e extrair seus valores
+    $senhas = $xml->xpath('//ans:senha');
+
+    // Criar um novo Spreadsheet
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setCellValue('A1', 'Senha');
 
-    // Configurar cabeçalhos da planilha
-    $cabecalhos = [
-        'Tipo Transação',
-        'Sequencial Transação',
-        'Data Registro Transação',
-        'Hora Registro Transação',
-        'Código Prestador',
-        'Registro ANS',
-        'Número Lote',
-        'Número Guia Operadora',
-        'Data Autorização',
-        'Senha',
-        'Data Validade Senha',
-        'Número Carteira',
-        'Atendimento RN',
-        'CNPJ Contratado',
-        'Nome Contratado',
-        'CNES',
-        'Sequencial Item',
-        'Data Execução',
-        'Código Tabela',
-        'Código Procedimento',
-        'Descrição Procedimento',
-        'Quantidade Executada',
-        'Valor Unitário',
-        'Valor Total',
-        'CPF Profissional',
-        'Nome Profissional',
-        'Conselho',
-        'Número Conselho Profissional',
-        'UF',
-        'CBOS'
-    ];
-
-    $col = 1;
-    foreach ($cabecalhos as $cabecalho) {
-        $sheet->setCellValue([$col++, 1], $cabecalho);
+    // Adicionar todas as senhas ao Spreadsheet
+    $rowNumber = 2;
+    foreach ($senhas as $senha) {
+        $sheet->setCellValue('A' . $rowNumber, (string) $senha);
+        $rowNumber++;
     }
 
-    // Preencher a planilha com dados do XML
-    $row = 2; // Inicia na segunda linha
-
-    foreach ($xml->xpath('//ans:guiaSP-SADT') as $guia) {
-        $col = 1;
-        $sheet->setCellValue([$col++, $row], (string) $xml->xpath('//ans:tipoTransacao')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $xml->xpath('//ans:sequencialTransacao')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $xml->xpath('//ans:dataRegistroTransacao')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $xml->xpath('//ans:horaRegistroTransacao')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $xml->xpath('//ans:codigoPrestadorNaOperadora')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $guia->xpath('.//ans:registroANS')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $xml->xpath('//ans:numeroLote')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $guia->xpath('.//ans:numeroGuiaOperadora')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $guia->xpath('.//ans:dataAutorizacao')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $guia->xpath('.//ans:senha')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $guia->xpath('.//ans:dataValidadeSenha')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $guia->xpath('.//ans:numeroCarteira')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $guia->xpath('.//ans:atendimentoRN')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $guia->xpath('.//ans:cnpjContratado')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $guia->xpath('.//ans:nomeContratado')[0]);
-        $sheet->setCellValue([$col++, $row], (string) $guia->xpath('.//ans:CNES')[0]);
-
-        foreach ($guia->xpath('.//ans:procedimentoExecutado') as $procedimento) {
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:sequencialItem')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:dataExecucao')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:codigoTabela')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:codigoProcedimento')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:descricaoProcedimento')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:quantidadeExecutada')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:valorUnitario')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:valorTotal')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:cpfContratado')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:nomeProf')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:conselho')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:numeroConselhoProfissional')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:UF')[0]);
-            $sheet->setCellValue([$col++, $row], (string) $procedimento->xpath('.//ans:CBOS')[0]);
-
-            $row++; // Mover para a próxima linha para o próximo procedimento
-        }
-    }
-
-    // Salvar o arquivo Excel
+    // Salvar o Spreadsheet em um arquivo Excel
     $writer = new Xlsx($spreadsheet);
-    $writer->save('saida.xlsx');
+    $writer->save('senhas.xlsx');
+
+    echo "Arquivo Excel criado com sucesso!";
 }
+
 
 ?>
