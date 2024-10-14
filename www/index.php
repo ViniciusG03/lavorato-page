@@ -303,6 +303,7 @@ if (!isset($_SESSION['login'])) {
     </div>
   </div>
 
+  <!-- Modal relatorio -->
   <div class="modal fade" id="modalRelatorio" tabindex="-1" aria-labelledby="modalRelatorioLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
@@ -361,15 +362,31 @@ if (!isset($_SESSION['login'])) {
               <select id="convenio" name="convenio" class="form-select">
                 <option value="todos">TODOS OS CONVÊNIOS</option>
                 <option value="CASSI">CASSI</option>
+                <option value="TRF">TRF</option>
+                <option value="SERPRO">SERPRO</option>
+                <option value="TST">TST</option>
+                <option value="POSTAL SAUDE">POSTAL SAUDE</option>
+                <option value="TJDFT">TJDFT</option>
+                <option value="PARTICULAR">PARTICULAR</option>
                 <option value="FUSEX">FUSEX</option>
                 <option value="CBMDF">CBMDF</option>
-                <option value="ASMEPRO">ASMEPRO</option>
-                <option value="ASMCH">ASMCH</option>
-                <option value="AMHPDF">AMHPDF</option>
-                <option value="AMAI">AMAI</option>
+                <option value="CAIXA">FUSEX</option>
+                <option value="SIS SENADO">SIS SENADO</option>
+                <option value="PLAN ASSISTE">PLAN ASSISTE</option>
+                <option value="FASCAL">FASCAL</option>
+                <option value="BACEN">BACEN</option>
+                <option value="STM">STM</option>
+                <option value="E-VIDA">E-VIDA</option>
                 <option value="BRB">BRB</option>
-                <option value="BRBSAUDE">BRBSAUDE</option>
-                <option value="FUSEX(PNE)">FUSEX(PNE)</option>
+                <option value="UNIVIDA">UNIVIDA</option>
+                <option value="PORTO">PORTO</option>
+                <option value="CASEMBRAPA">CASEMBRAPA</option>
+                <option value="TRT">TRT</option>
+                <option value="GEAP">GEAP</option>
+                <option value="OMINT">OMINT</option>
+                <option value="STF">STF</option>
+                <option value="BRADESCO">BRADESCO</option>
+                <option value="CAMARA DOS DEPUTADOS">CAMARA DOS DEPUTADOS</option>
               </select>
             </div>
             <div class="mb-3">
@@ -393,16 +410,32 @@ if (!isset($_SESSION['login'])) {
             <div class="mb-3">
               <label for="excluir_convenio" class="form-label">Convênios para Excluir:</label>
               <select id="excluir_convenio" name="excluir_convenio[]" class="form-select" multiple>
-                <option value="CASSI">CASSI</option>
+              <option value="CASSI">CASSI</option>
+                <option value="TRF">TRF</option>
+                <option value="SERPRO">SERPRO</option>
+                <option value="TST">TST</option>
+                <option value="POSTAL SAUDE">POSTAL SAUDE</option>
+                <option value="TJDFT">TJDFT</option>
+                <option value="PARTICULAR">PARTICULAR</option>
                 <option value="FUSEX">FUSEX</option>
                 <option value="CBMDF">CBMDF</option>
-                <option value="ASMEPRO">ASMEPRO</option>
-                <option value="ASMCH">ASMCH</option>
-                <option value="AMHPDF">AMHPDF</option>
-                <option value="AMAI">AMAI</option>
+                <option value="CAIXA">FUSEX</option>
+                <option value="SIS SENADO">SIS SENADO</option>
+                <option value="PLAN ASSISTE">PLAN ASSISTE</option>
+                <option value="FASCAL">FASCAL</option>
+                <option value="BACEN">BACEN</option>
+                <option value="STM">STM</option>
+                <option value="E-VIDA">E-VIDA</option>
                 <option value="BRB">BRB</option>
-                <option value="BRBSAUDE">BRBSAUDE</option>
-                <option value="FUSEX(PNE)">FUSEX(PNE)</option>
+                <option value="UNIVIDA">UNIVIDA</option>
+                <option value="PORTO">PORTO</option>
+                <option value="CASEMBRAPA">CASEMBRAPA</option>
+                <option value="TRT">TRT</option>
+                <option value="GEAP">GEAP</option>
+                <option value="OMINT">OMINT</option>
+                <option value="STF">STF</option>
+                <option value="BRADESCO">BRADESCO</option>
+                <option value="CAMARA DOS DEPUTADOS">CAMARA DOS DEPUTADOS</option>
               </select>
             </div>
             <div class="modal-footer">

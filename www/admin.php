@@ -50,13 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inserir'])) {
             ':paciente_especialidade' => $row['paciente_especialidade'] ?? null,
             ':paciente_section' => $row['paciente_section'] ?? null,
             ':paciente_entrada' => $row['paciente_entrada'] ?? null,
-            ':paciente_mes' => 'Setembro'
+            ':paciente_mes' => 'Outubro'
         ]);
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['leitorXML'])) {
-    $xml = simplexml_load_file('LOTE_240804.xml');
+    $xml = simplexml_load_file('LOTE_240904.xml');
 
     // Definir o namespace
     $namespaces = $xml->getNamespaces(true);
