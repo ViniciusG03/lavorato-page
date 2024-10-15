@@ -62,24 +62,88 @@ p{
     color: var(--main-color-btn);
 }
 
-table {
-    border-collapse: collapse;
-    width: 100%;
-    border: 1px solid black; 
-    margin: 0 auto; 
+:root {
+    --main-bg-color: #b9d7d9;
+    --main-color-btn: #00b3ffde;
+    --main-nav-color: #00b3ffde;
 }
 
-th, td {
-    border: 1px solid black;
-    padding: 8px;
+* {
+  margin: 0;
+  padding: 0;   
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-color: var(--main-bg-color);
+    overflow-y: auto;
+}
+
+h1, p {
     text-align: center;
 }
-
-th {
-    background-color: var(--main-color-btn);
+  
+h1 {
     color: white;
 }
 
-td {
-    background-color: #f9f9f9;
+p{
+    color: gray;
 }
+
+.nav {
+    display: flex;
+    width: 100%;
+    background-color: var(--main-nav-color);
+    font-size: 14px;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.nav h1 {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+#homeButton {
+    width: 100px;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: 500;
+    border: none;
+    background-color: var(--main-color-btn);
+    cursor: pointer;
+    color: white;
+}
+
+#title {
+    text-align: center; 
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: var(--main-color-btn);
+}
+
+.container table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    border: 1px solid black !important;
+    margin: 0 auto !important; 
+}
+
+.container th, .container td {
+    border: 1px solid black !important;
+    padding: 8px !important;
+    text-align: center !important;
+}
+
+.container th {
+    background-color: var(--main-color-btn) !important;
+    color: white !important;
+}
+
+.container td {
+    background-color: #f9f9f9 !important;
+}
+
+

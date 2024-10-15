@@ -15,7 +15,20 @@ $database = "lavoratoguias";
 
 $conn = new mysqli($servername, $username, $password, $database);
 
-$sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes";
+$sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes 
+ORDER BY CASE WHEN paciente_mes = 'Janeiro' THEN 1
+WHEN paciente_mes = 'Fevereiro' THEN 2
+WHEN paciente_mes = 'Março' THEN 3
+WHEN paciente_mes = 'Abril' THEN 4
+WHEN paciente_mes = 'Maio' THEN 5
+WHEN paciente_mes = 'Junho' THEN 6
+WHEN paciente_mes = 'Julho' THEN 7
+WHEN paciente_mes = 'Agosto' THEN 8
+WHEN paciente_mes = 'Setembro' THEN 9
+WHEN paciente_mes = 'Outubro' THEN 10
+WHEN paciente_mes = 'Novembro' THEN 11
+WHEN paciente_mes = 'Dezembro' THEN 12
+ELSE 13 END;";
 $result = $conn->query($sql);
 
 if ($result === false) {

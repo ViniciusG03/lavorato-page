@@ -362,6 +362,7 @@ if (!isset($_SESSION['login'])) {
               <select id="convenio" name="convenio" class="form-select">
                 <option value="todos">TODOS OS CONVÊNIOS</option>
                 <option value="CASSI">CASSI</option>
+                <option value="CAIXA">CAIXA</option>
                 <option value="TRF">TRF</option>
                 <option value="SERPRO">SERPRO</option>
                 <option value="TST">TST</option>
@@ -410,7 +411,8 @@ if (!isset($_SESSION['login'])) {
             <div class="mb-3">
               <label for="excluir_convenio" class="form-label">Convênios para Excluir:</label>
               <select id="excluir_convenio" name="excluir_convenio[]" class="form-select" multiple>
-              <option value="CASSI">CASSI</option>
+                <option value="CASSI">CASSI</option>
+                <option value="CAIXA">CAIXA</option>
                 <option value="TRF">TRF</option>
                 <option value="SERPRO">SERPRO</option>
                 <option value="TST">TST</option>
