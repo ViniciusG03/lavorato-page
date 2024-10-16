@@ -42,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $tituloRelatorio = "<h1>Relatório</h1>";
     $subtituloRelatorio = "<h3>Data: $dataFormatada</h3>";
+    $horaDeGeração = date('H:i:s');
 
     $servername = "mysql.lavoratoguias.kinghost.net";
     $username = "lavoratoguias";
@@ -183,7 +184,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </head>
             <body>
                 <h1>$tituloRelatorio</h1>
-                <h3>$subtituloRelatorio</h3>
+                <h2>$subtituloRelatorio Gerado em: $horaDeGeração</h2>
                 $tabelaHTML
             </body>
             </html>";

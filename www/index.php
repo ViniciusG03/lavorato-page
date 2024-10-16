@@ -371,7 +371,7 @@ if (!isset($_SESSION['login'])) {
                 <option value="PARTICULAR">PARTICULAR</option>
                 <option value="FUSEX">FUSEX</option>
                 <option value="CBMDF">CBMDF</option>
-                <option value="CAIXA">FUSEX</option>
+                <option value="CAIXA">CAIXA</option>
                 <option value="SIS SENADO">SIS SENADO</option>
                 <option value="PLAN ASSISTE">PLAN ASSISTE</option>
                 <option value="FASCAL">FASCAL</option>
@@ -421,7 +421,7 @@ if (!isset($_SESSION['login'])) {
                 <option value="PARTICULAR">PARTICULAR</option>
                 <option value="FUSEX">FUSEX</option>
                 <option value="CBMDF">CBMDF</option>
-                <option value="CAIXA">FUSEX</option>
+                <option value="CAIXA">CAIXA</option>
                 <option value="SIS SENADO">SIS SENADO</option>
                 <option value="PLAN ASSISTE">PLAN ASSISTE</option>
                 <option value="FASCAL">FASCAL</option>
