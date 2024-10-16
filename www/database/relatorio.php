@@ -82,6 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql .= " AND paciente_convenio NOT IN ($excluirConveniosStr)";
     }
 
+    $sql .= " ORDER BY paciente_nome";
+
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
