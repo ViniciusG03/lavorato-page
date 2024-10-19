@@ -52,6 +52,7 @@ if (!isset($_SESSION['login'])) {
               }
               ?>
               <li><a class="dropdown-item" href="../login/logout.php">Logout</a></li>
+              <li><a class="dropdown-item" href="views/atas.php">ATAS</a></li>
             </ul>
           </li>
         </ul>
