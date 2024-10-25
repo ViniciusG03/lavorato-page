@@ -3,19 +3,11 @@ require '../vendor/autoload.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use setasign\Fpdi\Fpdi;
 
 // Configurações do Dompdf para permitir carregamento remoto (se necessário)
 $options = new Options();
 $options->set('isRemoteEnabled', true);
-
-// Crie uma instância do Dompdf
-$dompdf = new Dompdf($options);
-
-// Definir o locale para Português Brasileiro
-setlocale(LC_TIME, 'pt_BR.UTF-8', 'Portuguese_Brazil');
-
-// Obter o mês atual no formato "Mês de Ano" (ex: "Outubro de 2024")
-$mesAtual = strftime('%B de %Y'); // Exemplo: "Outubro de 2024"
 
 // Função para gerar número de identificação aleatório começando com "P"
 function gerarNumeroIdentificacao() {
@@ -29,6 +21,48 @@ function imagemParaBase64($imagemCaminho) {
     return 'data:image/' . $imagemTipo . ';base64,' . base64_encode($imagemDados);
 }
 
+// Função para gerar e salvar um PDF temporário
+function gerarPdfTemporario($html, $filePath) {
+    $options = new Options();
+    $options->set('isRemoteEnabled', true);
+    $dompdf = new Dompdf($options);
+
+    // Carregar o HTML no Dompdf
+    $dompdf->loadHtml($html);
+    
+    // Definir o tamanho do papel e a orientação
+    $dompdf->setPaper('A4', 'portrait');
+
+    // Renderizar o PDF
+    $dompdf->render();
+
+    // Salvar o PDF gerado em um arquivo temporário
+    file_put_contents($filePath, $dompdf->output());
+}
+
+// Função para mesclar os PDFs temporários em um único arquivo
+function mesclarPdfs($pdfFiles, $outputPath) {
+    $pdf = new Fpdi();
+    
+    foreach ($pdfFiles as $file) {
+        $pageCount = $pdf->setSourceFile($file);
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $tplIdx = $pdf->importPage($i);
+            $pdf->AddPage();
+            $pdf->useTemplate($tplIdx);
+        }
+    }
+
+    // Salvar o PDF mesclado
+    $pdf->Output($outputPath, 'F');
+}
+
+// Definir o locale para Português Brasileiro
+setlocale(LC_TIME, 'pt_BR.UTF-8', 'Portuguese_Brazil');
+
+// Obter o mês atual no formato "Mês de Ano" (ex: "Outubro de 2024")
+$mesAtual = strftime('%B de %Y');
+
 // Conectar ao banco de dados (exemplo de conexão MySQL)
 $host = 'mysql.lavoratoguias.kinghost.net';
 $dbname = 'lavoratoguias';
@@ -39,42 +73,42 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Query para buscar apenas o último registro de cada especialidade com base no maior ID
+    // Query para buscar todos os pacientes com convenio "Fusex" e o último registro de cada especialidade por paciente
     $sql = "
     SELECT t1.paciente_nome, t1.paciente_especialidade
     FROM pacientes t1
     INNER JOIN (
-        SELECT MAX(id) as ultimo_id, paciente_especialidade
+        SELECT MAX(id) as ultimo_id, paciente_nome, paciente_especialidade
         FROM pacientes
-        WHERE paciente_nome = :nome
-        GROUP BY paciente_especialidade
+        WHERE paciente_convenio = 'Fusex'
+        AND (paciente_saida IS NULL OR paciente_saida = '')
+        AND paciente_status NOT IN ('Saiu', 'Cancelado')
+        GROUP BY paciente_nome, paciente_especialidade
     ) t2 ON t1.id = t2.ultimo_id";
-    
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['nome' => 'LEVI NOGUEIRA MATOS']); // Nome do paciente, pode ser dinâmico
 
-    // Fetch todos os dados do último registro de cada especialidade
-    $pacienteData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $pdo->query($sql);
+    $pacientesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Verifique se encontrou algum resultado
-    if (count($pacienteData) === 0) {
-        throw new Exception("Nenhuma especialidade encontrada para o paciente.");
+    if (count($pacientesData) === 0) {
+        throw new Exception("Nenhum paciente encontrado.");
     }
 
     // Converter a imagem para base64
     $imagemLogoBase64 = imagemParaBase64('logo.jpeg'); // Caminho para a logo
 
-    // Variável para acumular todo o conteúdo HTML
-    $html = '';
+    // Array para armazenar os caminhos dos arquivos temporários de PDF
+    $pdfFiles = [];
 
-    foreach ($pacienteData as $paciente) {
+    // Loop para gerar PDFs temporários
+    foreach ($pacientesData as $index => $paciente) {
+        $filePath = "temp_pdf_$index.pdf"; // Cria um novo arquivo temporário para cada ficha
         $nomePaciente = $paciente['paciente_nome'];
         $especialidade = $paciente['paciente_especialidade'];
         $numeroIdentificacao = gerarNumeroIdentificacao(); // Gerar número de identificação
 
-        // Acumular o HTML de cada ficha com uma quebra de página
-        $html .= '
-        <div style="page-break-after: always;">
+        // HTML de cada ficha individualmente
+        $html = '
         <!DOCTYPE html>
         <html lang="pt-BR">
         <head>
@@ -94,7 +128,7 @@ try {
                     margin-bottom: 10px;
                 }
                 .header img {
-                    width: 100px;
+                    width: 50px;
                     height: auto;
                 }
                 .header h1 {
@@ -132,7 +166,7 @@ try {
         </head>
         <body>
             <div class="header">
-                <img src="' . $imagemLogoBase64 . '" alt="Logo"> <!-- Imagem em base64 -->
+                <img src="' . $imagemLogoBase64 . '" alt="Logo">
                 <h1>FICHA DE ASSINATURA</h1>
                 <div class="identificacao">ID: ' . $numeroIdentificacao . '</div>
             </div>
@@ -158,8 +192,8 @@ try {
                     </tr>
                 </thead>
                 <tbody>';
-        
-        // Gerar as linhas da tabela (você pode adicionar dados específicos aqui)
+
+        // Gerar as linhas da tabela
         for ($i = 1; $i <= 30; $i++) {
             $html .= '<tr>
                 <td>' . $i . '</td>
@@ -172,21 +206,26 @@ try {
                 </tbody>
             </table>
         </body>
-        </html>
-        </div>'; // Fim da ficha e marca de quebra de página
+        </html>';
+
+        // Gerar o PDF temporário para cada ficha
+        gerarPdfTemporario($html, $filePath);
+        $pdfFiles[] = $filePath;
     }
 
-    // Carregar todo o conteúdo HTML no Dompdf
-    $dompdf->loadHtml($html);
+    // Mesclar os PDFs temporários em um único arquivo final
+    $outputPath = 'Fichas_Assinatura_Todos_Pacientes.pdf';
+    mesclarPdfs($pdfFiles, $outputPath);
 
-    // Definir o tamanho do papel e orientação
-    $dompdf->setPaper('A4', 'portrait');
+    // Enviar o PDF final mesclado para o navegador
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: inline; filename="' . $outputPath . '"');
+    readfile($outputPath);
 
-    // Renderizar o PDF
-    $dompdf->render();
-
-    // Enviar o PDF para o navegador como um único arquivo com várias páginas
-    $dompdf->stream("Ficha_Assinatura_Paciente.pdf", ["Attachment" => false]);
+    // Limpar arquivos temporários
+    foreach ($pdfFiles as $file) {
+        unlink($file);
+    }
 
 } catch (Exception $e) {
     echo "Erro: " . $e->getMessage();
