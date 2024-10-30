@@ -53,6 +53,7 @@ if (!isset($_SESSION['login'])) {
               ?>
               <li><a class="dropdown-item" href="../login/logout.php">Logout</a></li>
               <li><a class="dropdown-item" href="views/atas.php">ATAS</a></li>
+              <li><a class="dropdown-item" href="views/relatorios.php">Relatorios</a></li>
             </ul>
           </li>
         </ul>
@@ -119,21 +120,21 @@ if (!isset($_SESSION['login'])) {
                 <input id="especialidade" name="especialidade" list="listEspec" class="form-control" autocomplete="off">
                 <datalist id="listEspec">
                   <option>AVALIACAO NEUROPSICOLOGICA</option>
-                  <option>SESSÃO DE ARTETERAPIA</option>
-                  <option>SESSÃO DE EQUOTERAPIA</option>
-                  <option>SESSÃO DE FISIOTERAPIA</option>
-                  <option>SESSÃO DE FONOAUDIOLOGIA</option>
-                  <option>SESSÃO DE FONOAUDIOLOGIA EM GRUPO</option>
-                  <option>SESSÃO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
-                  <option>SESSÃO DE MUSICOTERAPIA</option>
-                  <option>SESSÃO DE NUTRIÇÃO</option>
-                  <option>SESSÃO DE PSICOLOGIA DE CASAL</option>
-                  <option>SESSÃO DE PSICOMOTRICIDADE</option>
-                  <option>SESSÃO DE PSICOPEDAGOGIA</option>
-                  <option>SESSÃO DE PSICOTERAPIA</option>
-                  <option>SESSÃO DE TERAPIA COMPORTAMENTAL APLICADA</option>
-                  <option>SESSÃO DE TERAPIA OCUPACIONAL</option>
-                  <option>SESSÃO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                  <option>SESSAO DE ARTETERAPIA</option>
+                  <option>SESSAO DE EQUOTERAPIA</option>
+                  <option>SESSAO DE FISIOTERAPIA</option>
+                  <option>SESSAO DE FONOAUDIOLOGIA</option>
+                  <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
+                  <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                  <option>SESSAO DE MUSICOTERAPIA</option>
+                  <option>SESSAO DE NUTRIÇÃO</option>
+                  <option>SESSAO DE PSICOLOGIA DE CASAL</option>
+                  <option>SESSAO DE PSICOMOTRICIDADE</option>
+                  <option>SESSAO DE PSICOPEDAGOGIA</option>
+                  <option>SESSAO DE PSICOTERAPIA</option>
+                  <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                  <option>SESSAO DE TERAPIA OCUPACIONAL</option>
+                  <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
                   <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
                   <option>TRATAMENTO SERIADO</option>
                 </datalist>
@@ -237,22 +238,22 @@ if (!isset($_SESSION['login'])) {
                 <input type="text" id="especialidade" name="especialidade" class="form-control" list="EspecList"
                   autocomplete="off" />
                 <datalist id="EspecList">
-                  <option>AVALIACAO NEUROPSICOLOGICA</option>
-                  <option>SESSÃO DE ARTETERAPIA</option>
-                  <option>SESSÃO DE EQUOTERAPIA</option>
-                  <option>SESSÃO DE FISIOTERAPIA</option>
-                  <option>SESSÃO DE FONOAUDIOLOGIA</option>
-                  <option>SESSÃO DE FONOAUDIOLOGIA EM GRUPO</option>
-                  <option>SESSÃO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
-                  <option>SESSÃO DE MUSICOTERAPIA</option>
-                  <option>SESSÃO DE NUTRIÇÃO</option>
-                  <option>SESSÃO DE PSICOLOGIA DE CASAL</option>
-                  <option>SESSÃO DE PSICOMOTRICIDADE</option>
-                  <option>SESSÃO DE PSICOPEDAGOGIA</option>
-                  <option>SESSÃO DE PSICOTERAPIA</option>
-                  <option>SESSÃO DE TERAPIA COMPORTAMENTAL APLICADA</option>
-                  <option>SESSÃO DE TERAPIA OCUPACIONAL</option>
-                  <option>SESSÃO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                <option>AVALIACAO NEUROPSICOLOGICA</option>
+                  <option>SESSAO DE ARTETERAPIA</option>
+                  <option>SESSAO DE EQUOTERAPIA</option>
+                  <option>SESSAO DE FISIOTERAPIA</option>
+                  <option>SESSAO DE FONOAUDIOLOGIA</option>
+                  <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
+                  <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                  <option>SESSAO DE MUSICOTERAPIA</option>
+                  <option>SESSAO DE NUTRIÇÃO</option>
+                  <option>SESSAO DE PSICOLOGIA DE CASAL</option>
+                  <option>SESSAO DE PSICOMOTRICIDADE</option>
+                  <option>SESSAO DE PSICOPEDAGOGIA</option>
+                  <option>SESSAO DE PSICOTERAPIA</option>
+                  <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                  <option>SESSAO DE TERAPIA OCUPACIONAL</option>
+                  <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
                   <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
                   <option>TRATAMENTO SERIADO</option>
                 </datalist>
@@ -337,25 +338,25 @@ if (!isset($_SESSION['login'])) {
             <div class="mb-3">
               <label for="especialidade" class="form-label">Especialidade:</label>
               <select id="especialidade" name="especialidade" class="form-select">
-                <option value="todas">Todas as Especialidades</option>
-                <option>AVALIACAO NEUROPSICOLOGICA</option>
-                <option>SESSÃO DE ARTETERAPIA</option>
-                <option>SESSÃO DE EQUOTERAPIA</option>
-                <option>SESSÃO DE FISIOTERAPIA</option>
-                <option>SESSÃO DE FONOAUDIOLOGIA</option>
-                <option>SESSÃO DE FONOAUDIOLOGIA EM GRUPO</option>
-                <option>SESSÃO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
-                <option>SESSÃO DE MUSICOTERAPIA</option>
-                <option>SESSÃO DE NUTRIÇÃO</option>
-                <option>SESSÃO DE PSICOLOGIA DE CASAL</option>
-                <option>SESSÃO DE PSICOMOTRICIDADE</option>
-                <option>SESSÃO DE PSICOPEDAGOGIA</option>
-                <option>SESSÃO DE PSICOTERAPIA</option>
-                <option>SESSÃO DE TERAPIA COMPORTAMENTAL APLICADA</option>
-                <option>SESSÃO DE TERAPIA OCUPACIONAL</option>
-                <option>SESSÃO DE TERAPIA OCUPACIONAL EM GRUPO</option>
-                <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
-                <option>TRATAMENTO SERIADO</option>
+                  <option value="todas">Todas as Especialidades</option>
+                  <option>AVALIACAO NEUROPSICOLOGICA</option>
+                  <option>SESSAO DE ARTETERAPIA</option>
+                  <option>SESSAO DE EQUOTERAPIA</option>
+                  <option>SESSAO DE FISIOTERAPIA</option>
+                  <option>SESSAO DE FONOAUDIOLOGIA</option>
+                  <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
+                  <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                  <option>SESSAO DE MUSICOTERAPIA</option>
+                  <option>SESSAO DE NUTRIÇÃO</option>
+                  <option>SESSAO DE PSICOLOGIA DE CASAL</option>
+                  <option>SESSAO DE PSICOMOTRICIDADE</option>
+                  <option>SESSAO DE PSICOPEDAGOGIA</option>
+                  <option>SESSAO DE PSICOTERAPIA</option>
+                  <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                  <option>SESSAO DE TERAPIA OCUPACIONAL</option>
+                  <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                  <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                  <option>TRATAMENTO SERIADO</option>
               </select>
             </div>
             <div class="mb-3">

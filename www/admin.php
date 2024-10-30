@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inserir'])) {
     AND paciente_status != 'Cancelado' 
     AND paciente_convenio != 'CASSI' 
     AND paciente_convenio != 'UNIVIDA'
+    AND paciente_especialidade NOT LIKE '%CONSULTA%'
     AND paciente_saida IS NULL
     AND id IN (
         SELECT MAX(id)
@@ -50,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inserir'])) {
             ':paciente_especialidade' => $row['paciente_especialidade'] ?? null,
             ':paciente_section' => $row['paciente_section'] ?? null,
             ':paciente_entrada' => $row['paciente_entrada'] ?? null,
-            ':paciente_mes' => 'Outubro'
+            ':paciente_mes' => 'Novembro'
         ]);
     }
 }

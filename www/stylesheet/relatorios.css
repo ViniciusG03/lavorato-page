@@ -1,0 +1,100 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Altura total para o body e html */
+html, body {
+    height: 100%;
+    background-color: #121212; /* Fundo principal escuro */
+    color: #E0E0E0; /* Texto claro */
+}
+
+/* Sidebar */
+.row #sidebar {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background-color: #1F1F1F; /* Fundo da sidebar */
+    color: #E0E0E0; /* Cor do texto da sidebar */
+    overflow-y: auto;
+    padding-top: 20px;
+}
+
+/* Links da sidebar */
+#sidebar .nav-link {
+    color: #B3B3B3; /* Cor padrão dos links */
+}
+
+#sidebar .nav-link.active {
+    color: #FFFFFF; /* Cor do link ativo */
+    background-color: #333333; /* Destaque para link ativo */
+}
+
+#sidebar .nav-link:hover {
+    color: #FFFFFF; /* Cor ao passar o mouse */
+    background-color: #333333; /* Fundo ao passar o mouse */
+}
+
+/* Conteúdo principal */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    background-color: #181818; /* Fundo do conteúdo principal */
+    color: #E0E0E0; /* Texto do conteúdo */
+}
+
+/* Cabeçalhos e textos */
+h1, h2, h3, h4, h5, h6 {
+    color: #FFFFFF; /* Cor clara para cabeçalhos */
+}
+
+p, a {
+    color: #B3B3B3; /* Texto claro */
+}
+
+/* Botões */
+.btn {
+    background-color: #333333;
+    color: #FFFFFF;
+    border: none;
+}
+
+.btn:hover {
+    background-color: #444444;
+}
+
+/* Ajustes para ícones */
+.feather {
+    stroke: #B3B3B3; /* Cor dos ícones */
+}
+
+/* #nome-suggestions {
+    position: absolute;
+    z-index: 1000;
+    background-color: #2A2A2A;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #444444; 
+    display: none;
+    border-radius: 4px; 
+} */
+
+/* #nome-suggestions a {
+    display: block;
+    padding: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #E0E0E0;
+} */
+
+/* #nome-suggestions a:hover {
+    background-color: #333333; 
+    color: #FFFFFF; 
+} */

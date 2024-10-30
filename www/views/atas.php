@@ -108,7 +108,7 @@ if ($result === false) {
                   // Definir status baseado na data de validade
                   if ($dias_restantes < 0) {
                       $status = "Vencido";
-                  } elseif ($dias_restantes <= 30) {
+                  } elseif ($dias_restantes <= 15) {
                       $status = "Perto de vencer";
                   } else {
                       $status = "Válido";

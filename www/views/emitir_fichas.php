@@ -10,26 +10,29 @@ $options = new Options();
 $options->set('isRemoteEnabled', true);
 
 // Função para gerar número de identificação aleatório começando com "P"
-function gerarNumeroIdentificacao() {
+function gerarNumeroIdentificacao()
+{
     return 'P' . rand(1000, 9999); // Exemplo: "P1234"
 }
 
 // Função para converter imagem em base64
-function imagemParaBase64($imagemCaminho) {
+function imagemParaBase64($imagemCaminho)
+{
     $imagemTipo = pathinfo($imagemCaminho, PATHINFO_EXTENSION);
     $imagemDados = file_get_contents($imagemCaminho);
     return 'data:image/' . $imagemTipo . ';base64,' . base64_encode($imagemDados);
 }
 
 // Função para gerar e salvar um PDF temporário
-function gerarPdfTemporario($html, $filePath) {
+function gerarPdfTemporario($html, $filePath)
+{
     $options = new Options();
     $options->set('isRemoteEnabled', true);
     $dompdf = new Dompdf($options);
 
     // Carregar o HTML no Dompdf
     $dompdf->loadHtml($html);
-    
+
     // Definir o tamanho do papel e a orientação
     $dompdf->setPaper('A4', 'portrait');
 
@@ -41,9 +44,10 @@ function gerarPdfTemporario($html, $filePath) {
 }
 
 // Função para mesclar os PDFs temporários em um único arquivo
-function mesclarPdfs($pdfFiles, $outputPath) {
+function mesclarPdfs($pdfFiles, $outputPath)
+{
     $pdf = new Fpdi();
-    
+
     foreach ($pdfFiles as $file) {
         $pageCount = $pdf->setSourceFile($file);
         for ($i = 1; $i <= $pageCount; $i++) {
@@ -61,7 +65,7 @@ function mesclarPdfs($pdfFiles, $outputPath) {
 setlocale(LC_TIME, 'pt_BR.UTF-8', 'Portuguese_Brazil');
 
 // Obter o mês atual no formato "Mês de Ano" (ex: "Outubro de 2024")
-$mesAtual = strftime('%B de %Y');
+$mesAtual = "Novembro de 2024";
 
 // Conectar ao banco de dados (exemplo de conexão MySQL)
 $host = 'mysql.lavoratoguias.kinghost.net';
@@ -83,6 +87,7 @@ try {
         WHERE paciente_convenio = 'Fusex'
         AND (paciente_saida IS NULL OR paciente_saida = '')
         AND paciente_status NOT IN ('Saiu', 'Cancelado')
+        AND paciente_especialidade NOT LIKE '%consultas%' -- Exclui especialidades contendo 'consultas'
         GROUP BY paciente_nome, paciente_especialidade
     ) t2 ON t1.id = t2.ultimo_id";
 
@@ -128,7 +133,7 @@ try {
                     margin-bottom: 10px;
                 }
                 .header img {
-                    width: 50px;
+                    width: 150px;
                     height: auto;
                 }
                 .header h1 {

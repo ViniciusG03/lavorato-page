@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($mesSelecionado !== 'todos') {
-        $sql .= " AND MONTH(data_hora_insercao) = ?";
+        $sql .= " AND paciente_mes = ?";
     }
 
     if (!empty($status)) {

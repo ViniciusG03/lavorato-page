@@ -27,7 +27,7 @@ WHEN paciente_mes = 'Agosto' THEN 8
 WHEN paciente_mes = 'Setembro' THEN 9
 WHEN paciente_mes = 'Outubro' THEN 10
 WHEN paciente_mes = 'Novembro' THEN 11
-WHEN paciente_ mes = 'Dezembro' THEN 12
+WHEN paciente_mes = 'Dezembro' THEN 12
 ELSE 13 END;";
 $result = $conn->query($sql);
 
