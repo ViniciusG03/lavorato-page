@@ -89,7 +89,7 @@ try {
     INNER JOIN (
         SELECT MAX(id) as ultimo_id, paciente_nome, paciente_especialidade
         FROM pacientes
-        WHERE paciente_convenio = 'Fusex'
+        WHERE paciente_convenio = 'Particular'
         AND (paciente_saida IS NULL OR paciente_saida = '')
         AND paciente_status NOT IN ('Saiu', 'Cancelado')
         AND paciente_especialidade NOT LIKE '%consulta%'

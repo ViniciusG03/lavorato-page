@@ -12,15 +12,12 @@ $options->set('isRemoteEnabled', true);
 // Função para gerar número de identificação aleatório começando com "P"
 function gerarNumeroIdentificacao()
 {
-    return 'P' . rand(1000, 9999); // Exemplo: "P1234"
+    return 'PNE' . rand(1000, 9999); // Exemplo: "P1234"
 }
 
 // Função para converter imagem em base64
 function imagemParaBase64($imagemCaminho)
 {
-    if (!file_exists($imagemCaminho)) {
-        throw new Exception("A imagem não foi encontrada no caminho especificado.");
-    }
     $imagemTipo = pathinfo($imagemCaminho, PATHINFO_EXTENSION);
     $imagemDados = file_get_contents($imagemCaminho);
     return 'data:image/' . $imagemTipo . ';base64,' . base64_encode($imagemDados);
@@ -67,12 +64,10 @@ function mesclarPdfs($pdfFiles, $outputPath)
 // Definir o locale para Português Brasileiro
 setlocale(LC_TIME, 'pt_BR.UTF-8', 'Portuguese_Brazil');
 
-// Obter os dados do formulário enviados via POST
-$nomePaciente = $_POST['nome'] ?? '';
-$especialidade = $_POST['especialidade'] ?? '';
-$mesAtual = $_POST['mes'] ?? 'Novembro'; // Valor padrão para o mês
+// Obter o mês atual no formato "Mês de Ano" (ex: "Outubro de 2024")
+$mesAtual = "Novembro";
 
-// Conectar ao banco de dados
+// Conectar ao banco de dados (exemplo de conexão MySQL)
 $host = 'mysql.lavoratoguias.kinghost.net';
 $dbname = 'lavoratoguias';
 $username = 'lavoratogu_add1';
@@ -82,28 +77,21 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Query para buscar pacientes com os filtros do formulário
+    // Query para buscar todos os pacientes com convenio "Fusex" e o último registro de cada especialidade por paciente
     $sql = "
     SELECT t1.paciente_nome, t1.paciente_especialidade
     FROM pacientes t1
     INNER JOIN (
         SELECT MAX(id) as ultimo_id, paciente_nome, paciente_especialidade
         FROM pacientes
-        WHERE paciente_convenio = 'Fusex'
+        WHERE paciente_convenio = 'Fusex(PNE)'
         AND (paciente_saida IS NULL OR paciente_saida = '')
         AND paciente_status NOT IN ('Saiu', 'Cancelado')
-        AND paciente_especialidade NOT LIKE '%consulta%'
-        AND paciente_nome LIKE :nomePaciente
-        AND paciente_especialidade LIKE :especialidade
+        AND paciente_especialidade NOT LIKE '%consulta%' -- Exclui especialidades contendo 'consultas'
         GROUP BY paciente_nome, paciente_especialidade
     ) t2 ON t1.id = t2.ultimo_id";
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':nomePaciente' => "%$nomePaciente%",
-        ':especialidade' => "%$especialidade%",
-    ]);
-
+    $stmt = $pdo->query($sql);
     $pacientesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Verifique se encontrou algum resultado
@@ -190,13 +178,13 @@ try {
 
             <div class="info-header">
                 <div class="section">
-                    <label>Nome do Paciente:</label> ' . htmlspecialchars($paciente['paciente_nome']) . '
+                    <label>Nome do Paciente:</label> ' . $nomePaciente . '
                 </div>
                 <div class="section">
-                    <label>Especialidade:</label> ' . htmlspecialchars($paciente['paciente_especialidade']) . '
+                    <label>Especialidade:</label> ' . $especialidade . '
                 </div>
                 <div class="section">
-                    <label>Mês:</label> ' . htmlspecialchars($mesAtual) . '
+                    <label>Mês:</label> ' . $mesAtual . '
                 </div>
             </div>
 
@@ -228,6 +216,20 @@ try {
         // Gerar o PDF temporário para cada ficha
         gerarPdfTemporario($html, $filePath);
         $pdfFiles[] = $filePath;
+
+        // Inserir o paciente no banco de dados
+        $stmtInsert = $pdo->prepare("
+        INSERT INTO pacientes (paciente_nome, paciente_convenio, paciente_especialidade, paciente_mes, paciente_guia, paciente_status, paciente_section) 
+        VALUES (:nomePaciente, 'FUSEX(PNE)', :especialidade, :mesAtual, :numeroIdentificacao, :status, :section)
+        ");
+        $stmtInsert->execute([
+            ':nomePaciente' => $nomePaciente,
+            ':especialidade' => $especialidade,
+            ':mesAtual' => $mesAtual,
+            ':numeroIdentificacao' => $numeroIdentificacao,
+            ':status' => 'Emitido',
+            ':section' => '1'
+        ]);
     }
 
     // Mesclar os PDFs temporários em um único arquivo final

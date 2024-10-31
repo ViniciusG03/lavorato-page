@@ -243,7 +243,6 @@ try {
     foreach ($pdfFiles as $file) {
         unlink($file);
     }
-
 } catch (Exception $e) {
     echo "Erro: " . $e->getMessage();
 }

@@ -65,7 +65,7 @@ function mesclarPdfs($pdfFiles, $outputPath)
 setlocale(LC_TIME, 'pt_BR.UTF-8', 'Portuguese_Brazil');
 
 // Obter o mês atual no formato "Mês de Ano" (ex: "Outubro de 2024")
-$mesAtual = "Novembro de 2024";
+$mesAtual = "Novembro";
 
 // Conectar ao banco de dados (exemplo de conexão MySQL)
 $host = 'mysql.lavoratoguias.kinghost.net';
@@ -87,7 +87,7 @@ try {
         WHERE paciente_convenio = 'Fusex'
         AND (paciente_saida IS NULL OR paciente_saida = '')
         AND paciente_status NOT IN ('Saiu', 'Cancelado')
-        AND paciente_especialidade NOT LIKE '%consultas%' -- Exclui especialidades contendo 'consultas'
+        AND paciente_especialidade NOT LIKE '%consulta%' -- Exclui especialidades contendo 'consultas'
         GROUP BY paciente_nome, paciente_especialidade
     ) t2 ON t1.id = t2.ultimo_id";
 
@@ -216,6 +216,19 @@ try {
         // Gerar o PDF temporário para cada ficha
         gerarPdfTemporario($html, $filePath);
         $pdfFiles[] = $filePath;
+
+        $stmtInsert = $pdo->prepare("
+        INSERT INTO pacientes (paciente_nome, paciente_convenio, paciente_especialidade, paciente_mes, paciente_guia, paciente_status, paciente_section) 
+        VALUES (:nomePaciente, 'FUSEX', :especialidade, :mesAtual, :numeroIdentificacao, :status, :section)
+    ");
+        $stmtInsert->execute([
+            ':nomePaciente' => $nomePaciente,
+            ':especialidade' => $especialidade,
+            ':mesAtual' => $mesAtual,
+            ':numeroIdentificacao' => $numeroIdentificacao,
+            ':status' => 'Emitido',
+            ':section' => '1'
+        ]);
     }
 
     // Mesclar os PDFs temporários em um único arquivo final
@@ -231,7 +244,6 @@ try {
     foreach ($pdfFiles as $file) {
         unlink($file);
     }
-
 } catch (Exception $e) {
     echo "Erro: " . $e->getMessage();
 }

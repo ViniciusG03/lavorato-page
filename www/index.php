@@ -372,6 +372,7 @@ if (!isset($_SESSION['login'])) {
                 <option value="TJDFT">TJDFT</option>
                 <option value="PARTICULAR">PARTICULAR</option>
                 <option value="FUSEX">FUSEX</option>
+                <option value="FUSEX(PNE)">FUSEX(PNE)</option>
                 <option value="CBMDF">CBMDF</option>
                 <option value="CAIXA">CAIXA</option>
                 <option value="SIS SENADO">SIS SENADO</option>

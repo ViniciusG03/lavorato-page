@@ -220,17 +220,17 @@ try {
         $pdfFiles[] = $filePath;
 
         // Inserir registro de ficha no banco de dados
-        // $stmtInsert = $pdo->prepare("
-        //     INSERT INTO pacientes (paciente_nome, paciente_convenio, paciente_especialidade, paciente_mes, paciente_guia, paciente_status) 
-        //     VALUES (:nomePaciente, 'CBMDF', :especialidade, :mesAtual, :numeroIdentificacao, :status)
-        // ");
-        // $stmtInsert->execute([
-        //     ':nomePaciente' => $nomePaciente,
-        //     ':especialidade' => $especialidade,
-        //     ':mesAtual' => $mesAtual,
-        //     ':numeroIdentificacao' => $numeroIdentificacao,
-        //     ':status' => 'Emitido'
-        // ]);
+        $stmtInsert = $pdo->prepare("
+            INSERT INTO pacientes (paciente_nome, paciente_convenio, paciente_especialidade, paciente_mes, paciente_guia, paciente_status) 
+            VALUES (:nomePaciente, 'CBMDF', :especialidade, :mesAtual, :numeroIdentificacao, :status)
+        ");
+        $stmtInsert->execute([
+            ':nomePaciente' => $nomePaciente,
+            ':especialidade' => $especialidade,
+            ':mesAtual' => $mesAtual,
+            ':numeroIdentificacao' => $numeroIdentificacao,
+            ':status' => 'Emitido'
+        ]);
     }
 
     // Mesclar os PDFs temporários em um único arquivo final

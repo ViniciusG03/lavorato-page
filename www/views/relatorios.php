@@ -81,13 +81,21 @@
                             </div>
                             <div class="modal-body">
                                 <button class="btn btn-secondary w-100 my-2 ficha-option"
-                                    data-option="fusex_individual">Ficha Fusex Individual</button>
-                                <button class="btn btn-secondary w-100 my-2 ficha-option" data-option="fusex">Ficha
-                                    Fusex</button>
+                                    data-option="fusex_individual_tipico">Ficha Fusex Individual Tipico</button>
+                                <button class="btn btn-secondary w-100 my-2 ficha-option" data-option="fusex_tipico">Ficha
+                                    Fusex Tipico</button>
+                                <button class="btn btn-secondary w-100 my-2 ficha-option"
+                                    data-option="fusex_individual_pne">Ficha Fusex Individual PNE</button>
+                                <button class="btn btn-secondary w-100 my-2 ficha-option" data-option="fusex_pne">Ficha
+                                    Fusex PNE</button>
                                 <button class="btn btn-secondary w-100 my-2 ficha-option"
                                     data-option="cbmdf_individual">Ficha CBMDF Individual</button>
                                 <button class="btn btn-secondary w-100 my-2 ficha-option" data-option="cbmdf">Ficha
                                     CBMDF</button>
+                                <button class="btn btn-secondary w-100 my-2 ficha-option"
+                                    data-option="particular_individual">Ficha Particular Individual</button>
+                                <button class="btn btn-secondary w-100 my-2 ficha-option"
+                                    data-option="particular">Ficha Particular</button>
                             </div>
                         </div>
                     </div>
