@@ -12,7 +12,7 @@ $options->set('isRemoteEnabled', true);
 // Função para gerar número de identificação aleatório começando com "P"
 function gerarNumeroIdentificacao()
 {
-    return 'P' . rand(1000, 9999); // Exemplo: "P1234"
+    return 'PNE' . rand(1000, 9999); // Exemplo: "P1234"
 }
 
 // Função para converter imagem em base64
