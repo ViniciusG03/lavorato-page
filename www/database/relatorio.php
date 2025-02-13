@@ -6,6 +6,19 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 
+$usuarioResponsavel = $_SESSION['login'];
+
+$usuarios = [
+    'admin' => 'Vinicius Oliveira',
+    'talita' => 'Talita Ruiz',
+    'gustavoramos' => 'Gustavo Ramos',
+    'nicole' => 'Nicole Santos',
+    'kaynnanduraes' => 'Kaynnan Durães'
+];
+
+$usuarioResponsavelFormatado = $usuarios[$usuarioResponsavel] ?? 'None';
+
+
 require_once '../vendor/autoload.php';
 
 use Dompdf\Dompdf;
@@ -41,8 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dataFormatada = date('d/m/Y', strtotime($dataSelecionada));
 
     $tituloRelatorio = "<h1>Relatório</h1>";
-    $subtituloRelatorio = "<h3>Data: $dataFormatada</h3>";
     $horaDeGeração = date('H:i:s');
+    $subtituloRelatorio = "<h3>Emitido por $usuarioResponsavelFormatado</h3>";
 
     $servername = "mysql.lavoratoguias.kinghost.net";
     $username = "lavoratoguias";
@@ -55,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Erro na conexão: " . $conn->connect_error);
     }
 
-    $sql = "SELECT id, paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_especialidade, paciente_mes, paciente_section, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes WHERE DATE(data_hora_insercao) = ?";
+    $sql = "SELECT id, paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_especialidade, paciente_mes, paciente_section, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes WHERE DATE(data_hora_insercao) = ? AND usuario_responsavel = ?";
 
     if ($especialidadeSelecionada !== 'todas') {
         $sql .= " AND paciente_especialidade = ?";
@@ -66,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($mesSelecionado !== 'todos') {
-        $sql .= " AND paciente_mes = ?";
+        $sql .= " AND MONTH(data_hora_insercao) = ?";
     }
 
     if (!empty($status)) {
@@ -88,9 +101,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        $bindValues = array($dataSelecionada);
+        $bindValues = [$dataSelecionada, $usuarioResponsavel];
 
-        $bindTypes = 's';
+        $bindTypes = 'ss';
 
         if ($especialidadeSelecionada !== 'todas') {
             $bindValues[] = $especialidadeSelecionada;
@@ -184,7 +197,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </head>
             <body>
                 <h1>$tituloRelatorio</h1>
-                <h2>$subtituloRelatorio Gerado em: $horaDeGeração</h2>
+                <h2>Emitido por: $usuarioResponsavelFormatado</h2>
+                <h2>Em $dataFormatada as $horaDeGeração</h2>
                 $tabelaHTML
             </body>
             </html>";

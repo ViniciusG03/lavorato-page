@@ -67,7 +67,7 @@ function mesclarPdfs($pdfFiles, $outputPath)
 setlocale(LC_TIME, 'pt_BR.UTF-8', 'Portuguese_Brazil');
 
 // Obter o mês atual no formato "Mês de Ano" (ex: "Outubro de 2024")
-$mesAtual = "Novembro";
+$mesAtual = "Dezembro";
 
 // Conectar ao banco de dados (exemplo de conexão MySQL)
 $host = 'mysql.lavoratoguias.kinghost.net';

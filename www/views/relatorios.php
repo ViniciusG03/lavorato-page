@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['login'])) {
+  header("Location: ../login/login.php");
+  exit();
+}
+
+if ($_SESSION['login'] == 'consulta') {
+    header("Location: ../index.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -13,7 +27,7 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <script src="../bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/autocomplete_relatorio.js"></script>
     <link rel="stylesheet" href="../stylesheet/relatorios.css">
 </head>
@@ -82,20 +96,36 @@
                             <div class="modal-body">
                                 <button class="btn btn-secondary w-100 my-2 ficha-option"
                                     data-option="fusex_individual_tipico">Ficha Fusex Individual Tipico</button>
-                                <button class="btn btn-secondary w-100 my-2 ficha-option" data-option="fusex_tipico">Ficha
-                                    Fusex Tipico</button>
+                                <?php
+                                if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+                                    echo '<button class="btn btn-secondary w-100 my-2 ficha-option" data-option="fusex_tipico">Ficha
+                                    Fusex Tipico</button>';
+                                }
+                                ?>
                                 <button class="btn btn-secondary w-100 my-2 ficha-option"
                                     data-option="fusex_individual_pne">Ficha Fusex Individual PNE</button>
-                                <button class="btn btn-secondary w-100 my-2 ficha-option" data-option="fusex_pne">Ficha
-                                    Fusex PNE</button>
+                                <?php
+                                if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+                                    echo '<button class="btn btn-secondary w-100 my-2 ficha-option" data-option="fusex_pne">Ficha
+                                    Fusex PNE</button>';
+                                }
+                                ?>
                                 <button class="btn btn-secondary w-100 my-2 ficha-option"
                                     data-option="cbmdf_individual">Ficha CBMDF Individual</button>
-                                <button class="btn btn-secondary w-100 my-2 ficha-option" data-option="cbmdf">Ficha
-                                    CBMDF</button>
-                                <button class="btn btn-secondary w-100 my-2 ficha-option"
+                                <?php
+                                if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+                                    echo '<button class="btn btn-secondary w-100 my-2 ficha-option" data-option="cbmdf">Ficha
+                                    CBMDF</button>';
+                                }
+                                ?>
+                                <?php
+                                if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+                                    echo ' <button class="btn btn-secondary w-100 my-2 ficha-option"
                                     data-option="particular_individual">Ficha Particular Individual</button>
-                                <button class="btn btn-secondary w-100 my-2 ficha-option"
-                                    data-option="particular">Ficha Particular</button>
+                                    <button class="btn btn-secondary w-100 my-2 ficha-option"
+                                    data-option="particular">Ficha Particular</button>';
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>

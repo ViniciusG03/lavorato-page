@@ -53,7 +53,11 @@ if (!isset($_SESSION['login'])) {
               ?>
               <li><a class="dropdown-item" href="../login/logout.php">Logout</a></li>
               <li><a class="dropdown-item" href="views/atas.php">ATAS</a></li>
-              <li><a class="dropdown-item" href="views/relatorios.php">Relatorios</a></li>
+              <?php
+              if (isset($_SESSION['is_admin']) || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will') {
+                echo '<li><a class="dropdown-item" href="views/relatorios.php">Relatorios</a></li>';
+              }
+              ?>
             </ul>
           </li>
         </ul>
@@ -65,12 +69,24 @@ if (!isset($_SESSION['login'])) {
       <img src="../assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
     </div>
     <div class="buttons">
-      <button id="btn-cadastrar">Cadastrar</button>
-      <button id="btn-atualizar">Atualizar</button>
+      <?php 
+      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will') {
+        echo '<button id="btn-cadastrar">Cadastrar</button>';
+      }
+      ?>
+      <?php 
+      if($_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['is_admin'] || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'talita') {
+        echo '<button id="btn-atualizar">Atualizar</button>';
+      }
+      ?>
       <button type="button" id="btn-listar" target="_blank">Listar</button>
-      <button type="button" id="btn-relatorio">Relatorio</button>
+      <?php 
+      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'talita') {
+        echo '<button type="button" id="btn-relatorio">Relatorio</button>';
+      }
+      ?>
       <?php
-      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will') {
         echo '<button type="button" id="btn-remover">Remover</button>';
       }
       ?>
@@ -104,11 +120,10 @@ if (!isset($_SESSION['login'])) {
                 <input list="statusGuia" type="text" id="status_guia" name="status_guia" class="form-control"
                   autocomplete="off" />
                 <datalist id="statusGuia">
-                  <option>Solicitado</option>
                   <option>Emitido</option>
-                  <option>Descida</option>
                   <option>Assinado</option>
                   <option>Faturado</option>
+                  <option>Enviado a BM</option>
                 </datalist>
               </div>
               <div class="col-md-6 mb-3">
@@ -206,11 +221,10 @@ if (!isset($_SESSION['login'])) {
                 <input type="text" id="status_guia" name="status_guia" list="statusGuia" class="form-control"
                   autocomplete="off" />
                 <datalist id="statusGuia">
-                  <option>Solicitado</option>
                   <option>Emitido</option>
-                  <option>Descida</option>
                   <option>Assinado</option>
                   <option>Faturado</option>
+                  <option>Enviado a BM</option>
                 </datalist>
               </div>
               <div class="col-md-6 mb-3">
@@ -324,11 +338,10 @@ if (!isset($_SESSION['login'])) {
               <input type="text" id="status" name="status" class="form-control" placeholder="Emitido..."
                 list="statusList">
               <datalist id="statusList">
-                <option>Solicitado</option>
                 <option>Emitido</option>
-                <option>Descida</option>
                 <option>Assinado</option>
                 <option>Faturado</option>
+                <option>Enviado a BM</option>
               </datalist>
             </div>
             <div class="mb-3">

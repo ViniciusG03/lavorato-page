@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inserir'])) {
             ':paciente_especialidade' => $row['paciente_especialidade'] ?? null,
             ':paciente_section' => $row['paciente_section'] ?? null,
             ':paciente_entrada' => $row['paciente_entrada'] ?? null,
-            ':paciente_mes' => 'Novembro'
+            ':paciente_mes' => 'Dezembro'
         ]);
     }
 }

@@ -80,12 +80,12 @@ if (isset($_GET['option'])) {
 
         case 'particular_individual':
             // Redireciona para emitir_fichas_individuais_particulares.php
-            echo json_encode(['redirect' => '../views/emitir_fichas_individuais_particulares.php']);
+            echo json_encode(['redirect' => '../views/process_individual_particular.php']);
             break;
 
         case 'particular':
             // Redireciona para emitir_fichas_particulares.php
-            echo json_encode(['redirect' => '../views/emitir_fichas_particulares.php']);
+            echo json_encode(['redirect' => '../views/emitir_fichas_particular.php']);
             break;
     }
     exit;
