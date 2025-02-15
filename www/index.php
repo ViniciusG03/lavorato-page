@@ -54,7 +54,7 @@ if (!isset($_SESSION['login'])) {
               <li><a class="dropdown-item" href="../login/logout.php">Logout</a></li>
               <li><a class="dropdown-item" href="views/atas.php">ATAS</a></li>
               <?php
-              if (isset($_SESSION['is_admin']) || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will') {
+              if (isset($_SESSION['is_admin']) || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'eviny') {
                 echo '<li><a class="dropdown-item" href="views/relatorios.php">Relatorios</a></li>';
               }
               ?>
@@ -69,29 +69,36 @@ if (!isset($_SESSION['login'])) {
       <img src="../assets/Logo-Lavorato-alfa.png" width="1028px" height="364px" alt="Lavorato Logo" />
     </div>
     <div class="buttons">
-      <?php 
-      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will') {
+      <?php
+      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'eviny') {
         echo '<button id="btn-cadastrar">Cadastrar</button>';
       }
       ?>
-      <?php 
-      if($_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['is_admin'] || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'talita') {
+      <?php
+      if ($_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['is_admin'] || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'talita' || $_SESSION['login'] == 'eviny') {
         echo '<button id="btn-atualizar">Atualizar</button>';
       }
       ?>
+      <?php
+      if ($_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['is_admin'] || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'talita' || $_SESSION['login'] == 'eviny') {
+        echo '<button id="btn-atualizarEmMassa">Atualizar em massa</button>';
+      }
+      ?>
       <button type="button" id="btn-listar" target="_blank">Listar</button>
-      <?php 
-      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'talita') {
+      <?php
+      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'talita' || $_SESSION['login'] == 'eviny') {
         echo '<button type="button" id="btn-relatorio">Relatorio</button>';
       }
       ?>
       <?php
-      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will') {
+      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'eviny') {
         echo '<button type="button" id="btn-remover">Remover</button>';
       }
       ?>
     </div>
   </div>
+
+  <!-- Modal de cadastro -->
   <div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -120,10 +127,14 @@ if (!isset($_SESSION['login'])) {
                 <input list="statusGuia" type="text" id="status_guia" name="status_guia" class="form-control"
                   autocomplete="off" />
                 <datalist id="statusGuia">
-                  <option>Emitido</option>
-                  <option>Assinado</option>
-                  <option>Faturado</option>
-                  <option>Enviado a BM</option>
+                <option>Emitido</option>
+                <option>Subiu</option>
+                <option>Cancelado</option>
+                <option>Saiu</option>
+                <option>Não Usou</option>
+                <option>Assinado</option>
+                <option>Faturado</option>
+                <option>Enviado a BM</option>
                 </datalist>
               </div>
               <div class="col-md-6 mb-3">
@@ -195,6 +206,7 @@ if (!isset($_SESSION['login'])) {
     </div>
   </div>
 
+  <!-- Modal de atualização -->
   <div class="modal fade" id="modalAtualizacao" tabindex="-1" aria-labelledby="modalAtualizacaoLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -210,7 +222,7 @@ if (!isset($_SESSION['login'])) {
                 <label for="numero_guia" class="form-label">ID:</label>
                 <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" />
                 <label for="checkbox_guia" class="form-label">Usar numeração da guia:</label>
-                <input type="checkbox" id="checkbox_guia" name="checkbox_guia"/>
+                <input type="checkbox" id="checkbox_guia" name="checkbox_guia" />
               </div>
               <div class="col-md-6 mb-3">
                 <label for="correcao_guia" class="form-label">Corrigir número da guia:</label>
@@ -221,10 +233,14 @@ if (!isset($_SESSION['login'])) {
                 <input type="text" id="status_guia" name="status_guia" list="statusGuia" class="form-control"
                   autocomplete="off" />
                 <datalist id="statusGuia">
-                  <option>Emitido</option>
-                  <option>Assinado</option>
-                  <option>Faturado</option>
-                  <option>Enviado a BM</option>
+                <option>Emitido</option>
+                <option>Subiu</option>
+                <option>Cancelado</option>
+                <option>Saiu</option>
+                <option>Não Usou</option>
+                <option>Assinado</option>
+                <option>Faturado</option>
+                <option>Enviado a BM</option>
                 </datalist>
               </div>
               <div class="col-md-6 mb-3">
@@ -252,7 +268,7 @@ if (!isset($_SESSION['login'])) {
                 <input type="text" id="especialidade" name="especialidade" class="form-control" list="EspecList"
                   autocomplete="off" />
                 <datalist id="EspecList">
-                <option>AVALIACAO NEUROPSICOLOGICA</option>
+                  <option>AVALIACAO NEUROPSICOLOGICA</option>
                   <option>SESSAO DE ARTETERAPIA</option>
                   <option>SESSAO DE EQUOTERAPIA</option>
                   <option>SESSAO DE FISIOTERAPIA</option>
@@ -278,28 +294,28 @@ if (!isset($_SESSION['login'])) {
               <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls" class="form-control" />
             </div>
             <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="mes" class="form-label">Mês de atualização:</label>
-              <input type="text" id="mes" name="mes" list="mesList" class="form-control" autocomplete="off" />
-              <datalist id="mesList">
-                <option>Janeiro</option>
-                <option>Fevereiro</option>
-                <option>Março</option>
-                <option>Abril</option>
-                <option>Maio</option>
-                <option>Junho</option>
-                <option>Julho</option>
-                <option>Agosto</option>
-                <option>Setembro</option>
-                <option>Outubro</option>
-                <option>Novembro</option>
-                <option>Dezembro</option>
-              </datalist>
-            </div>
-            <div class="col-md-6">
-              <label for="numero_lote" class="form-label">Número do lote:</label>
-              <input type="text" id="numero_lote" name="numero_lote" class="form-control" autocomplete="off" />
-            </div>
+              <div class="col-md-6">
+                <label for="mes" class="form-label">Mês de atualização:</label>
+                <input type="text" id="mes" name="mes" list="mesList" class="form-control" autocomplete="off" />
+                <datalist id="mesList">
+                  <option>Janeiro</option>
+                  <option>Fevereiro</option>
+                  <option>Março</option>
+                  <option>Abril</option>
+                  <option>Maio</option>
+                  <option>Junho</option>
+                  <option>Julho</option>
+                  <option>Agosto</option>
+                  <option>Setembro</option>
+                  <option>Outubro</option>
+                  <option>Novembro</option>
+                  <option>Dezembro</option>
+                </datalist>
+              </div>
+              <div class="col-md-6">
+                <label for="numero_lote" class="form-label">Número do lote:</label>
+                <input type="text" id="numero_lote" name="numero_lote" class="form-control" autocomplete="off" />
+              </div>
               <div class="col-md-6">
                 <label for="entrada" class="form-label">Entrada:</label>
                 <input type="text" id="entrada" name="entrada" class="form-control" autocomplete="off" />
@@ -339,6 +355,10 @@ if (!isset($_SESSION['login'])) {
                 list="statusList">
               <datalist id="statusList">
                 <option>Emitido</option>
+                <option>Subiu</option>
+                <option>Cancelado</option>
+                <option>Saiu</option>
+                <option>Não Usou</option>
                 <option>Assinado</option>
                 <option>Faturado</option>
                 <option>Enviado a BM</option>
@@ -351,25 +371,25 @@ if (!isset($_SESSION['login'])) {
             <div class="mb-3">
               <label for="especialidade" class="form-label">Especialidade:</label>
               <select id="especialidade" name="especialidade" class="form-select">
-                  <option value="todas">Todas as Especialidades</option>
-                  <option>AVALIACAO NEUROPSICOLOGICA</option>
-                  <option>SESSAO DE ARTETERAPIA</option>
-                  <option>SESSAO DE EQUOTERAPIA</option>
-                  <option>SESSAO DE FISIOTERAPIA</option>
-                  <option>SESSAO DE FONOAUDIOLOGIA</option>
-                  <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
-                  <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
-                  <option>SESSAO DE MUSICOTERAPIA</option>
-                  <option>SESSAO DE NUTRIÇÃO</option>
-                  <option>SESSAO DE PSICOLOGIA DE CASAL</option>
-                  <option>SESSAO DE PSICOMOTRICIDADE</option>
-                  <option>SESSAO DE PSICOPEDAGOGIA</option>
-                  <option>SESSAO DE PSICOTERAPIA</option>
-                  <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
-                  <option>SESSAO DE TERAPIA OCUPACIONAL</option>
-                  <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
-                  <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
-                  <option>TRATAMENTO SERIADO</option>
+                <option value="todas">Todas as Especialidades</option>
+                <option>AVALIACAO NEUROPSICOLOGICA</option>
+                <option>SESSAO DE ARTETERAPIA</option>
+                <option>SESSAO DE EQUOTERAPIA</option>
+                <option>SESSAO DE FISIOTERAPIA</option>
+                <option>SESSAO DE FONOAUDIOLOGIA</option>
+                <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
+                <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                <option>SESSAO DE MUSICOTERAPIA</option>
+                <option>SESSAO DE NUTRIÇÃO</option>
+                <option>SESSAO DE PSICOLOGIA DE CASAL</option>
+                <option>SESSAO DE PSICOMOTRICIDADE</option>
+                <option>SESSAO DE PSICOPEDAGOGIA</option>
+                <option>SESSAO DE PSICOTERAPIA</option>
+                <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                <option>SESSAO DE TERAPIA OCUPACIONAL</option>
+                <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                <option>TRATAMENTO SERIADO</option>
               </select>
             </div>
             <div class="mb-3">
@@ -466,6 +486,54 @@ if (!isset($_SESSION['login'])) {
     </div>
   </div>
 
+  <div class="modal fade" id="modalAtualizar" tabindex="-1" aria-labelledby="modalAtualizarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAtualizarLabel">Atualizar Guias em Massa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Campo de busca -->
+          <input type="text" id="buscaGuia" class="form-control mb-3" placeholder="Buscar guia pelo número...">
+
+          <!-- Lista de guias filtradas -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Selecionar</th>
+                <th>Número da Guia</th>
+                <th>Paciente</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="listaGuias">
+              <!-- Guias serão carregadas aqui via AJAX -->
+            </tbody>
+          </table>
+
+          <!-- Seleção do novo status -->
+          <label for="novoStatus">Novo Status:</label>
+          <select class="form-control" id="novoStatus">
+            <option value="Emitido">Emitido</option>
+            <option value="Subiu">Subiu</option>
+            <option value="Cancelado">Cancelado</option>
+            <option value="Saiu">Saiu</option>
+            <option value="Não Usou">Não Usou</option>
+            <option value="Assinado">Assinado</option>
+            <option value="Enviado a BM">Enviado a BM</option>
+            <option value="Faturado">Faturado</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-success" id="confirmarAtualizacao">Atualizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal remoção -->
   <div class="modal fade" id="modalRemover" tabindex="-1" aria-labelledby="modalRemoverLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -498,7 +566,7 @@ if (!isset($_SESSION['login'])) {
     var idleTime = 0;
     var idleInterval = setInterval(timerIncrement, 60000); // 1 minuto (60000 milissegundos)
 
-    document.addEventListener("mousemove", function () {
+    document.addEventListener("mousemove", function() {
       idleTime = 0;
     });
 
