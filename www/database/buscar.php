@@ -18,8 +18,8 @@ if (!isset($_SESSION['login'])) {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap"
-    rel="stylesheet" />
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap"
+        rel="stylesheet" />
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <script src="../bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../stylesheet/buscar.css">
@@ -84,13 +84,26 @@ if (!isset($_SESSION['login'])) {
 
         if ($_SERVER["REQUEST_METHOD"] == "GET") {
             if (isset($_GET["categoria"]) && isset($_GET["termo"])) {
-                $categoria = $_GET["categoria"];
-                $termo = $_GET["termo"];
+                $categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
+                $termo = isset($_GET['termo']) ? $_GET['termo'] : '';
+                $filtro_adicional = isset($_GET['filtro_adicional']) ? $_GET['filtro_adicional'] : '';
+                $termo_adicional = isset($_GET['termo_adicional']) ? $_GET['termo_adicional'] : '';
 
-                $sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada 
-                        FROM pacientes
-                        WHERE $categoria LIKE ?
-                        ORDER BY CASE 
+                $sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes WHERE 1=1";
+
+                // Adiciona o primeiro filtro se existir
+                if ($categoria && $termo) {
+                    $termo = $conn->real_escape_string($termo);
+                    $sql .= " AND $categoria LIKE '%$termo%'";
+                }
+
+                // Adiciona o filtro adicional se existir
+                if ($filtro_adicional && $termo_adicional) {
+                    $termo_adicional = $conn->real_escape_string($termo_adicional);
+                    $sql .= " AND $filtro_adicional LIKE '%$termo_adicional%'";
+                }
+
+                $sql .= " ORDER BY CASE 
                             WHEN paciente_mes = 'Janeiro' THEN 1
                             WHEN paciente_mes = 'Fevereiro' THEN 2
                             WHEN paciente_mes = 'Março' THEN 3
@@ -103,15 +116,13 @@ if (!isset($_SESSION['login'])) {
                             WHEN paciente_mes = 'Outubro' THEN 10
                             WHEN paciente_mes = 'Novembro' THEN 11
                             WHEN paciente_mes = 'Dezembro' THEN 12
-                            ELSE 13 
-                        END";
+                            ELSE 13 END";
 
-                $stmt = $conn->prepare($sql);
-                $termo = "%" . $termo . "%";
-                $stmt->bind_param("s", $termo);
+                $result = $conn->query($sql);
 
-                $stmt->execute();
-                $result = $stmt->get_result();
+                if ($result === false) {
+                    die("Erro na consulta: " . $conn->error);
+                }
 
                 if ($result->num_rows > 0) {
                     $numRows = $result->num_rows;
@@ -166,7 +177,6 @@ if (!isset($_SESSION['login'])) {
                     echo '<h1>Nenhum paciente encontrado</h1><br><p>Clique em "Home" para voltar à página principal!</p>';
                 }
 
-                $stmt->close();
             } else {
                 echo '<h1>Parâmetros não especificados</h1><br><p>Clique em "Home" para voltar à página principal!</p>';
             }

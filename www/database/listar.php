@@ -79,8 +79,8 @@ $conn->close();
 
         <!-- Formulário de busca usando Bootstrap -->
         <form action="buscar.php" method="get" class="mb-4">
-            <div class="row g-3">
-                <div class="col-md-4">
+            <div class="row g-3 align-items-end">
+                <div class="col">
                     <label for="busca" class="form-label">Buscar por:</label>
                     <select id="busca" name="categoria" class="form-select">
                         <option value="paciente_nome">Nome do Paciente</option>
@@ -91,12 +91,27 @@ $conn->close();
                         <option value="paciente_mes">Mês</option>
                     </select>
                 </div>
-                <div class="col-md-4">
-                    <label for="termo" class="form-label">Termo de busca:</label>
+                <div class="col">
+                    <label for="termo" class="form-label">Termo:</label>
                     <input type="text" id="termo" name="termo" class="form-control"
                         placeholder="Digite o termo de busca" autocomplete="off">
                 </div>
-                <div class="col-md-4 d-flex align-items-end">
+                <div class="col">
+                    <label for="filtro_adicional" class="form-label">Filtro:</label>
+                    <select id="filtro_adicional" name="filtro_adicional" class="form-select">
+                        <option value="paciente_convenio">Convênio</option>
+                        <option value="paciente_guia">Número da Guia</option>
+                        <option value="paciente_status">Status</option>
+                        <option value="paciente_especialidade">Especialidade</option>
+                        <option value="paciente_mes">Mês</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="termo_adicional" class="form-label">Termo:</label>
+                    <input type="text" id="termo_adicional" name="termo_adicional" class="form-control"
+                        placeholder="Digite o termo adicional" autocomplete="off">
+                </div>
+                <div class="col-auto">
                     <button type="submit" class="btn btn-primary">Buscar</button>
                 </div>
             </div>

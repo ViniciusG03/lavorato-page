@@ -39,7 +39,7 @@ select#busca,
 select#especialidade,
 select#convenio,
 select#mes,
-select#excluir_convenio,
+select#filtro_adicional,
 input[type="text"],
 input[type="date"] {
     width: 100%; 
