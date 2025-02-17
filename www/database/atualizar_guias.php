@@ -1,4 +1,8 @@
 <?php
+session_start();
+
+$usuarioResponsavel = $_SESSION['login'];
+
 $servername = "mysql.lavoratoguias.kinghost.net";
 $username = "lavoratoguias";
 $password = "A3g7K2m9T5p8L4v6";
@@ -21,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $ids = implode(',', array_map('intval', $guias));
 
-    $sql = "UPDATE pacientes SET paciente_status = ? WHERE id IN ($ids)";
+    $sql = "UPDATE pacientes SET paciente_status = ?, usuario_responsavel = ? WHERE id IN ($ids)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('s', $status);
+    $stmt->bind_param('ss', $status, $usuarioResponsavel);
 
     if ($stmt->execute()) {
         echo "Status atualizado com sucesso!";

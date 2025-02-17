@@ -31,6 +31,8 @@ if (!isset($_SESSION['login'])) {
     </div>
     <div class="container">
         <?php
+        $usuarioResponsavel = $_SESSION['login'];
+
         $servername = "mysql.lavoratoguias.kinghost.net";
         $username = "lavoratoguias";
         $password = "A3g7K2m9T5p8L4v6";
@@ -155,7 +157,7 @@ if (!isset($_SESSION['login'])) {
                         if ($result->num_rows == 0) {
                             echo '<h1>NÚMERO NÃO ENCONTRADO!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
                         } else {
-                            $sql_update = "UPDATE pacientes SET paciente_status = '$status_guia'";
+                            $sql_update = "UPDATE pacientes SET paciente_status = '$status_guia', usuario_responsavel = '$usuarioResponsavel'";
                             if (!empty($numero_lote)) {
                                 $sql_update .= ", paciente_lote = '$numero_lote'";
                             }

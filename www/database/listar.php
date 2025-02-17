@@ -15,20 +15,40 @@ $database = "lavoratoguias";
 
 $conn = new mysqli($servername, $username, $password, $database);
 
-$sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada FROM pacientes 
-ORDER BY CASE WHEN paciente_mes = 'Janeiro' THEN 1
-WHEN paciente_mes = 'Fevereiro' THEN 2
-WHEN paciente_mes = 'Março' THEN 3
-WHEN paciente_mes = 'Abril' THEN 4
-WHEN paciente_mes = 'Maio' THEN 5
-WHEN paciente_mes = 'Junho' THEN 6
-WHEN paciente_mes = 'Julho' THEN 7
-WHEN paciente_mes = 'Agosto' THEN 8
-WHEN paciente_mes = 'Setembro' THEN 9
-WHEN paciente_mes = 'Outubro' THEN 10
-WHEN paciente_mes = 'Novembro' THEN 11
-WHEN paciente_mes = 'Dezembro' THEN 12
-ELSE 13 END;";
+$itens_por_pagina = 10;
+
+$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+
+// Calcular o início da visualização
+$inicio = ($pagina - 1) * $itens_por_pagina;
+
+// Consulta para contar o total de registros
+$sql_total = "SELECT COUNT(*) as total FROM pacientes";
+$result_total = $conn->query($sql_total);
+$row_total = $result_total->fetch_assoc();
+$total_registros = $row_total['total'];
+
+// Calcular o total de páginas
+$total_paginas = ceil($total_registros / $itens_por_pagina);
+
+$sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada 
+        FROM pacientes 
+        ORDER BY CASE 
+            WHEN paciente_mes = 'Janeiro' THEN 1
+            WHEN paciente_mes = 'Fevereiro' THEN 2
+            WHEN paciente_mes = 'Março' THEN 3
+            WHEN paciente_mes = 'Abril' THEN 4
+            WHEN paciente_mes = 'Maio' THEN 5
+            WHEN paciente_mes = 'Junho' THEN 6
+            WHEN paciente_mes = 'Julho' THEN 7
+            WHEN paciente_mes = 'Agosto' THEN 8
+            WHEN paciente_mes = 'Setembro' THEN 9
+            WHEN paciente_mes = 'Outubro' THEN 10
+            WHEN paciente_mes = 'Novembro' THEN 11
+            WHEN paciente_mes = 'Dezembro' THEN 12
+            ELSE 13 
+        END
+        LIMIT $inicio, $itens_por_pagina";
 $result = $conn->query($sql);
 
 if ($result === false) {
@@ -169,7 +189,38 @@ $conn->close();
                     ?>
                 </tbody>
             </table>
+            <!-- Paginação -->
+            <nav aria-label="Navegação de páginas" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <?php if ($pagina > 1): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=1">Primeira</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $pagina - 1; ?>">Anterior</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php
+                    // Mostrar páginas próximas
+                    for ($i = max(1, $pagina - 2); $i <= min($total_paginas, $pagina + 2); $i++): ?>
+                        <li class="page-item <?php echo $i == $pagina ? 'active' : ''; ?>">
+                            <a class="page-link" href="?pagina=<?php echo $i; ?>"><?php echo $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php if ($pagina < $total_paginas): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?>">Próxima</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $total_paginas; ?>">Última</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
         </div>
+
     </div>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
