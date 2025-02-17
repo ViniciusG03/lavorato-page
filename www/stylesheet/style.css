@@ -62,7 +62,7 @@ img {
 #btn-atualizarEmMassa,
 #btn-listar,
 #btn-remover,
-#btn-relatorio {
+#btn-relatorio{
     width: 250px;
     border-radius: 8px;
     font-size: 20px;
@@ -96,6 +96,35 @@ img {
  /* Estilizar botões */
  .btn-secondary {
     background-color: #6c757d; /* Cor de fundo do botão fechar */
+ }
+
+ #modalRelatorio textarea {
+    /* Dimensões e espaçamento */
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+     
+    /* Borda e arredondamento igual aos botões */
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+     
+    /* Fonte */
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+     
+    /* Cores similares aos botões */
+    background-color: #fff;
+    color: #212529;
+     
+    /* Comportamento */
+    resize: none;
+    min-height: 80px;
+ }
+
+ #modalRelatorio textarea:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
  }
  
 h1 {

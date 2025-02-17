@@ -25,6 +25,7 @@ require_once '../vendor/autoload.php';
 use Dompdf\Dompdf;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $observacao = $_POST["observacao"];
     $dataSelecionada = $_POST['data'];
     $status = isset($_POST['status']) ? $_POST['status'] : '';
 
@@ -176,33 +177,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dompdf = new Dompdf();
 
     $html = "<!DOCTYPE html>
-            <html lang='pt-BR'>
-            <head>
-                <meta charset='UTF-8'>
-                <title>Relatório</title>
-                <style>
-                    body {
-                        margin: 10mm; 
-                        font-size: 10pt; 
-                    }
-                    table {
-                        border-collapse: collapse;
-                        width: 100%;
-                    }
-                    th, td {
-                        border: 1px solid black;
-                        padding: 5px; 
-                        text-align: center;
-                    }
-                </style>
-            </head>
-            <body>
-                <h1>$tituloRelatorio</h1>
-                <h2>Emitido por: $usuarioResponsavelFormatado</h2>
-                <h2>Em $dataFormatada as $horaDeGeração</h2>
-                $tabelaHTML
-            </body>
-            </html>";
+        <html lang='pt-BR'>
+        <head>
+            <meta charset='UTF-8'>
+            <title>Relatório</title>
+            <style>
+                body {
+                    margin: 10mm; 
+                    font-size: 12pt; 
+                }
+                .title {
+                    text-align: center;
+                }
+                .header-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                .header-table td {
+                    width: 50%;
+                    vertical-align: middle;
+                    font-size: 9pt; 
+                }
+                .header-table td:first-child {
+                    text-align: left;
+                }
+                .header-table td:last-child {
+                    text-align: right;
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                th, td {
+                    border: 1px solid black;
+                    padding: 5px; 
+                    text-align: center;
+                }
+                p {
+                    font-size: 12pt; 
+                }
+            </style>
+        </head>
+        <body>
+            <h1 style='font-size: 12pt;' class='title'>$tituloRelatorio</h1>
+            <table class='header-table'>
+                <tr>
+                    <td>Emitido por: $usuarioResponsavelFormatado</td>
+                    <td>em $dataFormatada às $horaDeGeração</td>
+                </tr>
+            </table>
+            <p>Observação: $observacao</p>
+            $tabelaHTML
+        </body>
+        </html>";
+
 
     $dompdf->loadHtml($html);
 

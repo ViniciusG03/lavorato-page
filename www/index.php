@@ -476,6 +476,10 @@ if (!isset($_SESSION['login'])) {
                 <option value="CAMARA DOS DEPUTADOS">CAMARA DOS DEPUTADOS</option>
               </select>
             </div>
+            <div class="mb-3">
+              <label for="observacao" id="observacao" class="form-label">Observação:</label>
+              <textarea name="observacao" id="observacao" placeholder="Digite sua observação..." class="form-control"></textarea>
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
               <button type="submit" class="btn btn-primary">Salvar</button>
