@@ -6,12 +6,16 @@ if (typeof jQuery == 'undefined') {
 
 document.addEventListener("DOMContentLoaded", () => {
   const btnCadastrar = document.getElementById("btn-cadastrar");
-  const modalCadastro = new bootstrap.Modal(
-    document.getElementById("modalCadastro")
-  );
-  btnCadastrar.addEventListener("click", () => {
-    modalCadastro.show();
-  });
+  if (btnCadastrar) {
+    const modalCadastro = new bootstrap.Modal(
+      document.getElementById("modalCadastro")
+    );
+    btnCadastrar.addEventListener("click", () => {
+      modalCadastro.show();
+    });
+  } else {
+    console.error("Botão de cadastro não encontrado.");
+  }
 
   const btnAtualizar = document.getElementById("btn-atualizar");
   const modalAtualizar = new bootstrap.Modal(
@@ -30,12 +34,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const btnRemover = document.getElementById("btn-remover");
-  const modalRemover = new bootstrap.Modal(
-    document.getElementById("modalRemover")
-  );
-  btnRemover.addEventListener("click", () => {
-    modalRemover.show();
-  });
+  if (btnRemover) {
+    const modalRemover = new bootstrap.Modal(
+      document.getElementById("modalRemover")
+    );
+    btnRemover.addEventListener("click", () => {
+      modalRemover.show();
+    });
+  } else {
+    console.error("Botão de remoção não encontrado.");
+  }
 
   const btnAtualizarEmMassa = document.getElementById("btn-atualizarEmMassa");
   const modalAtualizarEmMassa = new bootstrap.Modal(

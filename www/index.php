@@ -5,6 +5,10 @@ if (!isset($_SESSION['login'])) {
   header("Location: ../login/login.php");
   exit();
 }
+
+function hasPermission($roles) {
+  return (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) || in_array($_SESSION['login'], $roles);
+}
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +58,7 @@ if (!isset($_SESSION['login'])) {
               <li><a class="dropdown-item" href="../login/logout.php">Logout</a></li>
               <li><a class="dropdown-item" href="views/atas.php">ATAS</a></li>
               <?php
-              if (isset($_SESSION['is_admin']) || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'eviny') {
+              if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin'])) {
                 echo '<li><a class="dropdown-item" href="views/relatorios.php">Relatorios</a></li>';
               }
               ?>
@@ -70,29 +74,29 @@ if (!isset($_SESSION['login'])) {
     </div>
     <div class="buttons">
       <?php
-      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'eviny') {
-        echo '<button id="btn-cadastrar">Cadastrar</button>';
+      if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin'])) {
+        echo '<button id="btn-cadastrar" class="btn btn-primary data-bs-toggle="modal">Cadastrar</button>';
       }
       ?>
       <?php
-      if ($_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['is_admin'] || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'talita' || $_SESSION['login'] == 'eviny') {
-        echo '<button id="btn-atualizar">Atualizar</button>';
+      if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])) {
+        echo '<button id="btn-atualizar" class="btn btn-primary data-bs-toggle="modal" data-bs-target=#modalAtualizacao>Atualizar</button>';
       }
       ?>
       <?php
-      if ($_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['is_admin'] || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'talita' || $_SESSION['login'] == 'eviny') {
-        echo '<button id="btn-atualizarEmMassa">Atualizar em massa</button>';
+      if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])) {
+        echo '<button id="btn-atualizarEmMassa" class="btn btn-primary data-bs-toggle="modal">Atualizar em massa</button>';
       }
       ?>
-      <button type="button" id="btn-listar" target="_blank">Listar</button>
+      <button type="button" id="btn-listar" target="_blank" class="btn btn-primary data-bs-toggle=modal">Listar</button>
       <?php
-      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'talita' || $_SESSION['login'] == 'eviny') {
-        echo '<button type="button" id="btn-relatorio">Relatorio</button>';
+      if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])) {
+        echo '<button type="button" id="btn-relatorio" class="btn btn-primary data-bs-toggle="modal">Relatorio</button>';
       }
       ?>
       <?php
-      if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'raphael' || $_SESSION['login'] == 'kaynnanduraes' || $_SESSION['login'] == 'nicole' || $_SESSION['login'] == 'will' || $_SESSION['login'] == 'eviny') {
-        echo '<button type="button" id="btn-remover">Remover</button>';
+      if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin'])) {
+        echo '<button type="button" id="btn-remover" class="btn btn-primary data-bs-toggle="modal">Remover</button>';
       }
       ?>
     </div>
