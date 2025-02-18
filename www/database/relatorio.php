@@ -15,7 +15,7 @@ $usuarios = [
     'nicole' => 'Nicole Santos',
     'kaynnanduraes' => 'Kaynnan Durães',
     'eviny' => 'Eviny Santos',
-    'Tulio' => 'Tulio Uler'
+    'tulio' => 'Tulio Uler'
 ];
 
 $usuarioResponsavelFormatado = $usuarios[$usuarioResponsavel] ?? 'None';
