@@ -185,7 +185,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <style>
                 body {
                     margin: 10mm; 
-                    font-size: 12pt; 
+                    font-size: 10pt; 
                 }
                 .title {
                     text-align: center;

@@ -135,6 +135,7 @@ function hasPermission($roles) {
                 <option>Subiu</option>
                 <option>Cancelado</option>
                 <option>Saiu</option>
+                <option>Retornou</option>
                 <option>Não Usou</option>
                 <option>Assinado</option>
                 <option>Faturado</option>
@@ -241,6 +242,7 @@ function hasPermission($roles) {
                 <option>Subiu</option>
                 <option>Cancelado</option>
                 <option>Saiu</option>
+                <option>Retornou</option>
                 <option>Não Usou</option>
                 <option>Assinado</option>
                 <option>Faturado</option>
@@ -362,6 +364,7 @@ function hasPermission($roles) {
                 <option>Subiu</option>
                 <option>Cancelado</option>
                 <option>Saiu</option>
+                <option>Retornou</option>
                 <option>Não Usou</option>
                 <option>Assinado</option>
                 <option>Faturado</option>
@@ -527,6 +530,7 @@ function hasPermission($roles) {
             <option value="Subiu">Subiu</option>
             <option value="Cancelado">Cancelado</option>
             <option value="Saiu">Saiu</option>
+            <option value="Retornou">Retornou</option>
             <option value="Não Usou">Não Usou</option>
             <option value="Assinado">Assinado</option>
             <option value="Enviado a BM">Enviado a BM</option>
