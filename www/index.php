@@ -6,7 +6,8 @@ if (!isset($_SESSION['login'])) {
   exit();
 }
 
-function hasPermission($roles) {
+function hasPermission($roles)
+{
   return (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) || in_array($_SESSION['login'], $roles);
 }
 ?>
@@ -29,6 +30,7 @@ function hasPermission($roles) {
   <script src="bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="../stylesheet/style.css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="scripts/notificacoes.js"></script>
   <script src="../scripts/autocomplete.js"></script>
   <script src="index.js"></script>
 </head>
@@ -60,6 +62,19 @@ function hasPermission($roles) {
               <?php
               if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin'])) {
                 echo '<li><a class="dropdown-item" href="views/relatorios.php">Relatorios</a></li>';
+              }
+              ?>
+              <?php
+              if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])) {
+                echo '<li><a class="dropdown-item" href="views/relatorios_compartilhados.php">
+                  Relatórios Compartilhados 
+                <span id="notificacao-badge" class="badge bg-danger" style="display: none;">0</span>
+                </a></li>';
+              }
+              ?>
+              <?php
+              if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])) {
+                echo '<li><a class="dropdown-item" href="views/pesquisar_guias.php">Pesquisar Guia em Relatórios</a></li>';
               }
               ?>
             </ul>
@@ -131,15 +146,16 @@ function hasPermission($roles) {
                 <input list="statusGuia" type="text" id="status_guia" name="status_guia" class="form-control"
                   autocomplete="off" />
                 <datalist id="statusGuia">
-                <option>Emitido</option>
-                <option>Subiu</option>
-                <option>Cancelado</option>
-                <option>Saiu</option>
-                <option>Retornou</option>
-                <option>Não Usou</option>
-                <option>Assinado</option>
-                <option>Faturado</option>
-                <option>Enviado a BM</option>
+                  <option>Emitido</option>
+                  <option>Subiu</option>
+                  <option>Cancelado</option>
+                  <option>Saiu</option>
+                  <option>Retornou</option>
+                  <option>Não Usou</option>
+                  <option>Assinado</option>
+                  <option>Faturado</option>
+                  <option>Enviado a BM</option>
+                  <option>Devolvido BM</option>
                 </datalist>
               </div>
               <div class="col-md-6 mb-3">
@@ -238,15 +254,16 @@ function hasPermission($roles) {
                 <input type="text" id="status_guia" name="status_guia" list="statusGuia" class="form-control"
                   autocomplete="off" />
                 <datalist id="statusGuia">
-                <option>Emitido</option>
-                <option>Subiu</option>
-                <option>Cancelado</option>
-                <option>Saiu</option>
-                <option>Retornou</option>
-                <option>Não Usou</option>
-                <option>Assinado</option>
-                <option>Faturado</option>
-                <option>Enviado a BM</option>
+                  <option>Emitido</option>
+                  <option>Subiu</option>
+                  <option>Cancelado</option>
+                  <option>Saiu</option>
+                  <option>Retornou</option>
+                  <option>Não Usou</option>
+                  <option>Assinado</option>
+                  <option>Faturado</option>
+                  <option>Enviado a BM</option>
+                  <option>Devolvido BM</option>
                 </datalist>
               </div>
               <div class="col-md-6 mb-3">
@@ -369,6 +386,7 @@ function hasPermission($roles) {
                 <option>Assinado</option>
                 <option>Faturado</option>
                 <option>Enviado a BM</option>
+                <option>Devolvido BM</option>
               </datalist>
             </div>
             <div class="mb-3">
@@ -535,6 +553,7 @@ function hasPermission($roles) {
             <option value="Assinado">Assinado</option>
             <option value="Enviado a BM">Enviado a BM</option>
             <option value="Faturado">Faturado</option>
+            <option value="Devolvido BM">Devolvido BM</option>
           </select>
         </div>
         <div class="modal-footer">

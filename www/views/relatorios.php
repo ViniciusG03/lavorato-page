@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['login'])) {
-  header("Location: ../login/login.php");
-  exit();
+    header("Location: ../login/login.php");
+    exit();
 }
 
 if ($_SESSION['login'] == 'consulta') {
@@ -97,7 +97,7 @@ if ($_SESSION['login'] == 'consulta') {
                                 <button class="btn btn-secondary w-100 my-2 ficha-option"
                                     data-option="fusex_individual_tipico">Ficha Fusex Individual Tipico</button>
                                 <?php
-                                if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+                                if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'eviny') {
                                     echo '<button class="btn btn-secondary w-100 my-2 ficha-option" data-option="fusex_tipico">Ficha
                                     Fusex Tipico</button>';
                                 }
@@ -105,7 +105,7 @@ if ($_SESSION['login'] == 'consulta') {
                                 <button class="btn btn-secondary w-100 my-2 ficha-option"
                                     data-option="fusex_individual_pne">Ficha Fusex Individual PNE</button>
                                 <?php
-                                if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
+                                if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] || $_SESSION['login'] == 'gustavoramos' || $_SESSION['login'] == 'eviny') {
                                     echo '<button class="btn btn-secondary w-100 my-2 ficha-option" data-option="fusex_pne">Ficha
                                     Fusex PNE</button>';
                                 }
