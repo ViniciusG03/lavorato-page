@@ -77,6 +77,11 @@ function hasPermission($roles)
                 echo '<li><a class="dropdown-item" href="views/pesquisar_guias.php">Pesquisar Guia em Relatórios</a></li>';
               }
               ?>
+              <?php
+              if ($_SESSION['login'] == 'admin' || in_array($_SESSION['login'], ['gustavoramos', 'talita'])) {
+                echo '<li><a class="dropdown-item" href="views/admin_relatorios.php">Admin Relatórios</a></li>';
+              }
+              ?>
             </ul>
           </li>
         </ul>
