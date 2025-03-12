@@ -82,6 +82,11 @@ function hasPermission($roles)
                 echo '<li><a class="dropdown-item" href="views/admin_relatorios.php">Admin Relatórios</a></li>';
               }
               ?>
+              <?php
+              if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])) {
+                echo '<li><a class="dropdown-item" href="views/visualizar_logs.php">Histórico de Alterações</a></li>';
+              }
+              ?>
             </ul>
           </li>
         </ul>

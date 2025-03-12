@@ -6,6 +6,9 @@ if (!isset($_SESSION['login'])) {
     exit();
 }
 
+// Incluir as funções de log
+require_once __DIR__ . '/log_functions.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +48,7 @@ if (!isset($_SESSION['login'])) {
         }
 
         require __DIR__ . '/../vendor/autoload.php'; // Certifique-se de que o caminho está correto
-        
+
         use PhpOffice\PhpSpreadsheet\IOFactory;
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -95,6 +98,11 @@ if (!isset($_SESSION['login'])) {
                             exit();
                         }
 
+                        // Obter o status anterior para registro de log
+                        $row = $result->fetch_assoc();
+                        $statusAnterior = $row['paciente_status'];
+                        $guiaId = $row['id'];
+
                         $sqlUpdate = "UPDATE pacientes SET paciente_status=? WHERE paciente_guia=? AND paciente_mes =?";
                         $stmt = $conn->prepare($sqlUpdate);
 
@@ -106,8 +114,34 @@ if (!isset($_SESSION['login'])) {
 
                         if (!$stmt->execute()) {
                             echo "Erro ao atualizar: " . $stmt->error;
+                        } else {
+                            // Registrar o log de alteração de status se o status foi alterado
+                            if ($statusAnterior != $statusGuia) {
+                                registrar_alteracao_status(
+                                    $guiaId,
+                                    $numeroGuia,
+                                    $statusAnterior,
+                                    $statusGuia,
+                                    $usuarioResponsavel,
+                                    "Atualização via Excel: Mês $mes",
+                                    $conn
+                                );
+                            }
                         }
                     } else {
+                        // Obter o status anterior para registro de log
+                        $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numeroGuia' AND paciente_mes = '$mes'";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            $row = $result->fetch_assoc();
+                            $statusAnterior = $row['paciente_status'];
+                            $guiaId = $row['id'];
+                        } else {
+                            $statusAnterior = null;
+                            $guiaId = null;
+                        }
+
                         $sqlUpdate = "UPDATE pacientes SET paciente_status=?, paciente_valor=?, paciente_lote=?, paciente_data_remessa=?, paciente_faturado=? WHERE paciente_guia=? AND paciente_mes =?";
                         $stmt = $conn->prepare($sqlUpdate);
 
@@ -119,10 +153,21 @@ if (!isset($_SESSION['login'])) {
 
                         if (!$stmt->execute()) {
                             echo "Erro ao atualizar: " . $stmt->error;
+                        } else {
+                            // Registrar o log de alteração de status se o status foi alterado
+                            if ($statusAnterior != $statusGuia && $guiaId) {
+                                registrar_alteracao_status(
+                                    $guiaId,
+                                    $numeroGuia,
+                                    $statusAnterior,
+                                    $statusGuia,
+                                    $usuarioResponsavel,
+                                    "Atualização completa via Excel: Mês $mes",
+                                    $conn
+                                );
+                            }
                         }
                     }
-
-
                 }
 
                 echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
@@ -157,6 +202,12 @@ if (!isset($_SESSION['login'])) {
                         if ($result->num_rows == 0) {
                             echo '<h1>NÚMERO NÃO ENCONTRADO!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
                         } else {
+                            // Obter o status anterior para registro de log
+                            $row = $result->fetch_assoc();
+                            $statusAnterior = $row['paciente_status'];
+                            $guiaId = $row['id'];
+                            $guiaNumero = $row['paciente_guia'];
+
                             $sql_update = "UPDATE pacientes SET paciente_status = '$status_guia', usuario_responsavel = '$usuarioResponsavel'";
                             if (!empty($numero_lote)) {
                                 $sql_update .= ", paciente_lote = '$numero_lote'";
@@ -169,6 +220,7 @@ if (!isset($_SESSION['login'])) {
                             }
                             if (!empty($correcao_guia)) {
                                 $sql_update .= ", paciente_guia = '$correcao_guia'";
+                                $guiaNumero = $correcao_guia; // Atualizar o número da guia para o log
                             }
                             if (!empty($valor_guia)) {
                                 $sql_update .= ", paciente_valor = '$valor_guia'";
@@ -197,6 +249,19 @@ if (!isset($_SESSION['login'])) {
 
                             if ($conn->query($sql_update) === TRUE) {
                                 echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+
+                                // Registrar o log de alteração de status se o status foi alterado
+                                if ($statusAnterior != $status_guia) {
+                                    registrar_alteracao_status(
+                                        $guiaId,
+                                        $guiaNumero,
+                                        $statusAnterior,
+                                        $status_guia,
+                                        $usuarioResponsavel,
+                                        "Atualização manual via formulário",
+                                        $conn
+                                    );
+                                }
                             } else {
                                 echo "Erro ao atualizar: " . $conn->error;
                             }
