@@ -60,25 +60,25 @@ $params = [];
 $types = '';
 
 if (!empty($filtro_guia)) {
-    $where_conditions[] = "paciente_guia LIKE ?";
+    $where_conditions[] = "l.paciente_guia LIKE ?";
     $params[] = "%$filtro_guia%";
     $types .= 's';
 }
 
 if (!empty($filtro_usuario)) {
-    $where_conditions[] = "usuario_responsavel = ?";
+    $where_conditions[] = "l.usuario_responsavel = ?";
     $params[] = $filtro_usuario;
     $types .= 's';
 }
 
 if (!empty($filtro_data_inicio)) {
-    $where_conditions[] = "data_alteracao >= ?";
+    $where_conditions[] = "l.data_alteracao >= ?";
     $params[] = $filtro_data_inicio . ' 00:00:00';
     $types .= 's';
 }
 
 if (!empty($filtro_data_fim)) {
-    $where_conditions[] = "data_alteracao <= ?";
+    $where_conditions[] = "l.data_alteracao <= ?";
     $params[] = $filtro_data_fim . ' 23:59:59';
     $types .= 's';
 }
@@ -86,7 +86,7 @@ if (!empty($filtro_data_fim)) {
 $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
 
 // Consulta para contar o total de registros
-$sql_count = "SELECT COUNT(*) as total FROM guias_status_logs $where_clause";
+$sql_count = "SELECT COUNT(*) as total FROM guias_status_logs l $where_clause";
 $stmt_count = $conn->prepare($sql_count);
 
 if (!empty($types)) {
@@ -275,6 +275,7 @@ $result_logs = $stmt_logs->get_result();
                                 <th>Novo Status</th>
                                 <th>Usuário</th>
                                 <th>Observação</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -313,11 +314,16 @@ $result_logs = $stmt_logs->get_result();
                                         </td>
                                         <td><?php echo isset($usuarios[$log['usuario_responsavel']]) ? $usuarios[$log['usuario_responsavel']] : $log['usuario_responsavel']; ?></td>
                                         <td><?php echo !empty($log['observacao']) ? htmlspecialchars($log['observacao']) : '<span class="text-muted">Nenhuma</span>'; ?></td>
+                                        <td>
+                                            <a href="historico_guia.php?guia=<?php echo urlencode($log['paciente_guia']); ?>" class="btn btn-sm btn-info">
+                                                Ver Histórico
+                                            </a>
+                                        </td>
                                     </tr>
                                 <?php endwhile; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="7" class="text-center">Nenhum registro encontrado.</td>
+                                    <td colspan="8" class="text-center">Nenhum registro encontrado.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
