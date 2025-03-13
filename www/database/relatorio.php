@@ -297,82 +297,231 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Relatório</title>
+            <title>Relatório - Lavorato System</title>
+            <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon">
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
             <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-            <link rel="stylesheet" href="../stylesheet/relatorio.css">
+            <link rel="stylesheet" href="../stylesheet/base.css">
             <style>
+                :root {
+                    --main-bg-color: #b9d7d9;
+                    --main-color-btn: #00b3ffde;
+                    --main-nav-color: #00b3ffde;
+                }
+                
+                body {
+                    background-color: var(--main-bg-color);
+                    font-family: "Poppins", sans-serif;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }
+                
+                .navbar {
+                    background-color: var(--main-nav-color) !important;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+                
+                .page-header {
+                    background-color: #fff;
+                    border-radius: 0.5rem;
+                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+                    margin-bottom: 1.5rem;
+                    padding: 1.5rem;
+                }
+                
+                .btn-primary {
+                    background-color: var(--main-color-btn);
+                    border-color: var(--main-color-btn);
+                }
+                
+                .btn-primary:hover {
+                    background-color: #0099cc;
+                    border-color: #0099cc;
+                }
+                
+                .btn-outline-primary {
+                    color: var(--main-color-btn);
+                    border-color: var(--main-color-btn);
+                }
+                
+                .btn-outline-primary:hover {
+                    background-color: var(--main-color-btn);
+                    border-color: var(--main-color-btn);
+                }
+                
                 .pdf-container {
                     width: 100%;
                     height: 600px;
                     border: 1px solid #ddd;
-                    margin-bottom: 20px;
+                    border-radius: 0.5rem;
+                    margin-bottom: 1.5rem;
+                    background-color: #fff;
+                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
                 }
+                
+                .card {
+                    border: none;
+                    border-radius: 0.5rem;
+                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+                    margin-bottom: 1.5rem;
+                }
+                
+                .card-header {
+                    background-color: var(--main-color-btn);
+                    color: white;
+                    border-radius: 0.5rem 0.5rem 0 0 !important;
+                    padding: 1rem 1.25rem;
+                }
+                
                 .message-container {
                     width: 100%;
                     background-color: #f8f9fa;
                     border: 1px solid #ddd;
-                    border-radius: 8px;
-                    padding: 20px;
-                    margin-bottom: 20px;
+                    border-radius: 0.5rem;
+                    padding: 2rem;
+                    margin-bottom: 1.5rem;
                     text-align: center;
+                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
                 }
+                
                 .compartilhar-panel {
-                    background-color: #00b3ffde;
-                    padding: 15px;
-                    border-radius: 8px;
-                    margin-top: 20px;
-                    color: white;
+                    background-color: white;
+                    padding: 1.5rem;
+                    border-radius: 0.5rem;
+                    margin-top: 1.5rem;
+                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
                 }
+                
+                .compartilhar-panel .card-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                
                 .form-group {
-                    margin-bottom: 15px;
+                    margin-bottom: 1rem;
                 }
-                .form-group label {
-                    display: block;
-                    margin-bottom: 5px;
+                
+                .notifications {
+                    background-color: white;
+                    border-radius: 0.5rem;
+                    padding: 1.5rem;
+                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
                 }
-                .form-group select, .form-group textarea {
-                    width: 100%;
-                    padding: 8px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
+                
+                .notifications h3 {
+                    color: var(--main-color-btn);
+                    font-size: 1.25rem;
+                    margin-bottom: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
                 }
-                .btn-primary {
-                    background-color: #0099cc;
-                    border: none;
-                    padding: 8px 15px;
+                
+                .alert {
+                    border-left: 4px solid #ffc107;
+                    background-color: #fff8e1;
+                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+                }
+                
+                .footer {
+                    margin-top: auto;
+                    background-color: var(--main-nav-color);
                     color: white;
-                    border-radius: 4px;
-                    cursor: pointer;
+                    padding: 1rem 0;
+                }
+                
+                @media (max-width: 768px) {
+                    .pdf-container {
+                        height: 400px;
+                    }
+                    
+                    .page-header {
+                        padding: 1rem;
+                    }
                 }
             </style>
         </head>
         <body>
-            <div class="nav">
-                <button id="homeButton">Home</button>
-                ';
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center" href="#">
+                        Lavorato System
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="../index.php">
+                                    <i class="fas fa-home me-1"></i> Home
+                                </a>
+                            </li>';
+                            
         if ($temRegistros) {
-            echo '<button id="gerarPDF">PDF Completo</button>';
+            echo '<li class="nav-item">
+                    <a class="nav-link" href="gerar_pdf.php" id="gerarPDF">
+                        <i class="fas fa-file-pdf me-1"></i> PDF Completo
+                    </a>
+                </li>';
         }
-        echo '
-                <h1>Lavorato\'s System</h1>
-            </div>
-            <div class="container">';
+        
+        echo '</ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container my-4">
+                <div class="page-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="h3 mb-0">Visualização de Relatório</h1>
+                            <p class="mb-0 text-muted">Gerado em ' . $dataFormatada . ' às ' . $horaDeGeração . ' por ' . $usuarioResponsavelFormatado . '</p>
+                        </div>
+                        <div>';
+                        
+        if ($temRegistros) {
+            echo '<a href="gerar_pdf.php" class="btn btn-outline-primary">
+                    <i class="fas fa-download me-1"></i> Baixar PDF
+                </a>';
+        }
+        
+        echo '</div>
+                    </div>
+                </div>';
 
         if ($temRegistros) {
             // Se tem registros, mostra o iframe com o PDF
-            echo '<iframe src="gerar_pdf.php" class="pdf-container"></iframe>';
+            echo '<div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-file-alt me-2"></i> Relatório
+                    </div>
+                    <div class="card-body p-0">
+                        <iframe src="gerar_pdf.php" class="pdf-container"></iframe>
+                    </div>
+                </div>';
 
             // Painel de compartilhamento apenas se tem registros
-            echo '<div class="compartilhar-panel">
-                        <h3>Compartilhar Relatório</h3>
+            echo '<div class="card compartilhar-panel">
+                    <div class="card-header">
+                        <i class="fas fa-share-alt me-2"></i> Compartilhar Relatório
+                    </div>
+                    <div class="card-body">
                         <form action="' . $_SERVER["PHP_SELF"] . '" method="post">
                             <input type="hidden" name="relatorio_id" value="' . $relatorio_id . '">
                             <input type="hidden" name="titulo_relatorio" value="Relatório de ' . $usuarioResponsavelFormatado . ' - ' . $dataFormatada . '">
                             <input type="hidden" name="dados_relatorio" value="' . base64_encode($html) . '">
                             
-                            <div class="form-group">
-                                <label for="usuario_destino">Compartilhar com:</label>
-                                <select name="usuario_destino" id="usuario_destino" class="form-control" required>';
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="usuario_destino" class="form-label">Compartilhar com:</label>
+                                        <select name="usuario_destino" id="usuario_destino" class="form-select" required>';
 
             foreach ($usuarios as $login => $nome) {
                 if ($login != $usuarioResponsavel) { // Não mostrar o usuário atual na lista
@@ -381,31 +530,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             echo '</select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="observacao_compartilhamento" class="form-label">Observação:</label>
+                                        <textarea name="observacao_compartilhamento" id="observacao_compartilhamento" class="form-control" rows="1"></textarea>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <div class="form-group">
-                                <label for="observacao_compartilhamento">Observação:</label>
-                                <textarea name="observacao_compartilhamento" id="observacao_compartilhamento" class="form-control" rows="3"></textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <button type="submit" name="compartilhar_relatorio" class="btn btn-primary">Compartilhar</button>
+                            <div class="form-group mt-3">
+                                <button type="submit" name="compartilhar_relatorio" class="btn btn-primary">
+                                    <i class="fas fa-share me-1"></i> Compartilhar
+                                </button>
                             </div>
                         </form>
-                    </div>';
+                    </div>
+                </div>';
         } else {
             // Se não tem registros, mostra a mensagem diretamente
             echo '<div class="message-container">
-                        <h2 style="color: #6c757d; margin-bottom: 10px;">Nenhum registro encontrado</h2>
+                    <div class="text-center mb-4">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h2 class="h4" style="color: #6c757d; margin-bottom: 10px;">Nenhum registro encontrado</h2>
                         <p style="color: #6c757d;">Não foram encontrados registros correspondentes aos critérios de busca selecionados.</p>
                         <p style="color: #6c757d;">Tente modificar os filtros ou selecionar outro período.</p>
-                        <button class="btn btn-primary mt-3" id="voltarButton">Voltar para os filtros</button>
-                    </div>';
+                    </div>
+                    <button class="btn btn-primary mt-3" id="voltarButton">
+                        <i class="fas fa-arrow-left me-1"></i> Voltar para os filtros
+                    </button>
+                </div>';
         }
 
         // Mostrar notificações de relatórios compartilhados
         echo '<div class="notifications mt-4">
-                    <h3 style="color: #333;">Notificações de Relatórios</h3>';
+                <h3><i class="fas fa-bell me-2"></i> Notificações de Relatórios</h3>';
 
         // Consultar relatórios compartilhados com o usuário atual
         $sql_notificacoes = "SELECT * FROM relatorios_compartilhados WHERE usuario_destino = ? AND status = 'pendente' ORDER BY data_compartilhamento DESC LIMIT 5";
@@ -417,45 +578,65 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result_notificacoes->num_rows > 0) {
             while ($notificacao = $result_notificacoes->fetch_assoc()) {
                 echo '<div class="alert alert-warning">
-                                <p><strong>Relatório:</strong> ' . htmlspecialchars($notificacao['titulo']) . '</p>
-                                <p><strong>De:</strong> ' . $usuarios[$notificacao['usuario_origem']] . '</p>
-                                <p><strong>Data:</strong> ' . date('d/m/Y H:i', strtotime($notificacao['data_compartilhamento'])) . '</p>';
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="alert-heading">' . htmlspecialchars($notificacao['titulo']) . '</h5>
+                                <p class="mb-1"><strong>De:</strong> ' . $usuarios[$notificacao['usuario_origem']] . '</p>
+                                <p class="mb-1"><strong>Data:</strong> ' . date('d/m/Y H:i', strtotime($notificacao['data_compartilhamento'])) . '</p>';
 
                 if ($notificacao['observacao']) {
-                    echo '<p><strong>Observação:</strong> ' . htmlspecialchars($notificacao['observacao']) . '</p>';
+                    echo '<p class="mb-0"><strong>Observação:</strong> ' . htmlspecialchars($notificacao['observacao']) . '</p>';
                 }
 
-                echo '<div class="mt-2">
-                                <a href="../views/relatorios_compartilhados.php" class="btn btn-sm btn-info">Ver Todos</a>
+                echo '</div>
+                            <div>
+                                <a href="../views/relatorios_compartilhados.php" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye me-1"></i> Visualizar
+                                </a>
                             </div>
-                            </div>';
+                        </div>
+                    </div>';
             }
+            
+            echo '<div class="text-center mt-3">
+                    <a href="../views/relatorios_compartilhados.php" class="btn btn-outline-primary">
+                        <i class="fas fa-list me-1"></i> Ver Todos os Relatórios
+                    </a>
+                </div>';
         } else {
-            echo '<p>Você não tem notificações de relatórios pendentes.</p>';
+            echo '<div class="alert alert-info">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle me-3 fa-lg"></i>
+                        <p class="mb-0">Você não tem notificações de relatórios pendentes.</p>
+                    </div>
+                </div>';
         }
 
         echo '</div>
             </div>
 
-            <script>
-                const btnListar = document.getElementById("homeButton");
-                btnListar.addEventListener("click", () => {
-                    window.location.href = "../index.php";
-                });';
+            <footer class="footer">
+                <div class="container text-center">
+                    <p class="mb-0">© 2025 Lavorato Tech. Todos os direitos reservados.</p>
+                </div>
+            </footer>
 
-        if ($temRegistros) {
-            echo 'const btnGerarPDF = document.getElementById("gerarPDF");
-                    btnGerarPDF.addEventListener("click", () => {
-                        window.location.href = "gerar_pdf.php";
-                    });';
-        } else {
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+            <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {';
+
+        if (!$temRegistros) {
             echo 'const btnVoltar = document.getElementById("voltarButton");
-                    btnVoltar.addEventListener("click", () => {
-                        window.history.back();
-                    });';
+                    if (btnVoltar) {
+                        btnVoltar.addEventListener("click", () => {
+                            window.history.back();
+                        });
+                    }';
         }
 
-        echo '</script>
+        echo '});
+            </script>
         </body>
         </html>';
 
@@ -465,55 +646,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório</title>
-    <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="../stylesheet/relatorio.css">
-    <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon">
-</head>
-<style>
-    h1,
-    h3 {
-        color: white;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-</style>
-
-<body>
-    <div class="nav">
-        <button id="homeButton">Home</button>
-        <button id="gerarPDF">PDF</button>
-        <h1>Lavorato's System</h1>
-    </div>
-    <div class="container">
-        <?php echo isset($tituloRelatorio) ? $tituloRelatorio : "<h1>Relatório</h1>"; ?>
-        <?php echo isset($subtituloRelatorio) ? $subtituloRelatorio : "<h3>Sistema Lavorato</h3>"; ?>
-        <?php echo isset($tabelaHTML) ? $tabelaHTML : "<p>Nenhum relatório gerado. Por favor, envie o formulário para gerar o relatório.</p>"; ?>
-    </div>
-
-    <script>
-        const btnListar = document.getElementById('homeButton');
-        btnListar.addEventListener('click', () => {
-            window.location.href = '../index.php';
-        });
-
-        const btnGerarPDF = document.getElementById('gerarPDF');
-        btnGerarPDF.addEventListener('click', () => {
-            window.location.href = '<?php echo $_SERVER["PHP_SELF"]; ?>';
-        });
-    </script>
-</body>
-
-</html>
