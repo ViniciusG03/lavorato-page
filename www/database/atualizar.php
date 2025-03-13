@@ -9,284 +9,329 @@ if (!isset($_SESSION['login'])) {
 // Incluir as funções de log
 require_once __DIR__ . '/log_functions.php';
 
-?>
+// Verificar se é uma solicitação AJAX
+$isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
-<!DOCTYPE html>
-<html lang="pt-br">
+$usuarioResponsavel = $_SESSION['login'];
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atualização de Guias</title>
-    <link rel="shortcut icon" href="../assets/Logo-Lavorato-alfa.png" type="image/x-icon" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="../stylesheet/atualizar.css">
-</head>
+$servername = "mysql.lavoratoguias.kinghost.net";
+$username = "lavoratoguias";
+$password = "A3g7K2m9T5p8L4v6";
+$database = "lavoratoguias";
 
-<body>
-    <div class="nav">
-        <button id="homeButton">Home</button>
-        <h1>Lavorato's System</h1>
-    </div>
-    <div class="container">
-        <?php
-        $usuarioResponsavel = $_SESSION['login'];
+$conn = new mysqli($servername, $username, $password, $database);
 
-        $servername = "mysql.lavoratoguias.kinghost.net";
-        $username = "lavoratoguias";
-        $password = "A3g7K2m9T5p8L4v6";
-        $database = "lavoratoguias";
+if ($conn->connect_error) {
+    if ($isAjax) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => "Erro na conexão: " . $conn->connect_error]);
+        exit();
+    } else {
+        die("Erro na conexão: " . $conn->connect_error);
+    }
+}
 
-        $conn = new mysqli($servername, $username, $password, $database);
+require __DIR__ . '/../vendor/autoload.php'; // Certifique-se de que o caminho está correto
 
-        if ($conn->connect_error) {
-            die("Erro na conexão: " . $conn->connect_error);
-        }
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
-        require __DIR__ . '/../vendor/autoload.php'; // Certifique-se de que o caminho está correto
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_FILES['excelFile']) && $_FILES['excelFile']['size'] > 0) {
+        $fileName = $_FILES['excelFile']['tmp_name'];
+        $spreadsheet = IOFactory::load($fileName);
+        $sheet = $spreadsheet->getActiveSheet();
+        $data = $sheet->toArray();
 
-        use PhpOffice\PhpSpreadsheet\IOFactory;
+        $atualizacoes = 0;
+        $erros = [];
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        foreach ($data as $row) {
+            $numeroGuia = $row[0];
+            $statusGuia = $row[1];
+            $valorGuia = $row[2];
+            $numeroLote = $row[3];
+            $dataRemessa = $row[4];
+            // $quantidadeFaturada = $row[5];
+            $mes = $_POST["mes"];
 
-            if (isset($_FILES['excelFile']) && $_FILES['excelFile']['size'] > 0) {
-                $fileName = $_FILES['excelFile']['tmp_name'];
-                $spreadsheet = IOFactory::load($fileName);
-                $sheet = $spreadsheet->getActiveSheet();
-                $data = $sheet->toArray();
+            if (empty($statusGuia) && empty($valorGuia) && empty($numeroLote) && empty($dataRemessa) && empty($quantidadeFaturada)) {
+                $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numeroGuia' AND paciente_mes = '$mes'";
+                $result = $conn->query($sql);
 
-                foreach ($data as $row) {
-                    $numeroGuia = $row[0];
-                    $statusGuia = $row[1];
-                    $valorGuia = $row[2];
-                    $numeroLote = $row[3];
-                    $dataRemessa = $row[4];
-                    // $quantidadeFaturada = $row[5];
-                    $mes = $_POST["mes"];
-
-                    if (empty($statusGuia) && empty($valorGuia) && empty($numeroLote) && empty($dataRemessa) && empty($quantidadeFaturada)) {
-                        $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numeroGuia' AND paciente_mes = '$mes'";
-                        $result = $conn->query($sql);
-
-                        if ($result->num_rows == 0) {
-                            echo '<h1>NÚMERO NÃO ENCONTRADO!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
-                            exit();
-                        }
-
-                        $sqlUpdate = "UPDATE pacientes SET paciente_faturado=? WHERE paciente_guia=? AND paciente_mes =?";
-                        $stmt = $conn->prepare($sqlUpdate);
-
-                        if ($stmt === false) {
-                            die('Prepare failed: ' . $conn->error);
-                        }
-
-                        $stmt->bind_param("sss", $quantidadeFaturada, $numeroGuia, $mes);
-
-                        if (!$stmt->execute()) {
-                            echo "Erro ao atualizar: " . $stmt->error;
-                        }
-                    } else if (empty($valor_guia) && empty($numeroLote) && empty($dataRemessa) && empty($quantidadeFaturada)) {
-                        $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numeroGuia' AND paciente_mes = '$mes'";
-                        $result = $conn->query($sql);
-
-                        if ($result->num_rows == 0) {
-                            echo '<h1>NÚMERO NÃO ENCONTRADO!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
-                            exit();
-                        }
-
-                        // Obter o status anterior para registro de log
-                        $row = $result->fetch_assoc();
-                        $statusAnterior = $row['paciente_status'];
-                        $guiaId = $row['id'];
-
-                        $sqlUpdate = "UPDATE pacientes SET paciente_status=? WHERE paciente_guia=? AND paciente_mes =?";
-                        $stmt = $conn->prepare($sqlUpdate);
-
-                        if ($stmt === false) {
-                            die('Prepare failed: ' . $conn->error);
-                        }
-
-                        $stmt->bind_param("sss", $statusGuia, $numeroGuia, $mes);
-
-                        if (!$stmt->execute()) {
-                            echo "Erro ao atualizar: " . $stmt->error;
-                        } else {
-                            // Registrar o log de alteração de status se o status foi alterado
-                            if ($statusAnterior != $statusGuia) {
-                                registrar_alteracao_status(
-                                    $guiaId,
-                                    $numeroGuia,
-                                    $statusAnterior,
-                                    $statusGuia,
-                                    $usuarioResponsavel,
-                                    "Atualização via Excel: Mês $mes",
-                                    $conn
-                                );
-                            }
-                        }
-                    } else {
-                        // Obter o status anterior para registro de log
-                        $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numeroGuia' AND paciente_mes = '$mes'";
-                        $result = $conn->query($sql);
-
-                        if ($result->num_rows > 0) {
-                            $row = $result->fetch_assoc();
-                            $statusAnterior = $row['paciente_status'];
-                            $guiaId = $row['id'];
-                        } else {
-                            $statusAnterior = null;
-                            $guiaId = null;
-                        }
-
-                        $sqlUpdate = "UPDATE pacientes SET paciente_status=?, paciente_valor=?, paciente_lote=?, paciente_data_remessa=?, paciente_faturado=? WHERE paciente_guia=? AND paciente_mes =?";
-                        $stmt = $conn->prepare($sqlUpdate);
-
-                        if ($stmt === false) {
-                            die('Prepare failed: ' . $conn->error);
-                        }
-
-                        $stmt->bind_param("sssssss", $statusGuia, $valorGuia, $numeroLote, $dataRemessa, $quantidadeFaturada, $numeroGuia, $mes);
-
-                        if (!$stmt->execute()) {
-                            echo "Erro ao atualizar: " . $stmt->error;
-                        } else {
-                            // Registrar o log de alteração de status se o status foi alterado
-                            if ($statusAnterior != $statusGuia && $guiaId) {
-                                registrar_alteracao_status(
-                                    $guiaId,
-                                    $numeroGuia,
-                                    $statusAnterior,
-                                    $statusGuia,
-                                    $usuarioResponsavel,
-                                    "Atualização completa via Excel: Mês $mes",
-                                    $conn
-                                );
-                            }
-                        }
-                    }
+                if ($result->num_rows == 0) {
+                    $erros[] = "Número de guia não encontrado: $numeroGuia";
+                    continue;
                 }
 
-                echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
-                exit();
-            } else {
-                $numero_guia = $_POST["numero_guia"];
-                $status_guia = $_POST["status_guia"];
-                $correcao_guia = $_POST["correcao_guia"];
-                $numero_lote = $_POST["numero_lote"];
-                $entrada = $_POST["entrada"];
-                $saida = $_POST["saida"];
-                $valor_guia = $_POST["valor_guia"];
-                $data_remessa = $_POST["data_remessa"];
-                $validade = $_POST["validade"];
-                $section = $_POST["section"];
-                $especialidade = $_POST["especialidade"];
-                $quantidadeFaturada = $_POST["qtd_faturada"];
-                $checkbox_guia = isset($_POST['checkbox_guia']) ? $_POST['checkbox_guia'] : 0;
-                $mes = $_POST["mes"];
+                $sqlUpdate = "UPDATE pacientes SET paciente_faturado=? WHERE paciente_guia=? AND paciente_mes =?";
+                $stmt = $conn->prepare($sqlUpdate);
 
-                if (empty($numero_guia) || empty($status_guia)) {
-                    echo '<h1>Por favor, informe o <strong>ID</strong> do paciente e status!</h1><p>Clique em "Home" para voltar a página principal!</p>';
+                if ($stmt === false) {
+                    $erros[] = "Erro ao preparar consulta: " . $conn->error;
+                    continue;
+                }
+
+                $stmt->bind_param("sss", $quantidadeFaturada, $numeroGuia, $mes);
+
+                if (!$stmt->execute()) {
+                    $erros[] = "Erro ao atualizar guia $numeroGuia: " . $stmt->error;
                 } else {
-                    if ($entrada !== "" || $saida !== "" || $status_guia !== "" || $numero_lote !== "") {
-                        if ($checkbox_guia) {
-                            $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numero_guia' AND paciente_mes = '$mes'";
-                        } else {
-                            $sql = "SELECT * FROM pacientes WHERE id = '$numero_guia'";
-                        }
-                        $result = $conn->query($sql);
+                    $atualizacoes++;
+                }
+            } else if (empty($valor_guia) && empty($numeroLote) && empty($dataRemessa) && empty($quantidadeFaturada)) {
+                $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numeroGuia' AND paciente_mes = '$mes'";
+                $result = $conn->query($sql);
 
-                        if ($result->num_rows == 0) {
-                            echo '<h1>NÚMERO NÃO ENCONTRADO!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
-                        } else {
-                            // Obter o status anterior para registro de log
-                            $row = $result->fetch_assoc();
-                            $statusAnterior = $row['paciente_status'];
-                            $guiaId = $row['id'];
-                            $guiaNumero = $row['paciente_guia'];
+                if ($result->num_rows == 0) {
+                    $erros[] = "Número de guia não encontrado: $numeroGuia";
+                    continue;
+                }
 
-                            $sql_update = "UPDATE pacientes SET paciente_status = '$status_guia', usuario_responsavel = '$usuarioResponsavel'";
-                            if (!empty($numero_lote)) {
-                                $sql_update .= ", paciente_lote = '$numero_lote'";
-                            }
-                            if (!empty($entrada)) {
-                                $sql_update .= ", paciente_entrada = '$entrada'";
-                            }
-                            if (!empty($saida)) {
-                                $sql_update .= ", paciente_saida = '$saida'";
-                            }
-                            if (!empty($correcao_guia)) {
-                                $sql_update .= ", paciente_guia = '$correcao_guia'";
-                                $guiaNumero = $correcao_guia; // Atualizar o número da guia para o log
-                            }
-                            if (!empty($valor_guia)) {
-                                $sql_update .= ", paciente_valor = '$valor_guia'";
-                            }
-                            if (!empty($data_remessa)) {
-                                $sql_update .= ", paciente_data_remessa = '$data_remessa'";
-                            }
-                            if (!empty($validade)) {
-                                $sql_update .= ", paciente_validade = '$validade'";
-                            }
-                            if (!empty($section)) {
-                                $sql_update .= ", paciente_section = '$section'";
-                            }
-                            if (!empty($especialidade)) {
-                                $sql_update .= ", paciente_especialidade = '$especialidade'";
-                            }
-                            if (!empty($quantidadeFaturada)) {
-                                $sql_update .= ", paciente_faturado = '$quantidadeFaturada'";
-                            }
+                // Obter o status anterior para registro de log
+                $row = $result->fetch_assoc();
+                $statusAnterior = $row['paciente_status'];
+                $guiaId = $row['id'];
 
-                            if ($checkbox_guia) {
-                                $sql_update .= " WHERE paciente_guia = '$numero_guia'";
-                            } else {
-                                $sql_update .= " WHERE id = '$numero_guia'";
-                            }
+                $sqlUpdate = "UPDATE pacientes SET paciente_status=? WHERE paciente_guia=? AND paciente_mes =?";
+                $stmt = $conn->prepare($sqlUpdate);
 
-                            if ($conn->query($sql_update) === TRUE) {
-                                echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+                if ($stmt === false) {
+                    $erros[] = "Erro ao preparar consulta: " . $conn->error;
+                    continue;
+                }
 
-                                // Registrar o log de alteração de status se o status foi alterado
-                                if ($statusAnterior != $status_guia) {
-                                    registrar_alteracao_status(
-                                        $guiaId,
-                                        $guiaNumero,
-                                        $statusAnterior,
-                                        $status_guia,
-                                        $usuarioResponsavel,
-                                        "Atualização manual via formulário",
-                                        $conn
-                                    );
-                                }
-                            } else {
-                                echo "Erro ao atualizar: " . $conn->error;
-                            }
-                        }
-                    } else {
-                        echo "<h1>Nenhum campo para atualizar!</h1>";
+                $stmt->bind_param("sss", $statusGuia, $numeroGuia, $mes);
+
+                if (!$stmt->execute()) {
+                    $erros[] = "Erro ao atualizar guia $numeroGuia: " . $stmt->error;
+                } else {
+                    $atualizacoes++;
+                    // Registrar o log de alteração de status se o status foi alterado
+                    if ($statusAnterior != $statusGuia) {
+                        registrar_alteracao_status(
+                            $guiaId,
+                            $numeroGuia,
+                            $statusAnterior,
+                            $statusGuia,
+                            $usuarioResponsavel,
+                            "Atualização via Excel: Mês $mes",
+                            $conn
+                        );
+                    }
+                }
+            } else {
+                // Obter o status anterior para registro de log
+                $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numeroGuia' AND paciente_mes = '$mes'";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    $statusAnterior = $row['paciente_status'];
+                    $guiaId = $row['id'];
+                } else {
+                    $erros[] = "Número de guia não encontrado: $numeroGuia";
+                    continue;
+                }
+
+                $sqlUpdate = "UPDATE pacientes SET paciente_status=?, paciente_valor=?, paciente_lote=?, paciente_data_remessa=?, paciente_faturado=? WHERE paciente_guia=? AND paciente_mes =?";
+                $stmt = $conn->prepare($sqlUpdate);
+
+                if ($stmt === false) {
+                    $erros[] = "Erro ao preparar consulta: " . $conn->error;
+                    continue;
+                }
+
+                $stmt->bind_param("sssssss", $statusGuia, $valorGuia, $numeroLote, $dataRemessa, $quantidadeFaturada, $numeroGuia, $mes);
+
+                if (!$stmt->execute()) {
+                    $erros[] = "Erro ao atualizar guia $numeroGuia: " . $stmt->error;
+                } else {
+                    $atualizacoes++;
+                    // Registrar o log de alteração de status se o status foi alterado
+                    if ($statusAnterior != $statusGuia && $guiaId) {
+                        registrar_alteracao_status(
+                            $guiaId,
+                            $numeroGuia,
+                            $statusAnterior,
+                            $statusGuia,
+                            $usuarioResponsavel,
+                            "Atualização completa via Excel: Mês $mes",
+                            $conn
+                        );
                     }
                 }
             }
-
-            $conn->close();
         }
-        ?>
 
+        if ($isAjax) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => (count($erros) == 0),
+                'message' => "Atualização concluída. $atualizacoes guias atualizadas.",
+                'errors' => $erros
+            ]);
+            exit();
+        } else {
+            echo '<h1>Atualização bem-sucedida</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+            if (count($erros) > 0) {
+                echo '<h2>Erros encontrados:</h2>';
+                foreach ($erros as $erro) {
+                    echo "<p>$erro</p>";
+                }
+            }
+            exit();
+        }
+    } else {
+        $numero_guia = $_POST["numero_guia"];
+        $status_guia = $_POST["status_guia"];
+        $correcao_guia = $_POST["correcao_guia"];
+        $numero_lote = $_POST["numero_lote"];
+        $entrada = $_POST["entrada"];
+        $saida = $_POST["saida"];
+        $valor_guia = $_POST["valor_guia"];
+        $data_remessa = $_POST["data_remessa"];
+        $validade = $_POST["validade"];
+        $section = $_POST["section"];
+        $especialidade = $_POST["especialidade"];
+        $quantidadeFaturada = $_POST["qtd_faturada"];
+        $checkbox_guia = isset($_POST['checkbox_guia']) ? $_POST['checkbox_guia'] : 0;
+        $mes = $_POST["mes"];
 
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const btnListar = document.getElementById('homeButton');
-                btnListar.addEventListener('click', () => {
-                    window.location.href = '../index.php';
-                });
-            });
-        </script>
+        $mensagem = "";
 
-    </div>
-</body>
+        if (empty($numero_guia) || empty($status_guia)) {
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => "Por favor, informe o ID do paciente e status!"
+                ]);
+                exit();
+            } else {
+                echo '<h1>Por favor, informe o <strong>ID</strong> do paciente e status!</h1><p>Clique em "Home" para voltar a página principal!</p>';
+            }
+        } else {
+            if ($entrada !== "" || $saida !== "" || $status_guia !== "" || $numero_lote !== "") {
+                if ($checkbox_guia) {
+                    $sql = "SELECT * FROM pacientes WHERE paciente_guia = '$numero_guia' AND paciente_mes = '$mes'";
+                } else {
+                    $sql = "SELECT * FROM pacientes WHERE id = '$numero_guia'";
+                }
+                $result = $conn->query($sql);
 
-</html>
+                if ($result->num_rows == 0) {
+                    if ($isAjax) {
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'success' => false,
+                            'message' => "NÚMERO NÃO ENCONTRADO!"
+                        ]);
+                        exit();
+                    } else {
+                        echo '<h1>NÚMERO NÃO ENCONTRADO!</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+                    }
+                } else {
+                    // Obter o status anterior para registro de log
+                    $row = $result->fetch_assoc();
+                    $statusAnterior = $row['paciente_status'];
+                    $guiaId = $row['id'];
+                    $guiaNumero = $row['paciente_guia'];
+
+                    $sql_update = "UPDATE pacientes SET paciente_status = '$status_guia', usuario_responsavel = '$usuarioResponsavel'";
+                    if (!empty($numero_lote)) {
+                        $sql_update .= ", paciente_lote = '$numero_lote'";
+                    }
+                    if (!empty($entrada)) {
+                        $sql_update .= ", paciente_entrada = '$entrada'";
+                    }
+                    if (!empty($saida)) {
+                        $sql_update .= ", paciente_saida = '$saida'";
+                    }
+                    if (!empty($correcao_guia)) {
+                        $sql_update .= ", paciente_guia = '$correcao_guia'";
+                        $guiaNumero = $correcao_guia; // Atualizar o número da guia para o log
+                    }
+                    if (!empty($valor_guia)) {
+                        $sql_update .= ", paciente_valor = '$valor_guia'";
+                    }
+                    if (!empty($data_remessa)) {
+                        $sql_update .= ", paciente_data_remessa = '$data_remessa'";
+                    }
+                    if (!empty($validade)) {
+                        $sql_update .= ", paciente_validade = '$validade'";
+                    }
+                    if (!empty($section)) {
+                        $sql_update .= ", paciente_section = '$section'";
+                    }
+                    if (!empty($especialidade)) {
+                        $sql_update .= ", paciente_especialidade = '$especialidade'";
+                    }
+                    if (!empty($quantidadeFaturada)) {
+                        $sql_update .= ", paciente_faturado = '$quantidadeFaturada'";
+                    }
+
+                    if ($checkbox_guia) {
+                        $sql_update .= " WHERE paciente_guia = '$numero_guia'";
+                    } else {
+                        $sql_update .= " WHERE id = '$numero_guia'";
+                    }
+
+                    if ($conn->query($sql_update) === TRUE) {
+                        $mensagem = "Atualização bem-sucedida";
+
+                        // Registrar o log de alteração de status se o status foi alterado
+                        if ($statusAnterior != $status_guia) {
+                            registrar_alteracao_status(
+                                $guiaId,
+                                $guiaNumero,
+                                $statusAnterior,
+                                $status_guia,
+                                $usuarioResponsavel,
+                                "Atualização manual via formulário",
+                                $conn
+                            );
+                        }
+
+                        if ($isAjax) {
+                            header('Content-Type: application/json');
+                            echo json_encode([
+                                'success' => true,
+                                'message' => $mensagem
+                            ]);
+                            exit();
+                        } else {
+                            echo '<h1>' . $mensagem . '</h1><br><p>Clique em "Home" para voltar a página principal!</p>';
+                        }
+                    } else {
+                        $mensagem = "Erro ao atualizar: " . $conn->error;
+                        if ($isAjax) {
+                            header('Content-Type: application/json');
+                            echo json_encode([
+                                'success' => false,
+                                'message' => $mensagem
+                            ]);
+                            exit();
+                        } else {
+                            echo "Erro ao atualizar: " . $conn->error;
+                        }
+                    }
+                }
+            } else {
+                $mensagem = "Nenhum campo para atualizar!";
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'message' => $mensagem
+                    ]);
+                    exit();
+                } else {
+                    echo "<h1>Nenhum campo para atualizar!</h1>";
+                }
+            }
+        }
+
+        $conn->close();
+    }
+}
+?>

@@ -259,363 +259,364 @@ function hasPermission($roles)
   <!-- Modais com design aprimorado -->
   <!-- Modal de cadastro -->
   <div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalCadastroLabel">Cadastro de Guia</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action="database/cadastrar.php" method="post" class="needs-validation" novalidate>
-            <div class="row">
-              <div class="col-12 mb-3">
-                <label for="nome" class="form-label">Nome do Paciente <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-user"></i></span>
-                  <input type="text" id="nome" name="nome" class="form-control" autocomplete="off" required />
-                </div>
-                <div id="nome-suggestions" class="dropdown-menu"></div>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCadastroLabel">Cadastro de Guia</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formCadastro" action="database/cadastrar.php" method="post" class="needs-validation" novalidate>
+          <div class="row">
+            <div class="col-12 mb-3">
+              <label for="nome" class="form-label">Nome do Paciente <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input type="text" id="nome" name="nome" class="form-control" autocomplete="off" required />
               </div>
-              <div class="col-md-6 mb-3">
-                <label for="convenio" class="form-label">Convênio <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                  <input type="text" id="convenio" name="convenio" class="form-control" autocomplete="off" required />
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="numero_guia" class="form-label">Número da Guia <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                  <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" required />
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="status_guia" class="form-label">Status <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
-                  <select id="status_guia" name="status_guia" class="form-select" required>
-                    <option value="" selected disabled>Selecione o status</option>
-                    <option value="Emitido">Emitido</option>
-                    <option value="Subiu">Subiu</option>
-                    <option value="Cancelado">Cancelado</option>
-                    <option value="Saiu">Saiu</option>
-                    <option value="Retornou">Retornou</option>
-                    <option value="Não Usou">Não Usou</option>
-                    <option value="Assinado">Assinado</option>
-                    <option value="Faturado">Faturado</option>
-                    <option value="Enviado a BM">Enviado a BM</option>
-                    <option value="Devolvido BM">Devolvido BM</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="numero_section" class="form-label">Número de sessões <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                  <input type="number" name="numero_section" id="numero_section" class="form-control" min="1" max="100" autocomplete="off" required>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="especialidade" class="form-label">Especialidade <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
-                  <select id="especialidade" name="especialidade" class="form-select" required>
-                    <option value="" selected disabled>Selecione a especialidade</option>
-                    <option>AVALIACAO NEUROPSICOLOGICA</option>
-                    <option>SESSAO DE ARTETERAPIA</option>
-                    <option>SESSAO DE EQUOTERAPIA</option>
-                    <option>SESSAO DE FISIOTERAPIA</option>
-                    <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
-                    <option>SESSAO DE MUSICOTERAPIA</option>
-                    <option>SESSAO DE NUTRIÇÃO</option>
-                    <option>SESSAO DE PSICOLOGIA DE CASAL</option>
-                    <option>SESSAO DE PSICOMOTRICIDADE</option>
-                    <option>SESSAO DE PSICOPEDAGOGIA</option>
-                    <option>SESSAO DE PSICOTERAPIA</option>
-                    <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
-                    <option>SESSAO DE TERAPIA OCUPACIONAL</option>
-                    <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
-                    <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
-                    <option>TRATAMENTO SERIADO</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="mes" class="form-label">Mês <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                  <select id="mes" name="mes" class="form-select" required>
-                    <option value="" selected disabled>Selecione o mês</option>
-                    <option>Janeiro</option>
-                    <option>Fevereiro</option>
-                    <option>Março</option>
-                    <option>Abril</option>
-                    <option>Maio</option>
-                    <option>Junho</option>
-                    <option>Julho</option>
-                    <option>Agosto</option>
-                    <option>Setembro</option>
-                    <option>Outubro</option>
-                    <option>Novembro</option>
-                    <option>Dezembro</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-12 mb-3">
-                <label for="validade" class="form-label">Validade</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
-                  <input type="date" id="validade" name="validade" class="form-control" autocomplete="off">
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="entrada" class="form-label">Entrada <span class="text-danger">*</span></label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-calendar-plus"></i></span>
-                  <input type="date" id="entrada" name="entrada" class="form-control" autocomplete="off" required>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="saida" class="form-label">Saída</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-calendar-minus"></i></span>
-                  <input type="date" id="saida" name="saida" class="form-control" autocomplete="off">
-                </div>
+              <div id="nome-suggestions" class="dropdown-menu"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="convenio" class="form-label">Convênio <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                <input type="text" id="convenio" name="convenio" class="form-control" autocomplete="off" required />
               </div>
             </div>
-            <div class="d-flex justify-content-end mt-3">
-              <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Salvar</button>
+            <div class="col-md-6 mb-3">
+              <label for="numero_guia" class="form-label">Número da Guia <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" required />
+              </div>
             </div>
-          </form>
-        </div>
+            <div class="col-md-6 mb-3">
+              <label for="status_guia" class="form-label">Status <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+                <select id="status_guia" name="status_guia" class="form-select" required>
+                  <option value="" selected disabled>Selecione o status</option>
+                  <option value="Emitido">Emitido</option>
+                  <option value="Subiu">Subiu</option>
+                  <option value="Cancelado">Cancelado</option>
+                  <option value="Saiu">Saiu</option>
+                  <option value="Retornou">Retornou</option>
+                  <option value="Não Usou">Não Usou</option>
+                  <option value="Assinado">Assinado</option>
+                  <option value="Faturado">Faturado</option>
+                  <option value="Enviado a BM">Enviado a BM</option>
+                  <option value="Devolvido BM">Devolvido BM</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="numero_section" class="form-label">Número de sessões <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                <input type="number" name="numero_section" id="numero_section" class="form-control" min="1" max="100" autocomplete="off" required>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="especialidade" class="form-label">Especialidade <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                <select id="especialidade" name="especialidade" class="form-select" required>
+                  <option value="" selected disabled>Selecione a especialidade</option>
+                  <option>AVALIACAO NEUROPSICOLOGICA</option>
+                  <option>SESSAO DE ARTETERAPIA</option>
+                  <option>SESSAO DE EQUOTERAPIA</option>
+                  <option>SESSAO DE FISIOTERAPIA</option>
+                  <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                  <option>SESSAO DE MUSICOTERAPIA</option>
+                  <option>SESSAO DE NUTRIÇÃO</option>
+                  <option>SESSAO DE PSICOLOGIA DE CASAL</option>
+                  <option>SESSAO DE PSICOMOTRICIDADE</option>
+                  <option>SESSAO DE PSICOPEDAGOGIA</option>
+                  <option>SESSAO DE PSICOTERAPIA</option>
+                  <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                  <option>SESSAO DE TERAPIA OCUPACIONAL</option>
+                  <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                  <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                  <option>TERAPIA ABA</option>
+                  <option>TRATAMENTO SERIADO</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="mes" class="form-label">Mês <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                <select id="mes" name="mes" class="form-select" required>
+                  <option value="" selected disabled>Selecione o mês</option>
+                  <option>Janeiro</option>
+                  <option>Fevereiro</option>
+                  <option>Março</option>
+                  <option>Abril</option>
+                  <option>Maio</option>
+                  <option>Junho</option>
+                  <option>Julho</option>
+                  <option>Agosto</option>
+                  <option>Setembro</option>
+                  <option>Outubro</option>
+                  <option>Novembro</option>
+                  <option>Dezembro</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-12 mb-3">
+              <label for="validade" class="form-label">Validade</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
+                <input type="date" id="validade" name="validade" class="form-control" autocomplete="off">
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="entrada" class="form-label">Entrada <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar-plus"></i></span>
+                <input type="date" id="entrada" name="entrada" class="form-control" autocomplete="off" required>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="saida" class="form-label">Saída</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar-minus"></i></span>
+                <input type="date" id="saida" name="saida" class="form-control" autocomplete="off">
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+</div>
 
   <!-- Modal de atualização -->
   <div class="modal fade" id="modalAtualizacao" tabindex="-1" aria-labelledby="modalAtualizacaoLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalAtualizacaoLabel">Atualização de Guias</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="updateForm" action="database/atualizar.php" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-            <div class="row g-3">
-              <div class="col-md-6">
-                <div class="card mb-3">
-                  <div class="card-header bg-light text-dark">
-                    <h6 class="mb-0">Identificação da Guia</h6>
-                  </div>
-                  <div class="card-body">
-                    <div class="mb-3">
-                      <label for="numero_guia" class="form-label">ID da Guia <span class="text-danger">*</span></label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                        <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" required />
-                      </div>
-                      <div class="form-check mt-2">
-                        <input type="checkbox" id="checkbox_guia" name="checkbox_guia" class="form-check-input" />
-                        <label for="checkbox_guia" class="form-check-label">Usar numeração da guia</label>
-                      </div>
+  aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAtualizacaoLabel">Atualização de Guias</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="updateForm" action="database/atualizar.php" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card mb-3">
+                <div class="card-header bg-light text-dark">
+                  <h6 class="mb-0">Identificação da Guia</h6>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label for="numero_guia" class="form-label">ID da Guia <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                      <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" required />
                     </div>
-                    <div class="mb-3">
-                      <label for="correcao_guia" class="form-label">Corrigir número da guia</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-edit"></i></span>
-                        <input type="text" id="correcao_guia" name="correcao_guia" class="form-control" autocomplete="off" />
-                      </div>
+                    <div class="form-check mt-2">
+                      <input type="checkbox" id="checkbox_guia" name="checkbox_guia" class="form-check-input" />
+                      <label for="checkbox_guia" class="form-check-label">Usar numeração da guia</label>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="correcao_guia" class="form-label">Corrigir número da guia</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-edit"></i></span>
+                      <input type="text" id="correcao_guia" name="correcao_guia" class="form-control" autocomplete="off" />
                     </div>
                   </div>
                 </div>
               </div>
-              
-              <div class="col-md-6">
-                <div class="card mb-3">
-                  <div class="card-header bg-light text-dark">
-                    <h6 class="mb-0">Status e Valores</h6>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="card mb-3">
+                <div class="card-header bg-light text-dark">
+                  <h6 class="mb-0">Status e Valores</h6>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label for="status_guia" class="form-label">Status</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+                      <select id="status_guia" name="status_guia" class="form-select">
+                        <option value="" selected disabled>Selecione o status</option>
+                        <option>Emitido</option>
+                        <option>Subiu</option>
+                        <option>Cancelado</option>
+                        <option>Saiu</option>
+                        <option>Retornou</option>
+                        <option>Não Usou</option>
+                        <option>Assinado</option>
+                        <option>Faturado</option>
+                        <option>Enviado a BM</option>
+                        <option>Devolvido BM</option>
+                      </select>
+                    </div>
                   </div>
-                  <div class="card-body">
-                    <div class="mb-3">
-                      <label for="status_guia" class="form-label">Status</label>
+                  <div class="mb-3">
+                    <label for="valor_guia" class="form-label">Valor da Guia</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                      <input type="text" id="valor_guia" name="valor_guia" class="form-control" autocomplete="off" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="card mb-3">
+                <div class="card-header bg-light text-dark">
+                  <h6 class="mb-0">Detalhes de Faturamento</h6>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label for="qtd_faturada" class="form-label">Quantidade faturada</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-sort-numeric-up"></i></span>
+                      <input type="number" id="qtd_faturada" name="qtd_faturada" class="form-control" autocomplete="off" />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="data_remessa" class="form-label">Data da Remessa</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                      <input type="date" id="data_remessa" name="data_remessa" class="form-control" autocomplete="off" />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="validade" class="form-label">Validade</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
+                      <input type="date" id="validade" name="validade" class="form-control" autocomplete="off" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="card mb-3">
+                <div class="card-header bg-light text-dark">
+                  <h6 class="mb-0">Informações Adicionais</h6>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label for="section" class="form-label">Número de Sessões</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                      <input type="number" id="section" name="section" class="form-control" autocomplete="off" />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="especialidade" class="form-label">Especialidade</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                      <select id="especialidade" name="especialidade" class="form-select">
+                        <option value="" selected disabled>Selecione a especialidade</option>
+                        <option>AVALIACAO NEUROPSICOLOGICA</option>
+                        <option>SESSAO DE ARTETERAPIA</option>
+                        <option>SESSAO DE EQUOTERAPIA</option>
+                        <option>SESSAO DE FISIOTERAPIA</option>
+                        <option>SESSAO DE FONOAUDIOLOGIA</option>
+                        <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
+                        <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                        <option>SESSAO DE MUSICOTERAPIA</option>
+                        <option>SESSAO DE NUTRIÇÃO</option>
+                        <option>SESSAO DE PSICOLOGIA DE CASAL</option>
+                        <option>SESSAO DE PSICOMOTRICIDADE</option>
+                        <option>SESSAO DE PSICOPEDAGOGIA</option>
+                        <option>SESSAO DE PSICOTERAPIA</option>
+                        <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                        <option>SESSAO DE TERAPIA OCUPACIONAL</option>
+                        <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                        <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                        <option>TRATAMENTO SERIADO</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-12">
+              <div class="card mb-3">
+                <div class="card-header bg-light text-dark">
+                  <h6 class="mb-0">Importação e Período</h6>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label for="excelFile" class="form-label">Importar arquivo Excel</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-file-excel"></i></span>
+                      <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls" class="form-control" />
+                    </div>
+                    <small class="text-muted">Formatos aceitos: .xlsx, .xls</small>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="mes" class="form-label">Mês de atualização</label>
                       <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
-                        <select id="status_guia" name="status_guia" class="form-select">
-                          <option value="" selected disabled>Selecione o status</option>
-                          <option>Emitido</option>
-                          <option>Subiu</option>
-                          <option>Cancelado</option>
-                          <option>Saiu</option>
-                          <option>Retornou</option>
-                          <option>Não Usou</option>
-                          <option>Assinado</option>
-                          <option>Faturado</option>
-                          <option>Enviado a BM</option>
-                          <option>Devolvido BM</option>
+                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        <select id="mes" name="mes" class="form-select">
+                          <option value="" selected disabled>Selecione o mês</option>
+                          <option>Janeiro</option>
+                          <option>Fevereiro</option>
+                          <option>Março</option>
+                          <option>Abril</option>
+                          <option>Maio</option>
+                          <option>Junho</option>
+                          <option>Julho</option>
+                          <option>Agosto</option>
+                          <option>Setembro</option>
+                          <option>Outubro</option>
+                          <option>Novembro</option>
+                          <option>Dezembro</option>
                         </select>
                       </div>
                     </div>
-                    <div class="mb-3">
-                      <label for="valor_guia" class="form-label">Valor da Guia</label>
+                    <div class="col-md-6 mb-3">
+                      <label for="numero_lote" class="form-label">Número do lote</label>
                       <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                        <input type="text" id="valor_guia" name="valor_guia" class="form-control" autocomplete="off" />
+                        <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
+                        <input type="text" id="numero_lote" name="numero_lote" class="form-control" autocomplete="off" />
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="col-md-6">
-                <div class="card mb-3">
-                  <div class="card-header bg-light text-dark">
-                    <h6 class="mb-0">Detalhes de Faturamento</h6>
-                  </div>
-                  <div class="card-body">
-                    <div class="mb-3">
-                      <label for="qtd_faturada" class="form-label">Quantidade faturada</label>
+                    <div class="col-md-6 mb-3">
+                      <label for="entrada" class="form-label">Entrada</label>
                       <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-sort-numeric-up"></i></span>
-                        <input type="number" id="qtd_faturada" name="qtd_faturada" class="form-control" autocomplete="off" />
+                        <span class="input-group-text"><i class="fas fa-calendar-plus"></i></span>
+                        <input type="date" id="entrada" name="entrada" class="form-control" autocomplete="off" />
                       </div>
                     </div>
-                    <div class="mb-3">
-                      <label for="data_remessa" class="form-label">Data da Remessa</label>
+                    <div class="col-md-6 mb-3">
+                      <label for="saida" class="form-label">Saída</label>
                       <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                        <input type="date" id="data_remessa" name="data_remessa" class="form-control" autocomplete="off" />
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                      <label for="validade" class="form-label">Validade</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
-                        <input type="date" id="validade" name="validade" class="form-control" autocomplete="off" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="col-md-6">
-                <div class="card mb-3">
-                  <div class="card-header bg-light text-dark">
-                    <h6 class="mb-0">Informações Adicionais</h6>
-                  </div>
-                  <div class="card-body">
-                    <div class="mb-3">
-                      <label for="section" class="form-label">Número de Sessões</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                        <input type="number" id="section" name="section" class="form-control" autocomplete="off" />
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                      <label for="especialidade" class="form-label">Especialidade</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
-                        <select id="especialidade" name="especialidade" class="form-select">
-                          <option value="" selected disabled>Selecione a especialidade</option>
-                          <option>AVALIACAO NEUROPSICOLOGICA</option>
-                          <option>SESSAO DE ARTETERAPIA</option>
-                          <option>SESSAO DE EQUOTERAPIA</option>
-                          <option>SESSAO DE FISIOTERAPIA</option>
-                          <option>SESSAO DE FONOAUDIOLOGIA</option>
-                          <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
-                          <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
-                          <option>SESSAO DE MUSICOTERAPIA</option>
-                          <option>SESSAO DE NUTRIÇÃO</option>
-                          <option>SESSAO DE PSICOLOGIA DE CASAL</option>
-                          <option>SESSAO DE PSICOMOTRICIDADE</option>
-                          <option>SESSAO DE PSICOPEDAGOGIA</option>
-                          <option>SESSAO DE PSICOTERAPIA</option>
-                          <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
-                          <option>SESSAO DE TERAPIA OCUPACIONAL</option>
-                          <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
-                          <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
-                          <option>TRATAMENTO SERIADO</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="col-md-12">
-                <div class="card mb-3">
-                  <div class="card-header bg-light text-dark">
-                    <h6 class="mb-0">Importação e Período</h6>
-                  </div>
-                  <div class="card-body">
-                    <div class="mb-3">
-                      <label for="excelFile" class="form-label">Importar arquivo Excel</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-file-excel"></i></span>
-                        <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls" class="form-control" />
-                      </div>
-                      <small class="text-muted">Formatos aceitos: .xlsx, .xls</small>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="mes" class="form-label">Mês de atualização</label>
-                        <div class="input-group">
-                          <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                          <select id="mes" name="mes" class="form-select">
-                            <option value="" selected disabled>Selecione o mês</option>
-                            <option>Janeiro</option>
-                            <option>Fevereiro</option>
-                            <option>Março</option>
-                            <option>Abril</option>
-                            <option>Maio</option>
-                            <option>Junho</option>
-                            <option>Julho</option>
-                            <option>Agosto</option>
-                            <option>Setembro</option>
-                            <option>Outubro</option>
-                            <option>Novembro</option>
-                            <option>Dezembro</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="numero_lote" class="form-label">Número do lote</label>
-                        <div class="input-group">
-                          <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
-                          <input type="text" id="numero_lote" name="numero_lote" class="form-control" autocomplete="off" />
-                        </div>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="entrada" class="form-label">Entrada</label>
-                        <div class="input-group">
-                          <span class="input-group-text"><i class="fas fa-calendar-plus"></i></span>
-                          <input type="date" id="entrada" name="entrada" class="form-control" autocomplete="off" />
-                        </div>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="saida" class="form-label">Saída</label>
-                        <div class="input-group">
-                          <span class="input-group-text"><i class="fas fa-calendar-minus"></i></span>
-                          <input type="date" id="saida" name="saida" class="form-control" autocomplete="off" />
-                        </div>
+                        <span class="input-group-text"><i class="fas fa-calendar-minus"></i></span>
+                        <input type="date" id="saida" name="saida" class="form-control" autocomplete="off" />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-content-end mt-3">
-              <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Salvar</button>
-            </div>
-          </form>
-        </div>
+          </div>
+          <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+</div>
 
   <!-- Modal relatorio -->
   <div class="modal fade" id="modalRelatorio" tabindex="-1" aria-labelledby="modalRelatorioLabel" aria-hidden="true">

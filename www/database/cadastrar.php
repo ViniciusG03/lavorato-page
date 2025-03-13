@@ -5,6 +5,10 @@ if (!isset($_SESSION['login'])) {
     header("Location: ../login/login.php");
     exit();
 }
+
+// Verifica se é uma requisição AJAX
+$isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+
 ?>
 
 <!DOCTYPE html>
@@ -39,7 +43,13 @@ if (!isset($_SESSION['login'])) {
             $conn = new mysqli($servername, $username, $password, $database);
 
             if ($conn->connect_error) {
-                die("Erro na conexão: " . $conn->connect_error);
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode(["success" => false, "message" => "Erro na conexão: " . $conn->connect_error]);
+                    exit;
+                } else {
+                    die("Erro na conexão: " . $conn->connect_error);
+                }
             }
 
             $nome = $_POST["nome"];
@@ -54,7 +64,13 @@ if (!isset($_SESSION['login'])) {
             $validade = $_POST["validade"];
 
             if (empty($nome) || empty($convenio) || empty($numero_guia) || empty($status_guia) || empty($especialidade) || empty($mes) || empty($entrada) || empty($section)) {
-                echo "<h1>Todos os campos devem ser preenchidos, exceto 'Saída'!</h1>";
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode(["success" => false, "message" => "Todos os campos devem ser preenchidos, exceto 'Saída'!"]);
+                    exit;
+                } else {
+                    echo "<h1>Todos os campos devem ser preenchidos, exceto 'Saída'!</h1>";
+                }
             } else {
                 $verifica_sql = "SELECT COUNT(*) as count FROM pacientes WHERE paciente_guia = '$numero_guia' AND paciente_mes = '$mes'";
                 $resultado_verificacao = $conn->query($verifica_sql);
@@ -64,24 +80,56 @@ if (!isset($_SESSION['login'])) {
                     $numero_de_registros = $row['count'];
 
                     if ($numero_de_registros > 0) {
-                        echo "<h2>Erro: A guia já está cadastrada!</h2>";
+                        if ($isAjax) {
+                            header('Content-Type: application/json');
+                            echo json_encode(["success" => false, "message" => "Erro: A guia já está cadastrada!"]);
+                            exit;
+                        } else {
+                            echo "<h2>Erro: A guia já está cadastrada!</h2>";
+                        }
                     } else {
                         $sql = "INSERT INTO pacientes (paciente_nome, paciente_convenio, paciente_guia, paciente_status, paciente_especialidade, paciente_mes, paciente_entrada, paciente_saida, paciente_section, paciente_validade) VALUES ('$nome', '$convenio', '$numero_guia', '$status_guia', '$especialidade', '$mes', '$entrada', '$saida', '$section', '$validade')";
 
                         if ($conn->query($sql) === TRUE) {
-                            echo "<h1> Guia cadastrada com sucesso!</h1>";
-                            echo "<h2>Nome do paciente:</h2> <p>$nome</p>";
-                            echo "<h2>Convênio do paciente:</h2> <p>$convenio</p>";
-                            echo "<h2>Número da Guia:</h2> <p>$numero_guia</p>";
-                            echo "<h2>Número de Seções:</h2> <p>$section</p>";
-                            echo "<h2>Status da Guia:</h2> <p>$status_guia</p>";
-                            echo "<h2>Especialidade:</h2> <p>$especialidade</p>";
-                            echo "<h2>Validade:</h2> <p>$validade</p>";
-                            echo "<h2>Mês:</h2> <p>$mes</p>";
-                            echo "<h2>Entrada:</h2> <p>$entrada</p>";
-                            echo "<h2>Saida:</h2> <p>$saida</p>";
+                            // Dados para apresentar no resumo
+                            $resumo = [
+                                "nome" => $nome,
+                                "convenio" => $convenio,
+                                "numero_guia" => $numero_guia,
+                                "section" => $section,
+                                "status_guia" => $status_guia,
+                                "especialidade" => $especialidade,
+                                "validade" => $validade,
+                                "mes" => $mes,
+                                "entrada" => $entrada,
+                                "saida" => $saida
+                            ];
+                            
+                            if ($isAjax) {
+                                header('Content-Type: application/json');
+                                echo json_encode(["success" => true, "message" => "Guia cadastrada com sucesso!", "data" => $resumo]);
+                                exit;
+                            } else {
+                                echo "<h1> Guia cadastrada com sucesso!</h1>";
+                                echo "<h2>Nome do paciente:</h2> <p>$nome</p>";
+                                echo "<h2>Convênio do paciente:</h2> <p>$convenio</p>";
+                                echo "<h2>Número da Guia:</h2> <p>$numero_guia</p>";
+                                echo "<h2>Número de Seções:</h2> <p>$section</p>";
+                                echo "<h2>Status da Guia:</h2> <p>$status_guia</p>";
+                                echo "<h2>Especialidade:</h2> <p>$especialidade</p>";
+                                echo "<h2>Validade:</h2> <p>$validade</p>";
+                                echo "<h2>Mês:</h2> <p>$mes</p>";
+                                echo "<h2>Entrada:</h2> <p>$entrada</p>";
+                                echo "<h2>Saida:</h2> <p>$saida</p>";
+                            }
                         } else {
-                            echo "<p>Erro ao cadastrar a guia: </p>" . $conn->error;
+                            if ($isAjax) {
+                                header('Content-Type: application/json');
+                                echo json_encode(["success" => false, "message" => "Erro ao cadastrar a guia: " . $conn->error]);
+                                exit;
+                            } else {
+                                echo "<p>Erro ao cadastrar a guia: </p>" . $conn->error;
+                            }
                         }
                     }
                 }
