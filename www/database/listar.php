@@ -259,6 +259,79 @@ $result_especialidades = $conn->query($sql_especialidades);
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script>
+        // Função para abrir o modal de detalhes
+function openDetailsModal(id) {
+    // Referência ao modal de detalhes
+    const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+    
+    // Mostra o spinner de carregamento
+    document.querySelector('#detailsModal .modal-body').innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+            <p class="mt-2">Carregando detalhes...</p>
+        </div>
+    `;
+    
+    // Configura o botão de editar nos detalhes
+    const editButton = document.querySelector('.btn-edit-details');
+    editButton.style.display = 'block';
+    editButton.onclick = function() {
+        window.location.href = '../index.php?action=edit&id=' + id;
+    };
+    
+    // Abre o modal
+    detailsModal.show();
+    
+    // Carrega os detalhes via AJAX
+    fetch('../database/get_details.php?id=' + id)
+        .then(response => response.text())
+        .then(data => {
+            // Atualiza o conteúdo do modal com os detalhes recebidos
+            document.querySelector('#detailsModal .modal-body').innerHTML = data;
+        })
+        .catch(error => {
+            document.querySelector('#detailsModal .modal-body').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    Erro ao carregar detalhes: ${error.message}
+                </div>
+            `;
+        });
+}
+
+// Função para abrir o modal de confirmação de exclusão
+function openDeleteModal(id) {
+    // Referência ao modal de exclusão
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+    
+    // Define o ID da guia a ser excluída
+    document.getElementById('id_guia_delete').value = id;
+    
+    // Atualiza o texto com o ID sendo excluído
+    document.getElementById('deleteGuiaId').textContent = `#${id}`;
+    
+    // Configura o botão de confirmação
+    document.getElementById('confirmDelete').onclick = function() {
+        document.getElementById('deleteForm').submit();
+    };
+    
+    // Abre o modal
+    deleteModal.show();
+}
+
+// Garantir que os tooltips sejam inicializados
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializa todos os tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+    </script>
+
     <style>
         :root {
             --main-bg-color: #b9d7d9;
@@ -612,26 +685,29 @@ $result_especialidades = $conn->query($sql_especialidades);
                             <td><?php echo !empty($row["paciente_valor"]) ? 'R$ ' . htmlspecialchars($row["paciente_valor"]) : '-'; ?></td>
                             <td><?php echo htmlspecialchars($row["data_hora_formatada"]); ?></td>
                             <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-primary btn-action edit-button" 
-                                        data-id="<?php echo $row["id"]; ?>"
-                                        data-bs-toggle="tooltip" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-info btn-action details-button"
-                                        data-id="<?php echo $row["id"]; ?>"
-                                        data-bs-toggle="tooltip" title="Detalhes">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
-                                    <button type="button" class="btn btn-sm btn-outline-danger btn-action delete-button"
-                                        data-id="<?php echo $row["id"]; ?>"
-                                        data-bs-toggle="tooltip" title="Excluir">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-primary btn-action edit-button" 
+                                    data-id="<?php echo $row["id"]; ?>"
+                                    data-bs-toggle="tooltip" title="Editar" 
+                                    onclick="window.location.href = '../index.php?action=edit&id=<?php echo $row['id']; ?>'">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-info btn-action details-button"
+                                    data-id="<?php echo $row["id"]; ?>"
+                                    data-bs-toggle="tooltip" title="Detalhes"
+                                    onclick="openDetailsModal(<?php echo $row['id']; ?>)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
+                                <button type="button" class="btn btn-sm btn-outline-danger btn-action delete-button"
+                                    data-id="<?php echo $row["id"]; ?>"
+                                    data-bs-toggle="tooltip" title="Excluir"
+                                    onclick="openDeleteModal(<?php echo $row['id']; ?>)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <?php endif; ?>
+                            </div>
+                        </td>
                         </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -990,186 +1066,6 @@ $result_especialidades = $conn->query($sql_especialidades);
             </div>
         </div>
     </div>
-
-    <script>
-        // Script de inicialização aprimorado
-(function() {
-    // Função principal para inicializar todos os componentes da interface
-    function inicializarInterface() {
-        console.log("Inicializando a interface...");
-        
-        // Inicializar tooltips do Bootstrap se disponível
-        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
-            var tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltips.forEach(function(tooltip) {
-                new bootstrap.Tooltip(tooltip);
-            });
-            console.log("Tooltips inicializados");
-        } else {
-            console.warn("Bootstrap não detectado para tooltips");
-        }
-        
-        // Configurar botões de edição
-        document.querySelectorAll('.edit-button').forEach(function(botao) {
-            botao.onclick = function(e) {
-                e.preventDefault();
-                var id = this.getAttribute('data-id');
-                if (id) {
-                    window.location.href = '../index.php?action=edit&id=' + id;
-                }
-                return false;
-            };
-        });
-        
-        // Configurar botões de detalhes
-        document.querySelectorAll('.details-button').forEach(function(botao) {
-            botao.onclick = function(e) {
-                e.preventDefault();
-                var id = this.getAttribute('data-id');
-                
-                // Atualizar o modal com dados de carregamento
-                var modalBody = document.querySelector('#detailsModal .modal-body');
-                if (modalBody) {
-                    modalBody.innerHTML = `
-                        <div class="text-center">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Carregando...</span>
-                            </div>
-                            <p class="mt-2">Carregando detalhes...</p>
-                        </div>
-                    `;
-                }
-                
-                // Mostrar o modal usando jQuery (mais confiável neste contexto)
-                $('#detailsModal').modal('show');
-                
-                // Carregar os dados via AJAX
-                if (id) {
-                    fetch('get_detalhes_guia.php?id=' + id)
-                        .then(function(response) { return response.text(); })
-                        .then(function(html) {
-                            if (modalBody) {
-                                modalBody.innerHTML = html;
-                            }
-                            
-                            // Mostrar botão de edição nos detalhes
-                            var editButton = document.querySelector('.btn-edit-details');
-                            if (editButton) {
-                                editButton.style.display = 'block';
-                                editButton.setAttribute('data-id', id);
-                            }
-                        })
-                        .catch(function(error) {
-                            if (modalBody) {
-                                modalBody.innerHTML = `
-                                    <div class="alert alert-danger">
-                                        <i class="fas fa-exclamation-circle me-2"></i> Erro ao carregar detalhes!
-                                    </div>
-                                `;
-                            }
-                            console.error("Erro ao carregar detalhes:", error);
-                        });
-                }
-                
-                return false;
-            };
-        });
-        
-        // Configurar botão de edição nos detalhes
-        var editDetailsButton = document.querySelector('.btn-edit-details');
-        if (editDetailsButton) {
-            editDetailsButton.onclick = function() {
-                var id = this.getAttribute('data-id');
-                if (id) {
-                    window.location.href = '../index.php?action=edit&id=' + id;
-                }
-                return false;
-            };
-        }
-        
-        // Configurar botões de exclusão
-        document.querySelectorAll('.delete-button').forEach(function(botao) {
-            botao.onclick = function(e) {
-                e.preventDefault();
-                var id = this.getAttribute('data-id');
-                var idInput = document.getElementById('id_guia_delete');
-                var idDisplay = document.getElementById('deleteGuiaId');
-                
-                if (idInput) idInput.value = id;
-                if (idDisplay) idDisplay.textContent = id;
-                
-                // Mostrar o modal usando jQuery
-                $('#deleteConfirmModal').modal('show');
-                return false;
-            };
-        });
-        
-        // Configurar botão de confirmação de exclusão
-        var confirmDeleteButton = document.getElementById('confirmDelete');
-        if (confirmDeleteButton) {
-            confirmDeleteButton.onclick = function() {
-                document.getElementById('deleteForm').submit();
-            };
-        }
-        
-        // Configurar botões de modais
-        var filtersButton = document.querySelector('button[data-bs-target="#filtersModal"]');
-        if (filtersButton) {
-            filtersButton.onclick = function(e) {
-                e.preventDefault();
-                $('#filtersModal').modal('show');
-                return false;
-            };
-        }
-        
-        var exportButton = document.querySelector('a[data-bs-toggle="modal"][data-bs-target="#exportModal"]');
-        if (exportButton) {
-            exportButton.onclick = function(e) {
-                e.preventDefault();
-                $('#exportModal').modal('show');
-                return false;
-            };
-        }
-        
-        console.log("Interface inicializada com sucesso!");
-    }
-    
-    // Tenta várias estratégias para inicializar a interface
-    function tentarInicializar() {
-        // Verifica se os elementos necessários existem
-        var elementos = document.querySelectorAll('.edit-button, .details-button, .delete-button');
-        if (elementos.length > 0) {
-            console.log("Elementos encontrados, inicializando interface");
-            inicializarInterface();
-            return true;
-        }
-        return false;
-    }
-    
-    // Inicia com DOMContentLoaded para a maioria dos casos
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOMContentLoaded acionado");
-            tentarInicializar();
-        });
-    } else {
-        // Se o DOM já estiver carregado (porque o script está no final)
-        console.log("DOM já carregado");
-        if (!tentarInicializar()) {
-            // Se não conseguiu inicializar, tenta com um pequeno delay
-            setTimeout(tentarInicializar, 100);
-        }
-    }
-    
-    // Adiciona também com jQuery como backup
-    if (typeof jQuery !== 'undefined') {
-        $(document).ready(function() {
-            console.log("jQuery ready acionado");
-            tentarInicializar();
-        });
-    }
-})();
-    </script>
 </body>
 
 </html>
