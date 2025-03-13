@@ -13,6 +13,9 @@ function remove_query_param($param) {
     return basename($_SERVER['PHP_SELF']) . '?' . http_build_query($params);
 }
 
+// Incluir funções de especialidades
+require_once __DIR__ . '/functions_especialidades.php';
+
 // Conexão com o banco de dados
 $servername = "mysql.lavoratoguias.kinghost.net";
 $username = "lavoratoguias";
@@ -34,6 +37,7 @@ $inicio = ($pagina - 1) * $itens_por_pagina;
 $filtro_status = isset($_GET['filtro_status']) ? $_GET['filtro_status'] : '';
 $filtro_convenio = isset($_GET['filtro_convenio']) ? $_GET['filtro_convenio'] : '';
 $filtro_mes = isset($_GET['filtro_mes']) ? $_GET['filtro_mes'] : '';
+$filtro_especialidade = isset($_GET['filtro_especialidade']) ? $_GET['filtro_especialidade'] : ''; // Novo filtro
 $termo_busca = isset($_GET['termo_busca']) ? $_GET['termo_busca'] : '';
 
 // Construção da query com base nos filtros
@@ -41,36 +45,80 @@ $where_conditions = [];
 $params = [];
 $types = '';
 
-if (!empty($filtro_status)) {
-    $where_conditions[] = "paciente_status = ?";
-    $params[] = $filtro_status;
-    $types .= 's';
-}
-
-if (!empty($filtro_convenio)) {
-    $where_conditions[] = "paciente_convenio = ?";
-    $params[] = $filtro_convenio;
-    $types .= 's';
-}
-
-if (!empty($filtro_mes)) {
-    $where_conditions[] = "paciente_mes = ?";
-    $params[] = $filtro_mes;
-    $types .= 's';
-}
-
-if (!empty($termo_busca)) {
-    $where_conditions[] = "(paciente_nome LIKE ? OR paciente_guia LIKE ?)";
-    $termo_busca_param = "%$termo_busca%";
-    $params[] = $termo_busca_param;
-    $params[] = $termo_busca_param;
+// Se temos filtro de especialidade, precisamos fazer um JOIN com a tabela de especialidades
+if (!empty($filtro_especialidade)) {
+    $base_query = "FROM pacientes p 
+                   LEFT JOIN paciente_especialidades pe ON p.id = pe.paciente_id
+                   WHERE (p.paciente_especialidade = ? OR pe.especialidade = ?)";
+    $params[] = $filtro_especialidade;
+    $params[] = $filtro_especialidade;
     $types .= 'ss';
+    
+    // Adicionar outros filtros
+    if (!empty($filtro_status)) {
+        $base_query .= " AND p.paciente_status = ?";
+        $params[] = $filtro_status;
+        $types .= 's';
+    }
+    
+    if (!empty($filtro_convenio)) {
+        $base_query .= " AND p.paciente_convenio = ?";
+        $params[] = $filtro_convenio;
+        $types .= 's';
+    }
+    
+    if (!empty($filtro_mes)) {
+        $base_query .= " AND p.paciente_mes = ?";
+        $params[] = $filtro_mes;
+        $types .= 's';
+    }
+    
+    if (!empty($termo_busca)) {
+        $base_query .= " AND (p.paciente_nome LIKE ? OR p.paciente_guia LIKE ?)";
+        $termo_busca_param = "%$termo_busca%";
+        $params[] = $termo_busca_param;
+        $params[] = $termo_busca_param;
+        $types .= 'ss';
+    }
+    
+    // Consulta para contar o total de registros com filtros
+    $sql_count = "SELECT COUNT(DISTINCT p.id) as total $base_query";
+} else {
+    // Usar a query original sem JOIN quando não há filtro de especialidade
+    $where_clause = [];
+    
+    if (!empty($filtro_status)) {
+        $where_clause[] = "paciente_status = ?";
+        $params[] = $filtro_status;
+        $types .= 's';
+    }
+    
+    if (!empty($filtro_convenio)) {
+        $where_clause[] = "paciente_convenio = ?";
+        $params[] = $filtro_convenio;
+        $types .= 's';
+    }
+    
+    if (!empty($filtro_mes)) {
+        $where_clause[] = "paciente_mes = ?";
+        $params[] = $filtro_mes;
+        $types .= 's';
+    }
+    
+    if (!empty($termo_busca)) {
+        $where_clause[] = "(paciente_nome LIKE ? OR paciente_guia LIKE ?)";
+        $termo_busca_param = "%$termo_busca%";
+        $params[] = $termo_busca_param;
+        $params[] = $termo_busca_param;
+        $types .= 'ss';
+    }
+    
+    $where_conditions = !empty($where_clause) ? "WHERE " . implode(" AND ", $where_clause) : "";
+    
+    // Consulta para contar o total de registros com filtros
+    $sql_count = "SELECT COUNT(*) as total FROM pacientes $where_conditions";
 }
 
-$where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
-
-// Consulta para contar o total de registros com filtros
-$sql_count = "SELECT COUNT(*) as total FROM pacientes $where_clause";
 $stmt_count = $conn->prepare($sql_count);
 
 if (!empty($types)) {
@@ -85,31 +133,53 @@ $total_paginas = ceil($total_registros / $itens_por_pagina);
 $stmt_count->close();
 
 // Consulta para obter os registros com os filtros e paginação
-$sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada 
-        FROM pacientes 
-        $where_clause
-        ORDER BY CASE 
-            WHEN paciente_mes = 'Janeiro' THEN 1
-            WHEN paciente_mes = 'Fevereiro' THEN 2
-            WHEN paciente_mes = 'Março' THEN 3
-            WHEN paciente_mes = 'Abril' THEN 4
-            WHEN paciente_mes = 'Maio' THEN 5
-            WHEN paciente_mes = 'Junho' THEN 6
-            WHEN paciente_mes = 'Julho' THEN 7
-            WHEN paciente_mes = 'Agosto' THEN 8
-            WHEN paciente_mes = 'Setembro' THEN 9
-            WHEN paciente_mes = 'Outubro' THEN 10
-            WHEN paciente_mes = 'Novembro' THEN 11
-            WHEN paciente_mes = 'Dezembro' THEN 12
-            ELSE 13 
-        END, paciente_nome ASC
-        LIMIT ?, ?";
+if (!empty($filtro_especialidade)) {
+    $sql = "SELECT DISTINCT p.*, DATE_FORMAT(p.data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada 
+            $base_query
+            GROUP BY p.id
+            ORDER BY CASE 
+                WHEN p.paciente_mes = 'Janeiro' THEN 1
+                WHEN p.paciente_mes = 'Fevereiro' THEN 2
+                WHEN p.paciente_mes = 'Março' THEN 3
+                WHEN p.paciente_mes = 'Abril' THEN 4
+                WHEN p.paciente_mes = 'Maio' THEN 5
+                WHEN p.paciente_mes = 'Junho' THEN 6
+                WHEN p.paciente_mes = 'Julho' THEN 7
+                WHEN p.paciente_mes = 'Agosto' THEN 8
+                WHEN p.paciente_mes = 'Setembro' THEN 9
+                WHEN p.paciente_mes = 'Outubro' THEN 10
+                WHEN p.paciente_mes = 'Novembro' THEN 11
+                WHEN p.paciente_mes = 'Dezembro' THEN 12
+                ELSE 13 
+            END, p.paciente_nome ASC
+            LIMIT ?, ?";
+} else {
+    $sql = "SELECT *, DATE_FORMAT(data_hora_insercao, '%d/%m/%Y %H:%i:%s') AS data_hora_formatada 
+            FROM pacientes 
+            $where_conditions
+            ORDER BY CASE 
+                WHEN paciente_mes = 'Janeiro' THEN 1
+                WHEN paciente_mes = 'Fevereiro' THEN 2
+                WHEN paciente_mes = 'Março' THEN 3
+                WHEN paciente_mes = 'Abril' THEN 4
+                WHEN paciente_mes = 'Maio' THEN 5
+                WHEN paciente_mes = 'Junho' THEN 6
+                WHEN paciente_mes = 'Julho' THEN 7
+                WHEN paciente_mes = 'Agosto' THEN 8
+                WHEN paciente_mes = 'Setembro' THEN 9
+                WHEN paciente_mes = 'Outubro' THEN 10
+                WHEN paciente_mes = 'Novembro' THEN 11
+                WHEN paciente_mes = 'Dezembro' THEN 12
+                ELSE 13 
+            END, paciente_nome ASC
+            LIMIT ?, ?";
+}
 
-$stmt = $conn->prepare($sql);
 $params[] = $inicio;
 $params[] = $itens_por_pagina;
 $types .= 'ii';
 
+$stmt = $conn->prepare($sql);
 $stmt->bind_param($types, ...$params);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -142,7 +212,7 @@ function getStatusColor($status) {
     }
 }
 
-// Obter lista de convênios e meses para os filtros
+// Obter lista de convênios, meses e especialidades para os filtros
 $sql_convenios = "SELECT DISTINCT paciente_convenio FROM pacientes ORDER BY paciente_convenio ASC";
 $result_convenios = $conn->query($sql_convenios);
 
@@ -161,6 +231,15 @@ $sql_meses = "SELECT DISTINCT paciente_mes FROM pacientes ORDER BY CASE
                 WHEN paciente_mes = 'Dezembro' THEN 12
                 ELSE 13 END ASC";
 $result_meses = $conn->query($sql_meses);
+
+// Consulta para obter todas as especialidades únicas
+$sql_especialidades = "SELECT DISTINCT especialidade FROM paciente_especialidades 
+                       UNION 
+                       SELECT DISTINCT paciente_especialidade FROM pacientes 
+                       WHERE paciente_especialidade IS NOT NULL 
+                       AND paciente_especialidade != '' 
+                       ORDER BY especialidade ASC";
+$result_especialidades = $conn->query($sql_especialidades);
 ?>
 
 <!DOCTYPE html>
@@ -321,6 +400,25 @@ $result_meses = $conn->query($sql_meses);
 .table-container, .card-body {
     height: auto !important;
 }
+
+ /* Adicionar na seção de estilos */
+ .list-unstyled {
+        margin-bottom: 0;
+        padding-left: 0;
+        list-style: none;
+    }
+    
+    .list-unstyled li {
+        line-height: 1.3;
+        padding: 2px 0;
+    }
+    
+    /* Se necessário, ajustar a largura da coluna de especialidades */
+    .table th:nth-child(6),
+    .table td:nth-child(6) {
+        min-width: 180px;
+        max-width: 220px;
+    }
     </style>
 </head>
 
@@ -450,6 +548,12 @@ $result_meses = $conn->query($sql_meses);
                     <a href="<?php echo remove_query_param('filtro_mes'); ?>" class="close">&times;</a>
                 </span>
                 <?php endif; ?>
+                <?php if (!empty($filtro_especialidade)): ?>
+                <span class="filter-badge mb-2">
+                    <i class="fas fa-stethoscope me-1"></i> Especialidade: <?php echo htmlspecialchars($filtro_especialidade); ?>
+                    <a href="<?php echo remove_query_param('filtro_especialidade'); ?>" class="close">&times;</a>
+                </span>
+                <?php endif; ?>
                 
                 <a href="listar.php" class="btn btn-sm btn-outline-secondary ms-auto">
                     <i class="fas fa-times me-1"></i> Limpar todos
@@ -484,7 +588,9 @@ $result_meses = $conn->query($sql_meses);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $result->fetch_assoc()): ?>
+                        <?php while ($row = $result->fetch_assoc()): 
+                            $especialidades = obter_especialidades_paciente($row['id'], $conn);
+                        ?>
                         <tr>
                             <td><?php echo $row["id"]; ?></td>
                             <td><?php echo htmlspecialchars($row["paciente_nome"]); ?></td>
@@ -495,7 +601,7 @@ $result_meses = $conn->query($sql_meses);
                                     <?php echo htmlspecialchars($row["paciente_status"]); ?>
                                 </span>
                             </td>
-                            <td><?php echo htmlspecialchars($row["paciente_especialidade"]); ?></td>
+                            <td><?php echo formatar_especialidades($especialidades); ?></td>
                             <td><?php echo htmlspecialchars($row["paciente_mes"]); ?></td>
                             <td><?php echo htmlspecialchars($row["paciente_section"]); ?></td>
                             <td><?php echo !empty($row["paciente_valor"]) ? 'R$ ' . htmlspecialchars($row["paciente_valor"]) : '-'; ?></td>
@@ -699,6 +805,33 @@ $result_meses = $conn->query($sql_meses);
                                         <option value="25" <?php echo $itens_por_pagina == 25 ? 'selected' : ''; ?>>25</option>
                                         <option value="50" <?php echo $itens_por_pagina == 50 ? 'selected' : ''; ?>>50</option>
                                         <option value="100" <?php echo $itens_por_pagina == 100 ? 'selected' : ''; ?>>100</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="filtro_especialidade" class="form-label">Especialidade:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                                    <select id="filtro_especialidade" name="filtro_especialidade" class="form-select">
+                                        <option value="">Todas as especialidades</option>
+                                        <?php
+                                        // Obter lista de especialidades únicas
+                                        $sql_especialidades = "SELECT DISTINCT especialidade FROM paciente_especialidades 
+                                                            UNION 
+                                                            SELECT DISTINCT paciente_especialidade FROM pacientes 
+                                                            WHERE paciente_especialidade IS NOT NULL 
+                                                            AND paciente_especialidade != '' 
+                                                            ORDER BY especialidade ASC";
+                                        $result_especialidades = $conn->query($sql_especialidades);
+                                        
+                                        while ($esp = $result_especialidades->fetch_assoc()):
+                                            $esp_value = $esp['especialidade']; // ou o nome do campo apropriado
+                                        ?>
+                                            <option value="<?php echo htmlspecialchars($esp_value); ?>" 
+                                                <?php echo $filtro_especialidade == $esp_value ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($esp_value); ?>
+                                            </option>
+                                        <?php endwhile; ?>
                                     </select>
                                 </div>
                             </div>

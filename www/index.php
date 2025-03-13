@@ -316,31 +316,31 @@ function hasPermission($roles)
                 <input type="number" name="numero_section" id="numero_section" class="form-control" min="1" max="100" autocomplete="off" required>
               </div>
             </div>
-            <div class="col-md-6 mb-3">
-              <label for="especialidade" class="form-label">Especialidade <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
-                <select id="especialidade" name="especialidade" class="form-select" required>
-                  <option value="" selected disabled>Selecione a especialidade</option>
-                  <option>AVALIACAO NEUROPSICOLOGICA</option>
-                  <option>SESSAO DE ARTETERAPIA</option>
-                  <option>SESSAO DE EQUOTERAPIA</option>
-                  <option>SESSAO DE FISIOTERAPIA</option>
-                  <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
-                  <option>SESSAO DE MUSICOTERAPIA</option>
-                  <option>SESSAO DE NUTRIÇÃO</option>
-                  <option>SESSAO DE PSICOLOGIA DE CASAL</option>
-                  <option>SESSAO DE PSICOMOTRICIDADE</option>
-                  <option>SESSAO DE PSICOPEDAGOGIA</option>
-                  <option>SESSAO DE PSICOTERAPIA</option>
-                  <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
-                  <option>SESSAO DE TERAPIA OCUPACIONAL</option>
-                  <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
-                  <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
-                  <option>SESSAO DE TERAPIA ABA</option>
-                  <option>TRATAMENTO SERIADO</option>
-                </select>
-              </div>
+            <div class="col-md-12 mb-3">
+            <label for="especialidades" class="form-label">Especialidades <span class="text-danger">*</span></label>
+             <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+            <select id="especialidades" name="especialidades[]" class="form-select selectpicker" multiple data-live-search="true" required>
+              <option>AVALIACAO NEUROPSICOLOGICA</option>
+              <option>SESSAO DE ARTETERAPIA</option>
+              <option>SESSAO DE EQUOTERAPIA</option>
+              <option>SESSAO DE FISIOTERAPIA</option>
+              <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+              <option>SESSAO DE MUSICOTERAPIA</option>
+              <option>SESSAO DE NUTRIÇÃO</option>
+              <option>SESSAO DE PSICOLOGIA DE CASAL</option>
+              <option>SESSAO DE PSICOMOTRICIDADE</option>
+              <option>SESSAO DE PSICOPEDAGOGIA</option>
+              <option>SESSAO DE PSICOTERAPIA</option>
+              <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+              <option>SESSAO DE TERAPIA OCUPACIONAL</option>
+              <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+              <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+              <option>SESSAO DE TERAPIA ABA</option>
+              <option>TRATAMENTO SERIADO</option>
+            </select>
+            </div>
+             <small class="form-text text-muted">Segure Ctrl (ou Command no Mac) para selecionar múltiplas especialidades.</small>
             </div>
             <div class="col-md-6 mb-3">
               <label for="mes" class="form-label">Mês <span class="text-danger">*</span></label>
@@ -516,32 +516,33 @@ function hasPermission($roles)
                     </div>
                   </div>
                   <div class="mb-3">
-                    <label for="especialidade" class="form-label">Especialidade</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
-                      <select id="especialidade" name="especialidade" class="form-select">
-                        <option value="" selected disabled>Selecione a especialidade</option>
-                        <option>AVALIACAO NEUROPSICOLOGICA</option>
-                        <option>SESSAO DE ARTETERAPIA</option>
-                        <option>SESSAO DE EQUOTERAPIA</option>
-                        <option>SESSAO DE FISIOTERAPIA</option>
-                        <option>SESSAO DE FONOAUDIOLOGIA</option>
-                        <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
-                        <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
-                        <option>SESSAO DE MUSICOTERAPIA</option>
-                        <option>SESSAO DE NUTRIÇÃO</option>
-                        <option>SESSAO DE PSICOLOGIA DE CASAL</option>
-                        <option>SESSAO DE PSICOMOTRICIDADE</option>
-                        <option>SESSAO DE PSICOPEDAGOGIA</option>
-                        <option>SESSAO DE PSICOTERAPIA</option>
-                        <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
-                        <option>SESSAO DE TERAPIA OCUPACIONAL</option>
-                        <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
-                        <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
-                        <option>TRATAMENTO SERIADO</option>
-                      </select>
-                    </div>
-                  </div>
+                  <label for="especialidades" class="form-label">Especialidades</label>
+                  <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                  <select id="especialidades" name="especialidades[]" class="form-select" multiple>
+                    <option>AVALIACAO NEUROPSICOLOGICA</option>
+                    <option>SESSAO DE ARTETERAPIA</option>
+                    <option>SESSAO DE EQUOTERAPIA</option>
+                    <option>SESSAO DE FISIOTERAPIA</option>
+                    <option>SESSAO DE FONOAUDIOLOGIA</option>
+                    <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
+                    <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                    <option>SESSAO DE MUSICOTERAPIA</option>
+                    <option>SESSAO DE NUTRIÇÃO</option>
+                    <option>SESSAO DE PSICOLOGIA DE CASAL</option>
+                    <option>SESSAO DE PSICOMOTRICIDADE</option>
+                    <option>SESSAO DE PSICOPEDAGOGIA</option>
+                    <option>SESSAO DE PSICOTERAPIA</option>
+                    <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                    <option>SESSAO DE TERAPIA OCUPACIONAL</option>
+                    <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                    <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                    <option>SESSAO DE TERAPIA ABA</option>
+                    <option>TRATAMENTO SERIADO</option>
+                  </select>
+                </div>
+                <small class="form-text text-muted">Segure Ctrl (ou Command no Mac) para selecionar múltiplas especialidades.</small>
+              </div>
                 </div>
               </div>
             </div>
@@ -1011,5 +1012,54 @@ function hasPermission($roles)
     btnListar.addEventListener("click", () => {
       window.location.href = "database/listar.php";
     });
+
+    $(document).ready(function() {
+  $('.selectpicker').selectpicker({
+    noneSelectedText: 'Selecione especialidades',
+    selectAllText: 'Selecionar Todos',
+    deselectAllText: 'Desmarcar Todos',
+    countSelectedText: '{0} especialidades selecionadas'
+  });
+});
+
+function carregarEspecialidades(pacienteId) {
+  // Limpar seleções anteriores
+  const selectEspecialidades = document.getElementById('especialidades');
+  if (selectEspecialidades) {
+    // Desmarcar todos os options
+    Array.from(selectEspecialidades.options).forEach(option => {
+      option.selected = false;
+    });
+    
+    // Buscar especialidades do paciente via AJAX
+    fetch(`database/get_especialidades.php?paciente_id=${pacienteId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success && data.especialidades) {
+          // Marcar as especialidades existentes
+          Array.from(selectEspecialidades.options).forEach(option => {
+            if (data.especialidades.includes(option.value)) {
+              option.selected = true;
+            }
+          });
+          
+          // Atualizar o Bootstrap Select se estiver em uso
+          if (typeof $(selectEspecialidades).selectpicker === 'function') {
+            $(selectEspecialidades).selectpicker('refresh');
+          }
+        }
+      })
+      .catch(error => console.error('Erro ao carregar especialidades:', error));
+  }
+}
+
+// Modificar o evento de clique dos botões de edição para carregar especialidades
+document.querySelectorAll('.edit-button').forEach(button => {
+  button.addEventListener('click', function() {
+    const id = this.getAttribute('data-id');
+    // Adicionar chamada para carregar especialidades depois que o modal for aberto
+    setTimeout(() => carregarEspecialidades(id), 500);
+  });
+});
   </script>
 </body>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/functions_especialidades.php';
 
 if (!isset($_SESSION['login'])) {
     header("Location: ../login/login.php");
@@ -23,6 +24,9 @@ if (!isset($_SESSION['login'])) {
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <script src="../bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../stylesheet/buscar.css">
+    <style>
+        
+    </style>
 </head>
 
 <body>
@@ -136,7 +140,7 @@ if (!isset($_SESSION['login'])) {
                     echo "<th>Número</th>";
                     echo "<th>Status</th>";
                     echo "<th>Lote</th>";
-                    echo "<th>Especialidade</th>";
+                    echo "<th>Especialidades</th>";
                     echo "<th>Mês</th>";
                     echo "<th>Sessões</th>";
                     echo "<th>Qtd. Faturada</th>";
@@ -150,6 +154,8 @@ if (!isset($_SESSION['login'])) {
                     echo "<tbody>";
 
                     while ($row = $result->fetch_assoc()) {
+                        $especialidades = obter_especialidades_paciente($row["id"], $conn);
+
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row["id"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["paciente_nome"]) . "</td>";
@@ -157,7 +163,7 @@ if (!isset($_SESSION['login'])) {
                         echo "<td>" . htmlspecialchars($row["paciente_guia"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["paciente_status"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["paciente_lote"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["paciente_especialidade"]) . "</td>";
+                        echo "<td>" . formatar_especialidades($especialidades) . "</td>";
                         echo "<td>" . htmlspecialchars($row["paciente_mes"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["paciente_section"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["paciente_faturado"]) . "</td>";
