@@ -337,7 +337,7 @@ function hasPermission($roles)
                   <option>SESSAO DE TERAPIA OCUPACIONAL</option>
                   <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
                   <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
-                  <option>TERAPIA ABA</option>
+                  <option>SESSAO DE TERAPIA ABA</option>
                   <option>TRATAMENTO SERIADO</option>
                 </select>
               </div>
