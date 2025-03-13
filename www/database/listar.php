@@ -253,8 +253,12 @@ $result_especialidades = $conn->query($sql_especialidades);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../stylesheet/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
         :root {
             --main-bg-color: #b9d7d9;
@@ -389,6 +393,7 @@ $result_especialidades = $conn->query($sql_especialidades);
         body, html {
     height: auto !important;
     overflow-y: auto !important;
+    background-color: var(--main-bg-color) !important;
 }
 
 .container, .card.table-container {
@@ -986,32 +991,46 @@ $result_especialidades = $conn->query($sql_especialidades);
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar tooltips
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
+        // Script de inicialização aprimorado
+(function() {
+    // Função principal para inicializar todos os componentes da interface
+    function inicializarInterface() {
+        console.log("Inicializando a interface...");
+        
+        // Inicializar tooltips do Bootstrap se disponível
+        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+            var tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltips.forEach(function(tooltip) {
+                new bootstrap.Tooltip(tooltip);
             });
-            
-            // Botões de edição
-            document.querySelectorAll('.edit-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
+            console.log("Tooltips inicializados");
+        } else {
+            console.warn("Bootstrap não detectado para tooltips");
+        }
+        
+        // Configurar botões de edição
+        document.querySelectorAll('.edit-button').forEach(function(botao) {
+            botao.onclick = function(e) {
+                e.preventDefault();
+                var id = this.getAttribute('data-id');
+                if (id) {
                     window.location.href = '../index.php?action=edit&id=' + id;
-                });
-            });
-            
-            // Botões de detalhes
-            document.querySelectorAll('.details-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-                    
-                    // Resetar modal e mostrar loader
-                    document.querySelector('#detailsModal .modal-body').innerHTML = `
+                }
+                return false;
+            };
+        });
+        
+        // Configurar botões de detalhes
+        document.querySelectorAll('.details-button').forEach(function(botao) {
+            botao.onclick = function(e) {
+                e.preventDefault();
+                var id = this.getAttribute('data-id');
+                
+                // Atualizar o modal com dados de carregamento
+                var modalBody = document.querySelector('#detailsModal .modal-body');
+                if (modalBody) {
+                    modalBody.innerHTML = `
                         <div class="text-center">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Carregando...</span>
@@ -1019,53 +1038,137 @@ $result_especialidades = $conn->query($sql_especialidades);
                             <p class="mt-2">Carregando detalhes...</p>
                         </div>
                     `;
-                    
-                    // Esconder botão de edição
-                    document.querySelector('.btn-edit-details').style.display = 'none';
-                    
-                    // Abrir modal
-                    detailsModal.show();
-                    
-                    // Carregar detalhes via AJAX
+                }
+                
+                // Mostrar o modal usando jQuery (mais confiável neste contexto)
+                $('#detailsModal').modal('show');
+                
+                // Carregar os dados via AJAX
+                if (id) {
                     fetch('get_detalhes_guia.php?id=' + id)
-                        .then(response => response.text())
-                        .then(html => {
-                            document.querySelector('#detailsModal .modal-body').innerHTML = html;
-                            document.querySelector('.btn-edit-details').style.display = 'block';
-                            document.querySelector('.btn-edit-details').setAttribute('data-id', id);
+                        .then(function(response) { return response.text(); })
+                        .then(function(html) {
+                            if (modalBody) {
+                                modalBody.innerHTML = html;
+                            }
+                            
+                            // Mostrar botão de edição nos detalhes
+                            var editButton = document.querySelector('.btn-edit-details');
+                            if (editButton) {
+                                editButton.style.display = 'block';
+                                editButton.setAttribute('data-id', id);
+                            }
                         })
-                        .catch(error => {
-                            document.querySelector('#detailsModal .modal-body').innerHTML = `
-                                <div class="alert alert-danger">
-                                    <i class="fas fa-exclamation-circle me-2"></i> Erro ao carregar detalhes. Tente novamente.
-                                </div>
-                            `;
+                        .catch(function(error) {
+                            if (modalBody) {
+                                modalBody.innerHTML = `
+                                    <div class="alert alert-danger">
+                                        <i class="fas fa-exclamation-circle me-2"></i> Erro ao carregar detalhes!
+                                    </div>
+                                `;
+                            }
+                            console.error("Erro ao carregar detalhes:", error);
                         });
-                });
-            });
-            
-            // Botão editar do modal de detalhes
-            document.querySelector('.btn-edit-details')?.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                window.location.href = '../index.php?action=edit&id=' + id;
-            });
-            
-            // Botões de exclusão
-            document.querySelectorAll('.delete-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    document.getElementById('id_guia_delete').value = id;
-                    document.getElementById('deleteGuiaId').textContent = id;
-                    const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
-                    deleteModal.show();
-                });
-            });
-            
-            // Confirmar exclusão
-            document.getElementById('confirmDelete')?.addEventListener('click', function() {
-                document.getElementById('deleteForm').submit();
-            });
+                }
+                
+                return false;
+            };
         });
+        
+        // Configurar botão de edição nos detalhes
+        var editDetailsButton = document.querySelector('.btn-edit-details');
+        if (editDetailsButton) {
+            editDetailsButton.onclick = function() {
+                var id = this.getAttribute('data-id');
+                if (id) {
+                    window.location.href = '../index.php?action=edit&id=' + id;
+                }
+                return false;
+            };
+        }
+        
+        // Configurar botões de exclusão
+        document.querySelectorAll('.delete-button').forEach(function(botao) {
+            botao.onclick = function(e) {
+                e.preventDefault();
+                var id = this.getAttribute('data-id');
+                var idInput = document.getElementById('id_guia_delete');
+                var idDisplay = document.getElementById('deleteGuiaId');
+                
+                if (idInput) idInput.value = id;
+                if (idDisplay) idDisplay.textContent = id;
+                
+                // Mostrar o modal usando jQuery
+                $('#deleteConfirmModal').modal('show');
+                return false;
+            };
+        });
+        
+        // Configurar botão de confirmação de exclusão
+        var confirmDeleteButton = document.getElementById('confirmDelete');
+        if (confirmDeleteButton) {
+            confirmDeleteButton.onclick = function() {
+                document.getElementById('deleteForm').submit();
+            };
+        }
+        
+        // Configurar botões de modais
+        var filtersButton = document.querySelector('button[data-bs-target="#filtersModal"]');
+        if (filtersButton) {
+            filtersButton.onclick = function(e) {
+                e.preventDefault();
+                $('#filtersModal').modal('show');
+                return false;
+            };
+        }
+        
+        var exportButton = document.querySelector('a[data-bs-toggle="modal"][data-bs-target="#exportModal"]');
+        if (exportButton) {
+            exportButton.onclick = function(e) {
+                e.preventDefault();
+                $('#exportModal').modal('show');
+                return false;
+            };
+        }
+        
+        console.log("Interface inicializada com sucesso!");
+    }
+    
+    // Tenta várias estratégias para inicializar a interface
+    function tentarInicializar() {
+        // Verifica se os elementos necessários existem
+        var elementos = document.querySelectorAll('.edit-button, .details-button, .delete-button');
+        if (elementos.length > 0) {
+            console.log("Elementos encontrados, inicializando interface");
+            inicializarInterface();
+            return true;
+        }
+        return false;
+    }
+    
+    // Inicia com DOMContentLoaded para a maioria dos casos
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOMContentLoaded acionado");
+            tentarInicializar();
+        });
+    } else {
+        // Se o DOM já estiver carregado (porque o script está no final)
+        console.log("DOM já carregado");
+        if (!tentarInicializar()) {
+            // Se não conseguiu inicializar, tenta com um pequeno delay
+            setTimeout(tentarInicializar, 100);
+        }
+    }
+    
+    // Adiciona também com jQuery como backup
+    if (typeof jQuery !== 'undefined') {
+        $(document).ready(function() {
+            console.log("jQuery ready acionado");
+            tentarInicializar();
+        });
+    }
+})();
     </script>
 </body>
 
