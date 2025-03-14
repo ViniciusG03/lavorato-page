@@ -10,6 +10,39 @@ function hasPermission($roles)
 {
   return (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) || in_array($_SESSION['login'], $roles);
 }
+
+$conn = new mysqli("mysql.lavoratoguias.kinghost.net", "lavoratoguias", "A3g7K2m9T5p8L4v6", "lavoratoguias");
+
+if ($conn->connect_error) {
+  die("Erro de conexão: " . $conn->connect_error);
+}
+
+// 1. Total de Guias Ativas
+$sql_ativas = "SELECT COUNT(*) AS total FROM pacientes WHERE paciente_guia IS NOT NULL";
+$result_ativas = $conn->query($sql_ativas);
+$total_ativas = ($result_ativas && $result_ativas->num_rows > 0) ? $result_ativas->fetch_assoc()['total'] : 0;
+
+// 2. Guias Pendentes
+$sql_pendentes = "SELECT COUNT(*) AS total FROM pacientes 
+                   WHERE paciente_guia IS NOT NULL 
+                   AND (paciente_status != 'Faturado' AND paciente_status != 'Enviado a BM')";
+$result_pendentes = $conn->query($sql_pendentes);
+$total_pendentes = ($result_pendentes && $result_pendentes->num_rows > 0) ? $result_pendentes->fetch_assoc()['total'] : 0;
+
+// 3. Guias Completadas
+$sql_completadas = "SELECT COUNT(*) AS total FROM pacientes 
+                     WHERE paciente_guia IS NOT NULL 
+                     AND (paciente_status = 'Faturado' OR paciente_status = 'Enviado a BM')";
+$result_completadas = $conn->query($sql_completadas);
+$total_completadas = ($result_completadas && $result_completadas->num_rows > 0) ? $result_completadas->fetch_assoc()['total'] : 0;
+
+// 4. Total de Pacientes Únicos
+$sql_pacientes = "SELECT COUNT(DISTINCT paciente_nome) AS total FROM pacientes WHERE paciente_nome IS NOT NULL";
+$result_pacientes = $conn->query($sql_pacientes);
+$total_pacientes = ($result_pacientes && $result_pacientes->num_rows > 0) ? $result_pacientes->fetch_assoc()['total'] : 0;
+
+// Fecha a conexão
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +71,6 @@ function hasPermission($roles)
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="assets/Logo-Lavorato-alfa.png" alt="Lavorato Logo" width="40" class="me-2">
         Lavorato's System
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -53,9 +85,6 @@ function hasPermission($roles)
               <i class="fas fa-cog me-1"></i> Opções
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item" href="controle-page/controle.php">
-                <i class="fas fa-sliders-h me-2"></i>Controle</a>
-              </li>
               <?php
               if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
                 echo '<li><a class="dropdown-item" href="login/cadastro.php">
@@ -63,11 +92,13 @@ function hasPermission($roles)
               }
               ?>
               <li><a class="dropdown-item" href="login/logout.php">
-                <i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                  <i class="fas fa-sign-out-alt me-2"></i>Logout</a>
               </li>
-              <li><hr class="dropdown-divider"></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
               <li><a class="dropdown-item" href="views/atas.php">
-                <i class="fas fa-file-alt me-2"></i>ATAS</a>
+                  <i class="fas fa-file-alt me-2"></i>ATAS</a>
               </li>
               <?php
               if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin'])) {
@@ -90,7 +121,7 @@ function hasPermission($roles)
               }
               ?>
               <?php
-              if ($_SESSION['login'] == 'admin' || in_array($_SESSION['login'], ['gustavoramos', 'talita'])) {
+              if ($_SESSION['login'] == 'admin' || in_array($_SESSION['login'], ['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])) {
                 echo '<li><a class="dropdown-item" href="views/admin_relatorios.php">
                   <i class="fas fa-user-shield me-2"></i>Admin Relatórios</a></li>';
               }
@@ -117,100 +148,100 @@ function hasPermission($roles)
   <div class="container py-5">
     <div class="text-center mb-4">
       <div class="image-logo">
-        <img src="assets/Logo-Lavorato-alfa.png" alt="Lavorato Logo" class="img-fluid" style="max-height: 200px;">
+        <img src="assets/Logo_PNG.png" alt="Lavorato Logo" class="img-fluid" style="max-height: 200px;">
       </div>
       <h1 class="display-5 mt-3 mb-4 text-primary fw-bold">Sistema de Gestão de Guias</h1>
     </div>
 
     <!-- Dashboard Cards - Visão rápida -->
-    <?php if (hasPermission(['gustavoramos', 'raphael', 'admin'])): ?>
-    <div class="row mb-5">
-      <div class="col-md-3 mb-3">
-        <div class="card text-center h-100">
-          <div class="card-body">
-            <i class="fas fa-file-medical fa-3x text-primary mb-3"></i>
-            <h5 class="card-title">Guias Ativas</h5>
-            <p class="card-text fs-4 fw-bold">124</p>
+    <?php if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])): ?>
+      <div class="row mb-5">
+        <div class="col-md-3 mb-3">
+          <div class="card text-center h-100">
+            <div class="card-body">
+              <i class="fas fa-file-medical fa-3x text-primary mb-3"></i>
+              <h5 class="card-title">Guias Ativas</h5> <!-- Guias ativas, todas as guias do sistema -->
+              <p class="card-text fs-4 fw-bold"><?php echo $total_ativas; ?></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card text-center h-100">
+            <div class="card-body">
+              <i class="fas fa-tasks fa-3x text-warning mb-3"></i>
+              <h5 class="card-title">Pendentes</h5> <!-- Guias pendentes, guias que ainda não foram faturadas -->
+              <p class="card-text fs-4 fw-bold"><?php echo $total_pendentes; ?></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card text-center h-100">
+            <div class="card-body">
+              <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+              <h5 class="card-title">Completadas</h5> <!-- Guias completadas, guias que já foram faturadas (Status: Faturado, Enviado a BM) -->
+              <p class="card-text fs-4 fw-bold"><?php echo $total_completadas; ?></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="card text-center h-100">
+            <div class="card-body">
+              <i class="fas fa-users fa-3x text-info mb-3"></i>
+              <h5 class="card-title">Pacientes</h5> <!-- Total de pacientes, quantidade de pacientes cadastrados no sistema OBS: sem duplicidade, visto que tem vários registros com mesmo nome de paciente -->
+              <p class="card-text fs-4 fw-bold"><?php echo $total_pacientes; ?></p>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-3 mb-3">
-        <div class="card text-center h-100">
-          <div class="card-body">
-            <i class="fas fa-tasks fa-3x text-warning mb-3"></i>
-            <h5 class="card-title">Pendentes</h5>
-            <p class="card-text fs-4 fw-bold">18</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-3">
-        <div class="card text-center h-100">
-          <div class="card-body">
-            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
-            <h5 class="card-title">Completadas</h5>
-            <p class="card-text fs-4 fw-bold">43</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-3">
-        <div class="card text-center h-100">
-          <div class="card-body">
-            <i class="fas fa-users fa-3x text-info mb-3"></i>
-            <h5 class="card-title">Pacientes</h5>
-            <p class="card-text fs-4 fw-bold">87</p>
-          </div>
-        </div>
-      </div>
-    </div>
     <?php endif; ?>
 
     <!-- Botões principais com ícones e design melhorado -->
     <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
       <?php if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin'])): ?>
-      <div class="col">
-        <div class="card h-100 text-center border-0 shadow-sm">
-          <div class="card-body d-flex flex-column">
-            <div class="mb-3">
-              <i class="fas fa-file-medical fa-3x text-primary"></i>
+        <div class="col">
+          <div class="card h-100 text-center border-0 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <div class="mb-3">
+                <i class="fas fa-file-medical fa-3x text-primary"></i>
+              </div>
+              <h5 class="card-title">Cadastrar Guia</h5>
+              <p class="card-text text-muted">Adicionar uma nova guia ao sistema</p>
+              <button id="btn-cadastrar" class="btn btn-primary mt-auto w-100">Cadastrar</button>
             </div>
-            <h5 class="card-title">Cadastrar Guia</h5>
-            <p class="card-text text-muted">Adicionar uma nova guia ao sistema</p>
-            <button id="btn-cadastrar" class="btn btn-primary mt-auto w-100">Cadastrar</button>
           </div>
         </div>
-      </div>
       <?php endif; ?>
-      
+
       <?php if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])): ?>
-      <div class="col">
-        <div class="card h-100 text-center border-0 shadow-sm">
-          <div class="card-body d-flex flex-column">
-            <div class="mb-3">
-              <i class="fas fa-edit fa-3x text-primary"></i>
+        <div class="col">
+          <div class="card h-100 text-center border-0 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <div class="mb-3">
+                <i class="fas fa-edit fa-3x text-primary"></i>
+              </div>
+              <h5 class="card-title">Atualizar Guia</h5>
+              <p class="card-text text-muted">Modificar informações de uma guia existente</p>
+              <button id="btn-atualizar" class="btn btn-primary mt-auto w-100">Atualizar</button>
             </div>
-            <h5 class="card-title">Atualizar Guia</h5>
-            <p class="card-text text-muted">Modificar informações de uma guia existente</p>
-            <button id="btn-atualizar" class="btn btn-primary mt-auto w-100">Atualizar</button>
           </div>
         </div>
-      </div>
       <?php endif; ?>
-      
+
       <?php if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])): ?>
-      <div class="col">
-        <div class="card h-100 text-center border-0 shadow-sm">
-          <div class="card-body d-flex flex-column">
-            <div class="mb-3">
-              <i class="fas fa-layer-group fa-3x text-primary"></i>
+        <div class="col">
+          <div class="card h-100 text-center border-0 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <div class="mb-3">
+                <i class="fas fa-layer-group fa-3x text-primary"></i>
+              </div>
+              <h5 class="card-title">Atualização em Massa</h5>
+              <p class="card-text text-muted">Atualizar múltiplas guias de uma vez</p>
+              <button id="btn-atualizarEmMassa" class="btn btn-primary mt-auto w-100">Atualizar em Massa</button>
             </div>
-            <h5 class="card-title">Atualização em Massa</h5>
-            <p class="card-text text-muted">Atualizar múltiplas guias de uma vez</p>
-            <button id="btn-atualizarEmMassa" class="btn btn-primary mt-auto w-100">Atualizar em Massa</button>
           </div>
         </div>
-      </div>
       <?php endif; ?>
-      
+
       <div class="col">
         <div class="card h-100 text-center border-0 shadow-sm">
           <div class="card-body d-flex flex-column">
@@ -223,35 +254,35 @@ function hasPermission($roles)
           </div>
         </div>
       </div>
-      
+
       <?php if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita'])): ?>
-      <div class="col">
-        <div class="card h-100 text-center border-0 shadow-sm">
-          <div class="card-body d-flex flex-column">
-            <div class="mb-3">
-              <i class="fas fa-chart-line fa-3x text-primary"></i>
+        <div class="col">
+          <div class="card h-100 text-center border-0 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <div class="mb-3">
+                <i class="fas fa-chart-line fa-3x text-primary"></i>
+              </div>
+              <h5 class="card-title">Relatórios</h5>
+              <p class="card-text text-muted">Gerar relatórios com base nos dados do sistema</p>
+              <button id="btn-relatorio" class="btn btn-primary mt-auto w-100">Relatório</button>
             </div>
-            <h5 class="card-title">Relatórios</h5>
-            <p class="card-text text-muted">Gerar relatórios com base nos dados do sistema</p>
-            <button id="btn-relatorio" class="btn btn-primary mt-auto w-100">Relatório</button>
           </div>
         </div>
-      </div>
       <?php endif; ?>
-      
+
       <?php if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin'])): ?>
-      <div class="col">
-        <div class="card h-100 text-center border-0 shadow-sm">
-          <div class="card-body d-flex flex-column">
-            <div class="mb-3">
-              <i class="fas fa-trash-alt fa-3x text-primary"></i>
+        <div class="col">
+          <div class="card h-100 text-center border-0 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <div class="mb-3">
+                <i class="fas fa-trash-alt fa-3x text-primary"></i>
+              </div>
+              <h5 class="card-title">Remover Guia</h5>
+              <p class="card-text text-muted">Excluir uma guia existente do sistema</p>
+              <button id="btn-remover" class="btn btn-primary mt-auto w-100">Remover</button>
             </div>
-            <h5 class="card-title">Remover Guia</h5>
-            <p class="card-text text-muted">Excluir uma guia existente do sistema</p>
-            <button id="btn-remover" class="btn btn-primary mt-auto w-100">Remover</button>
           </div>
         </div>
-      </div>
       <?php endif; ?>
     </div>
   </div>
@@ -259,273 +290,72 @@ function hasPermission($roles)
   <!-- Modais com design aprimorado -->
   <!-- Modal de cadastro -->
   <div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalCadastroLabel">Cadastro de Guia</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formCadastro" action="database/cadastrar.php" method="post" class="needs-validation" novalidate>
-          <div class="row">
-            <div class="col-12 mb-3">
-              <label for="nome" class="form-label">Nome do Paciente <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                <input type="text" id="nome" name="nome" class="form-control" autocomplete="off" required />
-              </div>
-              <div id="nome-suggestions" class="dropdown-menu"></div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="convenio" class="form-label">Convênio <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                <input type="text" id="convenio" name="convenio" class="form-control" autocomplete="off" required />
-              </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="numero_guia" class="form-label">Número da Guia <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" required />
-              </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="status_guia" class="form-label">Status <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
-                <select id="status_guia" name="status_guia" class="form-select" required>
-                  <option value="" selected disabled>Selecione o status</option>
-                  <option value="Emitido">Emitido</option>
-                  <option value="Subiu">Subiu</option>
-                  <option value="Cancelado">Cancelado</option>
-                  <option value="Saiu">Saiu</option>
-                  <option value="Retornou">Retornou</option>
-                  <option value="Não Usou">Não Usou</option>
-                  <option value="Assinado">Assinado</option>
-                  <option value="Faturado">Faturado</option>
-                  <option value="Enviado a BM">Enviado a BM</option>
-                  <option value="Devolvido BM">Devolvido BM</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="numero_section" class="form-label">Número de sessões <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                <input type="number" name="numero_section" id="numero_section" class="form-control" min="1" max="100" autocomplete="off" required>
-              </div>
-            </div>
-            <div class="col-md-12 mb-3">
-            <label for="especialidades" class="form-label">Especialidades <span class="text-danger">*</span></label>
-             <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
-            <select id="especialidades" name="especialidades[]" class="form-select selectpicker" multiple data-live-search="true" required>
-              <option>AVALIACAO NEUROPSICOLOGICA</option>
-              <option>SESSAO DE ARTETERAPIA</option>
-              <option>SESSAO DE EQUOTERAPIA</option>
-              <option>SESSAO DE FISIOTERAPIA</option>
-              <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
-              <option>SESSAO DE MUSICOTERAPIA</option>
-              <option>SESSAO DE NUTRIÇÃO</option>
-              <option>SESSAO DE PSICOLOGIA DE CASAL</option>
-              <option>SESSAO DE PSICOMOTRICIDADE</option>
-              <option>SESSAO DE PSICOPEDAGOGIA</option>
-              <option>SESSAO DE PSICOTERAPIA</option>
-              <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
-              <option>SESSAO DE TERAPIA OCUPACIONAL</option>
-              <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
-              <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
-              <option>SESSAO DE TERAPIA ABA</option>
-              <option>TRATAMENTO SERIADO</option>
-            </select>
-            </div>
-             <small class="form-text text-muted">Segure Ctrl (ou Command no Mac) para selecionar múltiplas especialidades.</small>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="mes" class="form-label">Mês <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                <select id="mes" name="mes" class="form-select" required>
-                  <option value="" selected disabled>Selecione o mês</option>
-                  <option>Janeiro</option>
-                  <option>Fevereiro</option>
-                  <option>Março</option>
-                  <option>Abril</option>
-                  <option>Maio</option>
-                  <option>Junho</option>
-                  <option>Julho</option>
-                  <option>Agosto</option>
-                  <option>Setembro</option>
-                  <option>Outubro</option>
-                  <option>Novembro</option>
-                  <option>Dezembro</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-12 mb-3">
-              <label for="validade" class="form-label">Validade</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
-                <input type="date" id="validade" name="validade" class="form-control" autocomplete="off">
-              </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="entrada" class="form-label">Entrada <span class="text-danger">*</span></label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-calendar-plus"></i></span>
-                <input type="date" id="entrada" name="entrada" class="form-control" autocomplete="off" required>
-              </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="saida" class="form-label">Saída</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-calendar-minus"></i></span>
-                <input type="date" id="saida" name="saida" class="form-control" autocomplete="off">
-              </div>
-            </div>
-          </div>
-          <div class="d-flex justify-content-end mt-3">
-            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Salvar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <!-- Modal de atualização -->
-  <div class="modal fade" id="modalAtualizacao" tabindex="-1" aria-labelledby="modalAtualizacaoLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalAtualizacaoLabel">Atualização de Guias</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="updateForm" action="database/atualizar.php" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="card mb-3">
-                <div class="card-header bg-light text-dark">
-                  <h6 class="mb-0">Identificação da Guia</h6>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCadastroLabel">Cadastro de Guia</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formCadastro" action="database/cadastrar.php" method="post" class="needs-validation" novalidate>
+            <div class="row">
+              <div class="col-12 mb-3">
+                <label for="nome" class="form-label">Nome do Paciente <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  <input type="text" id="nome" name="nome" class="form-control" autocomplete="off" required />
                 </div>
-                <div class="card-body">
-                  <div class="mb-3">
-                    <label for="numero_guia" class="form-label">ID da Guia <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
-                      <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" required />
-                    </div>
-                    <div class="form-check mt-2">
-                      <input type="checkbox" id="checkbox_guia" name="checkbox_guia" class="form-check-input" />
-                      <label for="checkbox_guia" class="form-check-label">Usar numeração da guia</label>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <label for="correcao_guia" class="form-label">Corrigir número da guia</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-edit"></i></span>
-                      <input type="text" id="correcao_guia" name="correcao_guia" class="form-control" autocomplete="off" />
-                    </div>
-                  </div>
+                <div id="nome-suggestions" class="dropdown-menu"></div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="convenio" class="form-label">Convênio <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                  <input type="text" id="convenio" name="convenio" class="form-control" autocomplete="off" required />
                 </div>
               </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="card mb-3">
-                <div class="card-header bg-light text-dark">
-                  <h6 class="mb-0">Status e Valores</h6>
-                </div>
-                <div class="card-body">
-                  <div class="mb-3">
-                    <label for="status_guia" class="form-label">Status</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
-                      <select id="status_guia" name="status_guia" class="form-select">
-                        <option value="" selected disabled>Selecione o status</option>
-                        <option>Emitido</option>
-                        <option>Subiu</option>
-                        <option>Cancelado</option>
-                        <option>Saiu</option>
-                        <option>Retornou</option>
-                        <option>Não Usou</option>
-                        <option>Assinado</option>
-                        <option>Faturado</option>
-                        <option>Enviado a BM</option>
-                        <option>Devolvido BM</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <label for="valor_guia" class="form-label">Valor da Guia</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                      <input type="text" id="valor_guia" name="valor_guia" class="form-control" autocomplete="off" />
-                    </div>
-                  </div>
+              <div class="col-md-6 mb-3">
+                <label for="numero_guia" class="form-label">Número da Guia <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                  <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" required />
                 </div>
               </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="card mb-3">
-                <div class="card-header bg-light text-dark">
-                  <h6 class="mb-0">Detalhes de Faturamento</h6>
-                </div>
-                <div class="card-body">
-                  <div class="mb-3">
-                    <label for="qtd_faturada" class="form-label">Quantidade faturada</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-sort-numeric-up"></i></span>
-                      <input type="number" id="qtd_faturada" name="qtd_faturada" class="form-control" autocomplete="off" />
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <label for="data_remessa" class="form-label">Data da Remessa</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                      <input type="date" id="data_remessa" name="data_remessa" class="form-control" autocomplete="off" />
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <label for="validade" class="form-label">Validade</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
-                      <input type="date" id="validade" name="validade" class="form-control" autocomplete="off" />
-                    </div>
-                  </div>
+              <div class="col-md-6 mb-3">
+                <label for="status_guia" class="form-label">Status <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+                  <select id="status_guia" name="status_guia" class="form-select" required>
+                    <option value="" selected disabled>Selecione o status</option>
+                    <option value="Emitido">Emitido</option>
+                    <option value="Subiu">Subiu</option>
+                    <option value="Cancelado">Cancelado</option>
+                    <option value="Saiu">Saiu</option>
+                    <option value="Retornou">Retornou</option>
+                    <option value="Não Usou">Não Usou</option>
+                    <option value="Assinado">Assinado</option>
+                    <option value="Faturado">Faturado</option>
+                    <option value="Enviado a BM">Enviado a BM</option>
+                    <option value="Devolvido BM">Devolvido BM</option>
+                  </select>
                 </div>
               </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="card mb-3">
-                <div class="card-header bg-light text-dark">
-                  <h6 class="mb-0">Informações Adicionais</h6>
+              <div class="col-md-6 mb-3">
+                <label for="numero_section" class="form-label">Número de sessões <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                  <input type="number" name="numero_section" id="numero_section" class="form-control" min="1" max="100" autocomplete="off" required>
                 </div>
-                <div class="card-body">
-                  <div class="mb-3">
-                    <label for="section" class="form-label">Número de Sessões</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                      <input type="number" id="section" name="section" class="form-control" autocomplete="off" />
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                  <label for="especialidades" class="form-label">Especialidades</label>
-                  <div class="input-group">
+              </div>
+              <div class="col-md-12 mb-3">
+                <label for="especialidades" class="form-label">Especialidades <span class="text-danger">*</span></label>
+                <div class="input-group">
                   <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
-                  <select id="especialidades" name="especialidades[]" class="form-select" multiple>
+                  <select id="especialidades" name="especialidades[]" class="form-select selectpicker" multiple data-live-search="true" required>
                     <option>AVALIACAO NEUROPSICOLOGICA</option>
                     <option>SESSAO DE ARTETERAPIA</option>
                     <option>SESSAO DE EQUOTERAPIA</option>
                     <option>SESSAO DE FISIOTERAPIA</option>
-                    <option>SESSAO DE FONOAUDIOLOGIA</option>
-                    <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
                     <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
                     <option>SESSAO DE MUSICOTERAPIA</option>
                     <option>SESSAO DE NUTRIÇÃO</option>
@@ -543,81 +373,282 @@ function hasPermission($roles)
                 </div>
                 <small class="form-text text-muted">Segure Ctrl (ou Command no Mac) para selecionar múltiplas especialidades.</small>
               </div>
+              <div class="col-md-6 mb-3">
+                <label for="mes" class="form-label">Mês <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                  <select id="mes" name="mes" class="form-select" required>
+                    <option value="" selected disabled>Selecione o mês</option>
+                    <option>Janeiro</option>
+                    <option>Fevereiro</option>
+                    <option>Março</option>
+                    <option>Abril</option>
+                    <option>Maio</option>
+                    <option>Junho</option>
+                    <option>Julho</option>
+                    <option>Agosto</option>
+                    <option>Setembro</option>
+                    <option>Outubro</option>
+                    <option>Novembro</option>
+                    <option>Dezembro</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-12 mb-3">
+                <label for="validade" class="form-label">Validade</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
+                  <input type="date" id="validade" name="validade" class="form-control" autocomplete="off">
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="entrada" class="form-label">Entrada <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-calendar-plus"></i></span>
+                  <input type="date" id="entrada" name="entrada" class="form-control" autocomplete="off" required>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="saida" class="form-label">Saída</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-calendar-minus"></i></span>
+                  <input type="date" id="saida" name="saida" class="form-control" autocomplete="off">
                 </div>
               </div>
             </div>
-            
-            <div class="col-md-12">
-              <div class="card mb-3">
-                <div class="card-header bg-light text-dark">
-                  <h6 class="mb-0">Importação e Período</h6>
-                </div>
-                <div class="card-body">
-                  <div class="mb-3">
-                    <label for="excelFile" class="form-label">Importar arquivo Excel</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-file-excel"></i></span>
-                      <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls" class="form-control" />
-                    </div>
-                    <small class="text-muted">Formatos aceitos: .xlsx, .xls</small>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label for="mes" class="form-label">Mês de atualização</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                        <select id="mes" name="mes" class="form-select">
-                          <option value="" selected disabled>Selecione o mês</option>
-                          <option>Janeiro</option>
-                          <option>Fevereiro</option>
-                          <option>Março</option>
-                          <option>Abril</option>
-                          <option>Maio</option>
-                          <option>Junho</option>
-                          <option>Julho</option>
-                          <option>Agosto</option>
-                          <option>Setembro</option>
-                          <option>Outubro</option>
-                          <option>Novembro</option>
-                          <option>Dezembro</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="numero_lote" class="form-label">Número do lote</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
-                        <input type="text" id="numero_lote" name="numero_lote" class="form-control" autocomplete="off" />
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="entrada" class="form-label">Entrada</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-calendar-plus"></i></span>
-                        <input type="date" id="entrada" name="entrada" class="form-control" autocomplete="off" />
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="saida" class="form-label">Saída</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-calendar-minus"></i></span>
-                        <input type="date" id="saida" name="saida" class="form-control" autocomplete="off" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="d-flex justify-content-end mt-3">
+              <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
             </div>
-          </div>
-          <div class="d-flex justify-content-end mt-3">
-            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Salvar</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- Modal de atualização -->
+  <div class="modal fade" id="modalAtualizacao" tabindex="-1" aria-labelledby="modalAtualizacaoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAtualizacaoLabel">Atualização de Guias</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="updateForm" action="database/atualizar.php" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="card mb-3">
+                  <div class="card-header bg-light text-dark">
+                    <h6 class="mb-0">Identificação da Guia</h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label for="numero_guia" class="form-label">ID da Guia <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                        <input type="text" id="numero_guia" name="numero_guia" class="form-control" autocomplete="off" required />
+                      </div>
+                      <div class="form-check mt-2">
+                        <input type="checkbox" id="checkbox_guia" name="checkbox_guia" class="form-check-input" />
+                        <label for="checkbox_guia" class="form-check-label">Usar numeração da guia</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="correcao_guia" class="form-label">Corrigir número da guia</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-edit"></i></span>
+                        <input type="text" id="correcao_guia" name="correcao_guia" class="form-control" autocomplete="off" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="card mb-3">
+                  <div class="card-header bg-light text-dark">
+                    <h6 class="mb-0">Status e Valores</h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label for="status_guia" class="form-label">Status</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+                        <select id="status_guia" name="status_guia" class="form-select">
+                          <option value="" selected disabled>Selecione o status</option>
+                          <option>Emitido</option>
+                          <option>Subiu</option>
+                          <option>Cancelado</option>
+                          <option>Saiu</option>
+                          <option>Retornou</option>
+                          <option>Não Usou</option>
+                          <option>Assinado</option>
+                          <option>Faturado</option>
+                          <option>Enviado a BM</option>
+                          <option>Devolvido BM</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="valor_guia" class="form-label">Valor da Guia</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                        <input type="text" id="valor_guia" name="valor_guia" class="form-control" autocomplete="off" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="card mb-3">
+                  <div class="card-header bg-light text-dark">
+                    <h6 class="mb-0">Detalhes de Faturamento</h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label for="qtd_faturada" class="form-label">Quantidade faturada</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-sort-numeric-up"></i></span>
+                        <input type="number" id="qtd_faturada" name="qtd_faturada" class="form-control" autocomplete="off" />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="data_remessa" class="form-label">Data da Remessa</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                        <input type="date" id="data_remessa" name="data_remessa" class="form-control" autocomplete="off" />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="validade" class="form-label">Validade</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-times"></i></span>
+                        <input type="date" id="validade" name="validade" class="form-control" autocomplete="off" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="card mb-3">
+                  <div class="card-header bg-light text-dark">
+                    <h6 class="mb-0">Informações Adicionais</h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label for="section" class="form-label">Número de Sessões</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                        <input type="number" id="section" name="section" class="form-control" autocomplete="off" />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="especialidades" class="form-label">Especialidades</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                        <select id="especialidades" name="especialidades[]" class="form-select" multiple>
+                          <option>AVALIACAO NEUROPSICOLOGICA</option>
+                          <option>SESSAO DE ARTETERAPIA</option>
+                          <option>SESSAO DE EQUOTERAPIA</option>
+                          <option>SESSAO DE FISIOTERAPIA</option>
+                          <option>SESSAO DE FONOAUDIOLOGIA</option>
+                          <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
+                          <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
+                          <option>SESSAO DE MUSICOTERAPIA</option>
+                          <option>SESSAO DE NUTRIÇÃO</option>
+                          <option>SESSAO DE PSICOLOGIA DE CASAL</option>
+                          <option>SESSAO DE PSICOMOTRICIDADE</option>
+                          <option>SESSAO DE PSICOPEDAGOGIA</option>
+                          <option>SESSAO DE PSICOTERAPIA</option>
+                          <option>SESSAO DE TERAPIA COMPORTAMENTAL APLICADA</option>
+                          <option>SESSAO DE TERAPIA OCUPACIONAL</option>
+                          <option>SESSAO DE TERAPIA OCUPACIONAL EM GRUPO</option>
+                          <option>TERAPIA INTENSIVA NO MODELO PEDIASUIT</option>
+                          <option>SESSAO DE TERAPIA ABA</option>
+                          <option>TRATAMENTO SERIADO</option>
+                        </select>
+                      </div>
+                      <small class="form-text text-muted">Segure Ctrl (ou Command no Mac) para selecionar múltiplas especialidades.</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="card mb-3">
+                  <div class="card-header bg-light text-dark">
+                    <h6 class="mb-0">Importação e Período</h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label for="excelFile" class="form-label">Importar arquivo Excel</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-file-excel"></i></span>
+                        <input type="file" id="excelFile" name="excelFile" accept=".xlsx, .xls" class="form-control" />
+                      </div>
+                      <small class="text-muted">Formatos aceitos: .xlsx, .xls</small>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="mes" class="form-label">Mês de atualização</label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                          <select id="mes" name="mes" class="form-select">
+                            <option value="" selected disabled>Selecione o mês</option>
+                            <option>Janeiro</option>
+                            <option>Fevereiro</option>
+                            <option>Março</option>
+                            <option>Abril</option>
+                            <option>Maio</option>
+                            <option>Junho</option>
+                            <option>Julho</option>
+                            <option>Agosto</option>
+                            <option>Setembro</option>
+                            <option>Outubro</option>
+                            <option>Novembro</option>
+                            <option>Dezembro</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="numero_lote" class="form-label">Número do lote</label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
+                          <input type="text" id="numero_lote" name="numero_lote" class="form-control" autocomplete="off" />
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="entrada" class="form-label">Entrada</label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fas fa-calendar-plus"></i></span>
+                          <input type="date" id="entrada" name="entrada" class="form-control" autocomplete="off" />
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="saida" class="form-label">Saída</label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fas fa-calendar-minus"></i></span>
+                          <input type="date" id="saida" name="saida" class="form-control" autocomplete="off" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+              <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal relatorio -->
   <div class="modal fade" id="modalRelatorio" tabindex="-1" aria-labelledby="modalRelatorioLabel" aria-hidden="true">
@@ -801,80 +832,80 @@ function hasPermission($roles)
   </div>
 
   <div class="modal fade" id="modalAtualizar" tabindex="-1" aria-labelledby="modalAtualizarLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalAtualizarLabel">Atualizar Guias em Massa</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Campo de busca -->
-        <div class="mb-3">
-          <label for="buscaGuia" class="form-label">Buscar guia</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-search"></i></span>
-            <input type="text" id="buscaGuia" class="form-control" placeholder="Digite o número da guia...">
-          </div>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAtualizarLabel">Atualizar Guias em Massa</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-
-        <!-- Lista de guias filtradas com design melhorado -->
-        <div class="card mb-4">
-          <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
-            <h6 class="mb-0">Guias Encontradas</h6>
-            <span class="badge bg-primary" id="totalGuias">0</span>
+        <div class="modal-body">
+          <!-- Campo de busca -->
+          <div class="mb-3">
+            <label for="buscaGuia" class="form-label">Buscar guia</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-search"></i></span>
+              <input type="text" id="buscaGuia" class="form-control" placeholder="Digite o número da guia...">
+            </div>
           </div>
-          <div class="card-body p-0">
-            <div class="table-responsive">
-              <table class="table table-hover mb-0">
-                <thead>
-                  <tr>
-                    <th class="text-center" width="50">
-                      <input type="checkbox" id="selectAll" class="form-check-input">
-                    </th>
-                    <th>Número da Guia</th>
-                    <th>Paciente</th>
-                    <th>Status Atual</th>
-                  </tr>
-                </thead>
-                <tbody id="listaGuias">
-                  <!-- Guias serão carregadas aqui via AJAX -->
-                  <tr>
-                    <td colspan="4" class="text-center py-3">Digite um número para buscar guias</td>
-                  </tr>
-                </tbody>
-              </table>
+
+          <!-- Lista de guias filtradas com design melhorado -->
+          <div class="card mb-4">
+            <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+              <h6 class="mb-0">Guias Encontradas</h6>
+              <span class="badge bg-primary" id="totalGuias">0</span>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-center" width="50">
+                        <input type="checkbox" id="selectAll" class="form-check-input">
+                      </th>
+                      <th>Número da Guia</th>
+                      <th>Paciente</th>
+                      <th>Status Atual</th>
+                    </tr>
+                  </thead>
+                  <tbody id="listaGuias">
+                    <!-- Guias serão carregadas aqui via AJAX -->
+                    <tr>
+                      <td colspan="4" class="text-center py-3">Digite um número para buscar guias</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seleção do novo status -->
+          <div class="mb-3">
+            <label for="novoStatus" class="form-label">Novo Status</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+              <select id="novoStatus" class="form-select">
+                <option value="" selected disabled>Selecione o novo status</option>
+                <option value="Emitido">Emitido</option>
+                <option value="Subiu">Subiu</option>
+                <option value="Cancelado">Cancelado</option>
+                <option value="Saiu">Saiu</option>
+                <option value="Retornou">Retornou</option>
+                <option value="Não Usou">Não Usou</option>
+                <option value="Assinado">Assinado</option>
+                <option value="Enviado a BM">Enviado a BM</option>
+                <option value="Faturado">Faturado</option>
+                <option value="Devolvido BM">Devolvido BM</option>
+              </select>
             </div>
           </div>
         </div>
-
-        <!-- Seleção do novo status -->
-        <div class="mb-3">
-          <label for="novoStatus" class="form-label">Novo Status</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
-            <select id="novoStatus" class="form-select">
-              <option value="" selected disabled>Selecione o novo status</option>
-              <option value="Emitido">Emitido</option>
-              <option value="Subiu">Subiu</option>
-              <option value="Cancelado">Cancelado</option>
-              <option value="Saiu">Saiu</option>
-              <option value="Retornou">Retornou</option>
-              <option value="Não Usou">Não Usou</option>
-              <option value="Assinado">Assinado</option>
-              <option value="Enviado a BM">Enviado a BM</option>
-              <option value="Faturado">Faturado</option>
-              <option value="Devolvido BM">Devolvido BM</option>
-            </select>
-          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="confirmarAtualizacao">Atualizar Guias</button>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="confirmarAtualizacao">Atualizar Guias</button>
       </div>
     </div>
   </div>
-</div>
 
   <!-- Modal remoção -->
   <div class="modal fade" id="modalRemover" tabindex="-1" aria-labelledby="modalRemoverLabel" aria-hidden="true">
@@ -925,7 +956,7 @@ function hasPermission($roles)
               <?php echo isset($_SESSION['is_admin']) && $_SESSION['is_admin'] ? 'Administrador' : 'Usuário'; ?>
             </p>
           </div>
-          
+
           <div class="list-group">
             <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
               <div>
@@ -958,10 +989,10 @@ function hasPermission($roles)
     // Script para verificar formulários
     (function() {
       'use strict';
-      
+
       // Fetch all forms we want to apply custom validation
       var forms = document.querySelectorAll('.needs-validation');
-      
+
       // Loop over them and prevent submission
       Array.prototype.slice.call(forms).forEach(function(form) {
         form.addEventListener('submit', function(event) {
@@ -969,7 +1000,7 @@ function hasPermission($roles)
             event.preventDefault();
             event.stopPropagation();
           }
-          
+
           form.classList.add('was-validated');
         }, false);
       });
@@ -1014,52 +1045,52 @@ function hasPermission($roles)
     });
 
     $(document).ready(function() {
-  $('.selectpicker').selectpicker({
-    noneSelectedText: 'Selecione especialidades',
-    selectAllText: 'Selecionar Todos',
-    deselectAllText: 'Desmarcar Todos',
-    countSelectedText: '{0} especialidades selecionadas'
-  });
-});
-
-function carregarEspecialidades(pacienteId) {
-  // Limpar seleções anteriores
-  const selectEspecialidades = document.getElementById('especialidades');
-  if (selectEspecialidades) {
-    // Desmarcar todos os options
-    Array.from(selectEspecialidades.options).forEach(option => {
-      option.selected = false;
+      $('.selectpicker').selectpicker({
+        noneSelectedText: 'Selecione especialidades',
+        selectAllText: 'Selecionar Todos',
+        deselectAllText: 'Desmarcar Todos',
+        countSelectedText: '{0} especialidades selecionadas'
+      });
     });
-    
-    // Buscar especialidades do paciente via AJAX
-    fetch(`database/get_especialidades.php?paciente_id=${pacienteId}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success && data.especialidades) {
-          // Marcar as especialidades existentes
-          Array.from(selectEspecialidades.options).forEach(option => {
-            if (data.especialidades.includes(option.value)) {
-              option.selected = true;
-            }
-          });
-          
-          // Atualizar o Bootstrap Select se estiver em uso
-          if (typeof $(selectEspecialidades).selectpicker === 'function') {
-            $(selectEspecialidades).selectpicker('refresh');
-          }
-        }
-      })
-      .catch(error => console.error('Erro ao carregar especialidades:', error));
-  }
-}
 
-// Modificar o evento de clique dos botões de edição para carregar especialidades
-document.querySelectorAll('.edit-button').forEach(button => {
-  button.addEventListener('click', function() {
-    const id = this.getAttribute('data-id');
-    // Adicionar chamada para carregar especialidades depois que o modal for aberto
-    setTimeout(() => carregarEspecialidades(id), 500);
-  });
-});
+    function carregarEspecialidades(pacienteId) {
+      // Limpar seleções anteriores
+      const selectEspecialidades = document.getElementById('especialidades');
+      if (selectEspecialidades) {
+        // Desmarcar todos os options
+        Array.from(selectEspecialidades.options).forEach(option => {
+          option.selected = false;
+        });
+
+        // Buscar especialidades do paciente via AJAX
+        fetch(`database/get_especialidades.php?paciente_id=${pacienteId}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.success && data.especialidades) {
+              // Marcar as especialidades existentes
+              Array.from(selectEspecialidades.options).forEach(option => {
+                if (data.especialidades.includes(option.value)) {
+                  option.selected = true;
+                }
+              });
+
+              // Atualizar o Bootstrap Select se estiver em uso
+              if (typeof $(selectEspecialidades).selectpicker === 'function') {
+                $(selectEspecialidades).selectpicker('refresh');
+              }
+            }
+          })
+          .catch(error => console.error('Erro ao carregar especialidades:', error));
+      }
+    }
+
+    // Modificar o evento de clique dos botões de edição para carregar especialidades
+    document.querySelectorAll('.edit-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        // Adicionar chamada para carregar especialidades depois que o modal for aberto
+        setTimeout(() => carregarEspecialidades(id), 500);
+      });
+    });
   </script>
 </body>

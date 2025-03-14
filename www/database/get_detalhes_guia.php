@@ -83,19 +83,19 @@ $especialidades = obter_especialidades_paciente($id, $conn);
                 <th width="40%">Status:</th>
                 <td>
                     <span class="badge bg-<?php
-                    $status = $guia['paciente_status'];
-                    if ($status == 'Emitido') echo 'success';
-                    elseif ($status == 'Subiu') echo 'primary';
-                    elseif ($status == 'Cancelado') echo 'danger';
-                    elseif ($status == 'Saiu') echo 'warning';
-                    elseif ($status == 'Retornou') echo 'purple';
-                    elseif ($status == 'Não Usou') echo 'secondary';
-                    elseif ($status == 'Assinado') echo 'info';
-                    elseif ($status == 'Faturado') echo 'dark';
-                    elseif ($status == 'Enviado a BM') echo 'pink';
-                    elseif ($status == 'Devolvido BM') echo 'orange';
-                    else echo 'secondary';
-                    ?>">
+                                            $status = $guia['paciente_status'];
+                                            if ($status == 'Emitido') echo 'success';
+                                            elseif ($status == 'Subiu') echo 'primary';
+                                            elseif ($status == 'Cancelado') echo 'danger';
+                                            elseif ($status == 'Saiu') echo 'warning';
+                                            elseif ($status == 'Retornou') echo 'purple';
+                                            elseif ($status == 'Não Usou') echo 'secondary';
+                                            elseif ($status == 'Assinado') echo 'info';
+                                            elseif ($status == 'Faturado') echo 'dark';
+                                            elseif ($status == 'Enviado a BM') echo 'pink';
+                                            elseif ($status == 'Devolvido BM') echo 'orange';
+                                            else echo 'secondary';
+                                            ?>">
                         <?php echo htmlspecialchars($status); ?>
                     </span>
                 </td>
@@ -151,7 +151,7 @@ $especialidades = obter_especialidades_paciente($id, $conn);
         <table class="table table-sm">
             <tr>
                 <th width="40%">Usuário Responsável:</th>
-                <td><?php 
+                <td><?php
                     $usuarios = [
                         'admin' => 'Vinicius Oliveira',
                         'talita' => 'Talita Ruiz',
@@ -161,18 +161,18 @@ $especialidades = obter_especialidades_paciente($id, $conn);
                         'tulio' => 'Tulio Uler',
                         'will' => 'Williams Licar'
                     ];
-                    echo !empty($guia['usuario_responsavel']) ? 
-                        (isset($usuarios[$guia['usuario_responsavel']]) ? 
-                            $usuarios[$guia['usuario_responsavel']] : 
-                            $guia['usuario_responsavel']) : 
-                        '<em>Não informado</em>'; 
-                ?></td>
+                    echo !empty($guia['usuario_responsavel']) ?
+                        (isset($usuarios[$guia['usuario_responsavel']]) ?
+                            $usuarios[$guia['usuario_responsavel']] :
+                            $guia['usuario_responsavel']) :
+                        '<em>Não informado</em>';
+                    ?></td>
             </tr>
         </table>
-        
+
         <div class="mt-3">
             <h5 class="mb-3">Ações</h5>
-            <a href="historico_guia.php?guia=<?php echo urlencode($guia['paciente_guia']); ?>" class="btn btn-info btn-sm" target="_blank">
+            <a href="../views/historico_guia.php?guia=<?php echo urlencode($guia['paciente_guia']); ?>" class="btn btn-info btn-sm" target="_blank">
                 <i class="fas fa-history me-1"></i> Ver Histórico de Alterações
             </a>
         </div>

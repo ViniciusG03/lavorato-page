@@ -7,7 +7,8 @@ if (!isset($_SESSION['login'])) {
 }
 
 // Função auxiliar para remover um parâmetro da URL atual
-function remove_query_param($param) {
+function remove_query_param($param)
+{
     $params = $_GET;
     unset($params[$param]);
     return basename($_SERVER['PHP_SELF']) . '?' . http_build_query($params);
@@ -53,26 +54,26 @@ if (!empty($filtro_especialidade)) {
     $params[] = $filtro_especialidade;
     $params[] = $filtro_especialidade;
     $types .= 'ss';
-    
+
     // Adicionar outros filtros
     if (!empty($filtro_status)) {
         $base_query .= " AND p.paciente_status = ?";
         $params[] = $filtro_status;
         $types .= 's';
     }
-    
+
     if (!empty($filtro_convenio)) {
         $base_query .= " AND p.paciente_convenio = ?";
         $params[] = $filtro_convenio;
         $types .= 's';
     }
-    
+
     if (!empty($filtro_mes)) {
         $base_query .= " AND p.paciente_mes = ?";
         $params[] = $filtro_mes;
         $types .= 's';
     }
-    
+
     if (!empty($termo_busca)) {
         $base_query .= " AND (p.paciente_nome LIKE ? OR p.paciente_guia LIKE ?)";
         $termo_busca_param = "%$termo_busca%";
@@ -80,31 +81,31 @@ if (!empty($filtro_especialidade)) {
         $params[] = $termo_busca_param;
         $types .= 'ss';
     }
-    
+
     // Consulta para contar o total de registros com filtros
     $sql_count = "SELECT COUNT(DISTINCT p.id) as total $base_query";
 } else {
     // Usar a query original sem JOIN quando não há filtro de especialidade
     $where_clause = [];
-    
+
     if (!empty($filtro_status)) {
         $where_clause[] = "paciente_status = ?";
         $params[] = $filtro_status;
         $types .= 's';
     }
-    
+
     if (!empty($filtro_convenio)) {
         $where_clause[] = "paciente_convenio = ?";
         $params[] = $filtro_convenio;
         $types .= 's';
     }
-    
+
     if (!empty($filtro_mes)) {
         $where_clause[] = "paciente_mes = ?";
         $params[] = $filtro_mes;
         $types .= 's';
     }
-    
+
     if (!empty($termo_busca)) {
         $where_clause[] = "(paciente_nome LIKE ? OR paciente_guia LIKE ?)";
         $termo_busca_param = "%$termo_busca%";
@@ -112,9 +113,9 @@ if (!empty($filtro_especialidade)) {
         $params[] = $termo_busca_param;
         $types .= 'ss';
     }
-    
+
     $where_conditions = !empty($where_clause) ? "WHERE " . implode(" AND ", $where_clause) : "";
-    
+
     // Consulta para contar o total de registros com filtros
     $sql_count = "SELECT COUNT(*) as total FROM pacientes $where_conditions";
 }
@@ -185,7 +186,8 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 // Função para determinar a cor do badge com base no status
-function getStatusColor($status) {
+function getStatusColor($status)
+{
     switch ($status) {
         case 'Emitido':
             return 'success';
@@ -260,34 +262,34 @@ $result_especialidades = $conn->query($sql_especialidades);
     <!-- Carregue jQuery e Bootstrap primeiro -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Script corrigido usando jQuery -->
     <script>
         // Usar window.onload em vez de DOMContentLoaded
         window.onload = function() {
             console.log('Página completamente carregada (window.onload)');
-            
+
             // Verificar se o Bootstrap está disponível
             if (typeof bootstrap !== 'undefined') {
                 console.log('Bootstrap carregado corretamente');
-                
+
                 // Inicializar tooltips
                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
                 tooltipTriggerList.forEach(function(tooltipTriggerEl) {
                     new bootstrap.Tooltip(tooltipTriggerEl);
                 });
-                
+
                 // Adicionar event listeners para os botões
                 inicializarBotoes();
             } else {
                 console.error('Bootstrap não está disponível. Verifique se o script foi carregado corretamente.');
             }
         };
-        
+
         // Função para inicializar os botões
         function inicializarBotoes() {
             console.log('Inicializando botões');
-            
+
             // Botões de detalhes
             document.querySelectorAll('.details-button').forEach(button => {
                 button.addEventListener('click', function() {
@@ -296,7 +298,7 @@ $result_especialidades = $conn->query($sql_especialidades);
                     openDetailsModal(id);
                 });
             });
-            
+
             // Botões de exclusão
             document.querySelectorAll('.delete-button').forEach(button => {
                 button.addEventListener('click', function() {
@@ -305,7 +307,7 @@ $result_especialidades = $conn->query($sql_especialidades);
                     openDeleteModal(id);
                 });
             });
-            
+
             // Botões de edição
             document.querySelectorAll('.edit-button').forEach(button => {
                 button.addEventListener('click', function() {
@@ -315,28 +317,28 @@ $result_especialidades = $conn->query($sql_especialidades);
                 });
             });
         }
-        
+
         // Função para abrir o modal de detalhes
         function openDetailsModal(id) {
             console.log('Tentando abrir modal de detalhes para ID:', id);
-            
+
             // Verificar se o elemento do modal existe
             const modalElement = document.getElementById('detailsModal');
             if (!modalElement) {
                 console.error('Elemento do modal #detailsModal não encontrado!');
                 return;
             }
-            
+
             try {
                 // Verificar se o Bootstrap está disponível
                 if (typeof bootstrap === 'undefined' || typeof bootstrap.Modal === 'undefined') {
                     console.error('Bootstrap Modal não está disponível');
                     return;
                 }
-                
+
                 // Inicializar o modal com opções específicas para evitar problemas
                 const detailsModal = new bootstrap.Modal(modalElement);
-                
+
                 // Mostra o spinner de carregamento
                 const modalBody = modalElement.querySelector('.modal-body');
                 if (modalBody) {
@@ -349,7 +351,7 @@ $result_especialidades = $conn->query($sql_especialidades);
                         </div>
                     `;
                 }
-                
+
                 // Configura o botão de editar nos detalhes
                 const editButton = modalElement.querySelector('.btn-edit-details');
                 if (editButton) {
@@ -358,10 +360,10 @@ $result_especialidades = $conn->query($sql_especialidades);
                         window.location.href = '../index.php?action=edit&id=' + id;
                     };
                 }
-                
+
                 // Abre o modal
                 detailsModal.show();
-                
+
                 // Carrega os detalhes via AJAX
                 fetch('../database/get_detalhes_guia.php?id=' + id)
                     .then(response => {
@@ -395,36 +397,36 @@ $result_especialidades = $conn->query($sql_especialidades);
         // Função para abrir o modal de confirmação de exclusão
         function openDeleteModal(id) {
             console.log('Tentando abrir modal de exclusão para ID:', id);
-            
+
             // Verificar se o elemento do modal existe
             const modalElement = document.getElementById('deleteConfirmModal');
             if (!modalElement) {
                 console.error('Elemento do modal #deleteConfirmModal não encontrado!');
                 return;
             }
-            
+
             try {
                 // Verificar se o Bootstrap está disponível
                 if (typeof bootstrap === 'undefined' || typeof bootstrap.Modal === 'undefined') {
                     console.error('Bootstrap Modal não está disponível');
                     return;
                 }
-                
+
                 // Inicializar o modal com opções específicas
                 const deleteModal = new bootstrap.Modal(modalElement);
-                
+
                 // Define o ID da guia a ser excluída
                 const idInput = document.getElementById('id_guia_delete');
                 if (idInput) {
                     idInput.value = id;
                 }
-                
+
                 // Atualiza o texto com o ID sendo excluído
                 const idText = document.getElementById('deleteGuiaId');
                 if (idText) {
                     idText.textContent = `#${id}`;
                 }
-                
+
                 // Configura o botão de confirmação
                 const confirmButton = document.getElementById('confirmDelete');
                 if (confirmButton) {
@@ -435,7 +437,7 @@ $result_especialidades = $conn->query($sql_especialidades);
                         }
                     };
                 }
-                
+
                 // Abre o modal
                 deleteModal.show();
             } catch (error) {
@@ -464,15 +466,15 @@ $result_especialidades = $conn->query($sql_especialidades);
         .badge.bg-purple {
             background-color: #6f42c1;
         }
-        
+
         .badge.bg-pink {
             background-color: #e83e8c;
         }
-        
+
         .badge.bg-orange {
             background-color: #fd7e14;
         }
-        
+
         .filters-container {
             background-color: #f8f9fa;
             border-radius: 8px;
@@ -480,7 +482,7 @@ $result_especialidades = $conn->query($sql_especialidades);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
         }
-        
+
         .table-container {
             background-color: white;
             border-radius: 8px;
@@ -488,18 +490,19 @@ $result_especialidades = $conn->query($sql_especialidades);
             padding: 0;
             overflow: hidden;
         }
-        
+
         /* Melhora a responsividade da tabela em dispositivos móveis */
         @media (max-width: 768px) {
             .table-responsive {
                 font-size: 0.85rem;
             }
+
             .status-badge {
                 padding: 0.2rem 0.4rem;
                 font-size: 0.7rem;
             }
         }
-        
+
         /* Status badges distintos para melhor visualização */
         .status-badge {
             border-radius: 50rem;
@@ -514,7 +517,7 @@ $result_especialidades = $conn->query($sql_especialidades);
         .table-fixed-header {
             overflow-y: auto;
         }
-        
+
         .table-fixed-header thead th {
             position: sticky;
             top: 0;
@@ -526,18 +529,18 @@ $result_especialidades = $conn->query($sql_especialidades);
             display: inline-block;
             width: auto;
         }
-        
+
         /* Melhoria para paginação */
         .pagination-info {
             color: #6c757d;
             font-size: 0.875rem;
         }
-        
+
         /* Destacar linhas ao passar o mouse */
         .table-hover tbody tr:hover {
             background-color: rgba(0, 179, 255, 0.05);
         }
-        
+
         /* Melhoria para os filtros */
         .filter-badge {
             background-color: #e9ecef;
@@ -548,67 +551,70 @@ $result_especialidades = $conn->query($sql_especialidades);
             border-radius: 0.25rem;
             margin-right: 0.5rem;
         }
-        
+
         .filter-badge .close {
             margin-left: 0.5rem;
             font-size: 0.85rem;
             cursor: pointer;
         }
-        
+
         .filter-badge .close:hover {
             color: #dc3545;
         }
-        
+
         /* Botões de ação */
         .btn-action {
             padding: 0.25rem 0.5rem;
             font-size: 0.8rem;
         }
-        
+
         /* Cor do link na paginação */
         .page-link {
             color: var(--main-color-btn);
         }
-        
+
         .page-item.active .page-link {
             background-color: var(--main-color-btn);
             border-color: var(--main-color-btn);
         }
 
-        body, html {
-    height: auto !important;
-    overflow-y: auto !important;
-    background-color: var(--main-bg-color) !important;
-}
+        body,
+        html {
+            height: auto !important;
+            overflow-y: auto !important;
+            background-color: var(--main-bg-color) !important;
+        }
 
-.container, .card.table-container {
-    height: auto !important;
-    max-height: none !important;
-}
+        .container,
+        .card.table-container {
+            height: auto !important;
+            max-height: none !important;
+        }
 
-/* Manter altura automática para todos os elementos principais */
-.table-container, .card-body {
-    height: auto !important;
-}
+        /* Manter altura automática para todos os elementos principais */
+        .table-container,
+        .card-body {
+            height: auto !important;
+        }
 
- /* Adicionar na seção de estilos */
- .list-unstyled {
-        margin-bottom: 0;
-        padding-left: 0;
-        list-style: none;
-    }
-    
-    .list-unstyled li {
-        line-height: 1.3;
-        padding: 2px 0;
-    }
-    
-    /* Se necessário, ajustar a largura da coluna de especialidades */
-    .table th:nth-child(6),
-    .table td:nth-child(6) {
-        min-width: 180px;
-        max-width: 220px;
-    }
+        /* Adicionar na seção de estilos */
+        .list-unstyled {
+            margin-bottom: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .list-unstyled li {
+            line-height: 1.3;
+            padding: 2px 0;
+        }
+
+        /* Se necessário, ajustar a largura da coluna de especialidades */
+        .table th:nth-child(6),
+        .table td:nth-child(6) {
+            min-width: 180px;
+            max-width: 220px;
+        }
     </style>
 </head>
 
@@ -667,7 +673,6 @@ $result_especialidades = $conn->query($sql_especialidades);
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #00b3ffde;">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="../assets/Logo-Lavorato-alfa.png" alt="Lavorato Logo" width="30" class="me-2">
                 Lavorato's System
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -682,11 +687,11 @@ $result_especialidades = $conn->query($sql_especialidades);
                         </a>
                     </li>
                     <?php if (!empty($_GET)): ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="listar.php">
-                            <i class="fas fa-sync-alt me-1"></i> Limpar Filtros
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="listar.php">
+                                <i class="fas fa-sync-alt me-1"></i> Limpar Filtros
+                            </a>
+                        </li>
                     <?php endif; ?>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exportModal">
@@ -702,15 +707,15 @@ $result_especialidades = $conn->query($sql_especialidades);
         <div class="mb-4">
             <h1 class="h3">Lista de Guias</h1>
             <div class="d-flex">
-            <button type="button" class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#filtersModal">
-              <i class="fas fa-filter me-1"></i> Filtros Avançados
-            </button>
-             <a href="../index.php" class="btn btn-sm btn-primary">
-                <i class="fas fa-arrow-left me-1"></i> Voltar
-            </a>
+                <button type="button" class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#filtersModal">
+                    <i class="fas fa-filter me-1"></i> Filtros Avançados
+                </button>
+                <a href="../index.php" class="btn btn-sm btn-primary">
+                    <i class="fas fa-arrow-left me-1"></i> Voltar
+                </a>
+            </div>
         </div>
-        </div>
-        
+
         <!-- Barra de pesquisa rápida -->
         <div class="filters-container mb-4">
             <form action="listar.php" method="get" class="row g-3 align-items-end">
@@ -718,8 +723,8 @@ $result_especialidades = $conn->query($sql_especialidades);
                     <label for="termo_busca" class="form-label">Busca Rápida</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-search"></i></span>
-                        <input type="text" id="termo_busca" name="termo_busca" class="form-control" 
-                            placeholder="Nome do paciente ou número da guia" 
+                        <input type="text" id="termo_busca" name="termo_busca" class="form-control"
+                            placeholder="Nome do paciente ou número da guia"
                             value="<?php echo htmlspecialchars($termo_busca); ?>">
                     </div>
                 </div>
@@ -755,216 +760,216 @@ $result_especialidades = $conn->query($sql_especialidades);
                 </div>
             </form>
         </div>
-        
+
         <!-- Filtros ativos -->
         <?php if (!empty($filtro_status) || !empty($filtro_convenio) || !empty($filtro_mes) || !empty($termo_busca)): ?>
-        <div class="mb-3">
-            <div class="d-flex align-items-center flex-wrap">
-                <span class="me-2">Filtros ativos:</span>
-                
-                <?php if (!empty($termo_busca)): ?>
-                <span class="filter-badge mb-2">
-                    <i class="fas fa-search me-1"></i> Busca: <?php echo htmlspecialchars($termo_busca); ?>
-                    <a href="<?php echo remove_query_param('termo_busca'); ?>" class="close">&times;</a>
-                </span>
-                <?php endif; ?>
-                
-                <?php if (!empty($filtro_status)): ?>
-                <span class="filter-badge mb-2">
-                    <i class="fas fa-check-circle me-1"></i> Status: <?php echo htmlspecialchars($filtro_status); ?>
-                    <a href="<?php echo remove_query_param('filtro_status'); ?>" class="close">&times;</a>
-                </span>
-                <?php endif; ?>
-                
-                <?php if (!empty($filtro_convenio)): ?>
-                <span class="filter-badge mb-2">
-                    <i class="fas fa-id-card me-1"></i> Convênio: <?php echo htmlspecialchars($filtro_convenio); ?>
-                    <a href="<?php echo remove_query_param('filtro_convenio'); ?>" class="close">&times;</a>
-                </span>
-                <?php endif; ?>
-                
-                <?php if (!empty($filtro_mes)): ?>
-                <span class="filter-badge mb-2">
-                    <i class="fas fa-calendar-alt me-1"></i> Mês: <?php echo htmlspecialchars($filtro_mes); ?>
-                    <a href="<?php echo remove_query_param('filtro_mes'); ?>" class="close">&times;</a>
-                </span>
-                <?php endif; ?>
-                <?php if (!empty($filtro_especialidade)): ?>
-                <span class="filter-badge mb-2">
-                    <i class="fas fa-stethoscope me-1"></i> Especialidade: <?php echo htmlspecialchars($filtro_especialidade); ?>
-                    <a href="<?php echo remove_query_param('filtro_especialidade'); ?>" class="close">&times;</a>
-                </span>
-                <?php endif; ?>
-                
-                <a href="listar.php" class="btn btn-sm btn-outline-secondary ms-auto">
-                    <i class="fas fa-times me-1"></i> Limpar todos
-                </a>
+            <div class="mb-3">
+                <div class="d-flex align-items-center flex-wrap">
+                    <span class="me-2">Filtros ativos:</span>
+
+                    <?php if (!empty($termo_busca)): ?>
+                        <span class="filter-badge mb-2">
+                            <i class="fas fa-search me-1"></i> Busca: <?php echo htmlspecialchars($termo_busca); ?>
+                            <a href="<?php echo remove_query_param('termo_busca'); ?>" class="close">&times;</a>
+                        </span>
+                    <?php endif; ?>
+
+                    <?php if (!empty($filtro_status)): ?>
+                        <span class="filter-badge mb-2">
+                            <i class="fas fa-check-circle me-1"></i> Status: <?php echo htmlspecialchars($filtro_status); ?>
+                            <a href="<?php echo remove_query_param('filtro_status'); ?>" class="close">&times;</a>
+                        </span>
+                    <?php endif; ?>
+
+                    <?php if (!empty($filtro_convenio)): ?>
+                        <span class="filter-badge mb-2">
+                            <i class="fas fa-id-card me-1"></i> Convênio: <?php echo htmlspecialchars($filtro_convenio); ?>
+                            <a href="<?php echo remove_query_param('filtro_convenio'); ?>" class="close">&times;</a>
+                        </span>
+                    <?php endif; ?>
+
+                    <?php if (!empty($filtro_mes)): ?>
+                        <span class="filter-badge mb-2">
+                            <i class="fas fa-calendar-alt me-1"></i> Mês: <?php echo htmlspecialchars($filtro_mes); ?>
+                            <a href="<?php echo remove_query_param('filtro_mes'); ?>" class="close">&times;</a>
+                        </span>
+                    <?php endif; ?>
+                    <?php if (!empty($filtro_especialidade)): ?>
+                        <span class="filter-badge mb-2">
+                            <i class="fas fa-stethoscope me-1"></i> Especialidade: <?php echo htmlspecialchars($filtro_especialidade); ?>
+                            <a href="<?php echo remove_query_param('filtro_especialidade'); ?>" class="close">&times;</a>
+                        </span>
+                    <?php endif; ?>
+
+                    <a href="listar.php" class="btn btn-sm btn-outline-secondary ms-auto">
+                        <i class="fas fa-times me-1"></i> Limpar todos
+                    </a>
+                </div>
             </div>
-        </div>
         <?php endif; ?>
-        
+
         <!-- Resultados da busca -->
         <div class="card table-container">
             <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                 <h5 class="mb-0">Guias Encontradas</h5>
                 <span class="badge bg-primary"><?php echo $total_registros; ?> registros</span>
             </div>
-            
+
             <?php if ($result->num_rows > 0): ?>
-            <div class="table-fixed-header">
-                <table class="table table-hover table-striped mb-0">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Convênio</th>
-                            <th>Número</th>
-                            <th>Status</th>
-                            <th>Especialidade</th>
-                            <th>Mês</th>
-                            <th>Sessões</th>
-                            <th>Valor</th>
-                            <th>Atualização</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($row = $result->fetch_assoc()): 
-                            $especialidades = obter_especialidades_paciente($row['id'], $conn);
-                        ?>
-                        <tr>
-                            <td><?php echo $row["id"]; ?></td>
-                            <td><?php echo htmlspecialchars($row["paciente_nome"]); ?></td>
-                            <td><?php echo htmlspecialchars($row["paciente_convenio"]); ?></td>
-                            <td><?php echo htmlspecialchars($row["paciente_guia"]); ?></td>
-                            <td>
-                                <span class="badge bg-<?php echo getStatusColor($row["paciente_status"]); ?> status-badge">
-                                    <?php echo htmlspecialchars($row["paciente_status"]); ?>
-                                </span>
-                            </td>
-                            <td><?php echo formatar_especialidades($especialidades); ?></td>
-                            <td><?php echo htmlspecialchars($row["paciente_mes"]); ?></td>
-                            <td><?php echo htmlspecialchars($row["paciente_section"]); ?></td>
-                            <td><?php echo !empty($row["paciente_valor"]) ? 'R$ ' . htmlspecialchars($row["paciente_valor"]) : '-'; ?></td>
-                            <td><?php echo htmlspecialchars($row["data_hora_formatada"]); ?></td>
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-primary btn-action edit-button" 
-                                        data-id="<?php echo $row["id"]; ?>"
-                                        data-bs-toggle="tooltip" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-info btn-action details-button"
-                                        data-id="<?php echo $row["id"]; ?>"
-                                        data-bs-toggle="tooltip" title="Detalhes">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
-                                    <button type="button" class="btn btn-sm btn-outline-danger btn-action delete-button"
-                                        data-id="<?php echo $row["id"]; ?>"
-                                        data-bs-toggle="tooltip" title="Excluir">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                <div class="table-fixed-header">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Convênio</th>
+                                <th>Número</th>
+                                <th>Status</th>
+                                <th>Especialidade</th>
+                                <th>Mês</th>
+                                <th>Sessões</th>
+                                <th>Valor</th>
+                                <th>Atualização</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($row = $result->fetch_assoc()):
+                                $especialidades = obter_especialidades_paciente($row['id'], $conn);
+                            ?>
+                                <tr>
+                                    <td><?php echo $row["id"]; ?></td>
+                                    <td><?php echo htmlspecialchars($row["paciente_nome"]); ?></td>
+                                    <td><?php echo htmlspecialchars($row["paciente_convenio"]); ?></td>
+                                    <td><?php echo htmlspecialchars($row["paciente_guia"]); ?></td>
+                                    <td>
+                                        <span class="badge bg-<?php echo getStatusColor($row["paciente_status"]); ?> status-badge">
+                                            <?php echo htmlspecialchars($row["paciente_status"]); ?>
+                                        </span>
+                                    </td>
+                                    <td><?php echo formatar_especialidades($especialidades); ?></td>
+                                    <td><?php echo htmlspecialchars($row["paciente_mes"]); ?></td>
+                                    <td><?php echo htmlspecialchars($row["paciente_section"]); ?></td>
+                                    <td><?php echo !empty($row["paciente_valor"]) ? 'R$ ' . htmlspecialchars($row["paciente_valor"]) : '-'; ?></td>
+                                    <td><?php echo htmlspecialchars($row["data_hora_formatada"]); ?></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-primary btn-action edit-button"
+                                                data-id="<?php echo $row["id"]; ?>"
+                                                data-bs-toggle="tooltip" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-info btn-action details-button"
+                                                data-id="<?php echo $row["id"]; ?>"
+                                                data-bs-toggle="tooltip" title="Detalhes">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
+                                                <button type="button" class="btn btn-sm btn-outline-danger btn-action delete-button"
+                                                    data-id="<?php echo $row["id"]; ?>"
+                                                    data-bs-toggle="tooltip" title="Excluir">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer bg-white py-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <p class="pagination-info mb-md-0">Exibindo <?php echo min($total_registros, $itens_por_pagina); ?> de <?php echo $total_registros; ?> registros</p>
+                        </div>
+                        <div class="col-md-6">
+                            <nav aria-label="Paginação">
+                                <ul class="pagination justify-content-md-end mb-0">
+                                    <?php if ($pagina > 1): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?pagina=1<?php
+                                                                                echo !empty($termo_busca) ? '&termo_busca=' . urlencode($termo_busca) : '';
+                                                                                echo !empty($filtro_status) ? '&filtro_status=' . urlencode($filtro_status) : '';
+                                                                                echo !empty($filtro_convenio) ? '&filtro_convenio=' . urlencode($filtro_convenio) : '';
+                                                                                echo !empty($filtro_mes) ? '&filtro_mes=' . urlencode($filtro_mes) : '';
+                                                                                echo !empty($itens_por_pagina) ? '&itens_por_pagina=' . $itens_por_pagina : '';
+                                                                                ?>">
+                                                <i class="fas fa-angle-double-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?pagina=<?php echo $pagina - 1; ?><?php
+                                                                                                            echo !empty($termo_busca) ? '&termo_busca=' . urlencode($termo_busca) : '';
+                                                                                                            echo !empty($filtro_status) ? '&filtro_status=' . urlencode($filtro_status) : '';
+                                                                                                            echo !empty($filtro_convenio) ? '&filtro_convenio=' . urlencode($filtro_convenio) : '';
+                                                                                                            echo !empty($filtro_mes) ? '&filtro_mes=' . urlencode($filtro_mes) : '';
+                                                                                                            echo !empty($itens_por_pagina) ? '&itens_por_pagina=' . $itens_por_pagina : '';
+                                                                                                            ?>">
+                                                <i class="fas fa-angle-left"></i>
+                                            </a>
+                                        </li>
                                     <?php endif; ?>
-                                </div>
-                        </td>
-                        </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="card-footer bg-white py-3">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <p class="pagination-info mb-md-0">Exibindo <?php echo min($total_registros, $itens_por_pagina); ?> de <?php echo $total_registros; ?> registros</p>
-                    </div>
-                    <div class="col-md-6">
-                        <nav aria-label="Paginação">
-                            <ul class="pagination justify-content-md-end mb-0">
-                                <?php if ($pagina > 1): ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="?pagina=1<?php 
-                                        echo !empty($termo_busca) ? '&termo_busca=' . urlencode($termo_busca) : '';
-                                        echo !empty($filtro_status) ? '&filtro_status=' . urlencode($filtro_status) : '';
-                                        echo !empty($filtro_convenio) ? '&filtro_convenio=' . urlencode($filtro_convenio) : '';
-                                        echo !empty($filtro_mes) ? '&filtro_mes=' . urlencode($filtro_mes) : '';
-                                        echo !empty($itens_por_pagina) ? '&itens_por_pagina=' . $itens_por_pagina : '';
-                                    ?>">
-                                        <i class="fas fa-angle-double-left"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="?pagina=<?php echo $pagina - 1; ?><?php 
-                                        echo !empty($termo_busca) ? '&termo_busca=' . urlencode($termo_busca) : '';
-                                        echo !empty($filtro_status) ? '&filtro_status=' . urlencode($filtro_status) : '';
-                                        echo !empty($filtro_convenio) ? '&filtro_convenio=' . urlencode($filtro_convenio) : '';
-                                        echo !empty($filtro_mes) ? '&filtro_mes=' . urlencode($filtro_mes) : '';
-                                        echo !empty($itens_por_pagina) ? '&itens_por_pagina=' . $itens_por_pagina : '';
-                                    ?>">
-                                        <i class="fas fa-angle-left"></i>
-                                    </a>
-                                </li>
-                                <?php endif; ?>
 
-                                <?php
-                                // Mostrar 5 páginas (ou menos se não houver tantas)
-                                $start_page = max(1, min($pagina - 2, $total_paginas - 4));
-                                $end_page = min($total_paginas, max($pagina + 2, 5));
-                                
-                                for ($i = $start_page; $i <= $end_page; $i++):
-                                ?>
-                                <li class="page-item <?php echo ($i == $pagina) ? 'active' : ''; ?>">
-                                    <a class="page-link" href="?pagina=<?php echo $i; ?><?php 
-                                        echo !empty($termo_busca) ? '&termo_busca=' . urlencode($termo_busca) : '';
-                                        echo !empty($filtro_status) ? '&filtro_status=' . urlencode($filtro_status) : '';
-                                        echo !empty($filtro_convenio) ? '&filtro_convenio=' . urlencode($filtro_convenio) : '';
-                                        echo !empty($filtro_mes) ? '&filtro_mes=' . urlencode($filtro_mes) : '';
-                                        echo !empty($itens_por_pagina) ? '&itens_por_pagina=' . $itens_por_pagina : '';
-                                    ?>"><?php echo $i; ?></a>
-                                </li>
-                                <?php endfor; ?>
+                                    <?php
+                                    // Mostrar 5 páginas (ou menos se não houver tantas)
+                                    $start_page = max(1, min($pagina - 2, $total_paginas - 4));
+                                    $end_page = min($total_paginas, max($pagina + 2, 5));
 
-                                <?php if ($pagina < $total_paginas): ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?><?php 
-                                        echo !empty($termo_busca) ? '&termo_busca=' . urlencode($termo_busca) : '';
-                                        echo !empty($filtro_status) ? '&filtro_status=' . urlencode($filtro_status) : '';
-                                        echo !empty($filtro_convenio) ? '&filtro_convenio=' . urlencode($filtro_convenio) : '';
-                                        echo !empty($filtro_mes) ? '&filtro_mes=' . urlencode($filtro_mes) : '';
-                                        echo !empty($itens_por_pagina) ? '&itens_por_pagina=' . $itens_por_pagina : '';
-                                    ?>">
-                                        <i class="fas fa-angle-right"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="?pagina=<?php echo $total_paginas; ?><?php 
-                                        echo !empty($termo_busca) ? '&termo_busca=' . urlencode($termo_busca) : '';
-                                        echo !empty($filtro_status) ? '&filtro_status=' . urlencode($filtro_status) : '';
-                                        echo !empty($filtro_convenio) ? '&filtro_convenio=' . urlencode($filtro_convenio) : '';
-                                        echo !empty($filtro_mes) ? '&filtro_mes=' . urlencode($filtro_mes) : '';
-                                        echo !empty($itens_por_pagina) ? '&itens_por_pagina=' . $itens_por_pagina : '';
-                                    ?>">
-                                        <i class="fas fa-angle-double-right"></i>
-                                    </a>
-                                </li>
-                                <?php endif; ?>
-                            </ul>
-                        </nav>
+                                    for ($i = $start_page; $i <= $end_page; $i++):
+                                    ?>
+                                        <li class="page-item <?php echo ($i == $pagina) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?pagina=<?php echo $i; ?><?php
+                                                                                                echo !empty($termo_busca) ? '&termo_busca=' . urlencode($termo_busca) : '';
+                                                                                                echo !empty($filtro_status) ? '&filtro_status=' . urlencode($filtro_status) : '';
+                                                                                                echo !empty($filtro_convenio) ? '&filtro_convenio=' . urlencode($filtro_convenio) : '';
+                                                                                                echo !empty($filtro_mes) ? '&filtro_mes=' . urlencode($filtro_mes) : '';
+                                                                                                echo !empty($itens_por_pagina) ? '&itens_por_pagina=' . $itens_por_pagina : '';
+                                                                                                ?>"><?php echo $i; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+
+                                    <?php if ($pagina < $total_paginas): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?pagina=<?php echo $pagina + 1; ?><?php
+                                                                                                            echo !empty($termo_busca) ? '&termo_busca=' . urlencode($termo_busca) : '';
+                                                                                                            echo !empty($filtro_status) ? '&filtro_status=' . urlencode($filtro_status) : '';
+                                                                                                            echo !empty($filtro_convenio) ? '&filtro_convenio=' . urlencode($filtro_convenio) : '';
+                                                                                                            echo !empty($filtro_mes) ? '&filtro_mes=' . urlencode($filtro_mes) : '';
+                                                                                                            echo !empty($itens_por_pagina) ? '&itens_por_pagina=' . $itens_por_pagina : '';
+                                                                                                            ?>">
+                                                <i class="fas fa-angle-right"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?pagina=<?php echo $total_paginas; ?><?php
+                                                                                                            echo !empty($termo_busca) ? '&termo_busca=' . urlencode($termo_busca) : '';
+                                                                                                            echo !empty($filtro_status) ? '&filtro_status=' . urlencode($filtro_status) : '';
+                                                                                                            echo !empty($filtro_convenio) ? '&filtro_convenio=' . urlencode($filtro_convenio) : '';
+                                                                                                            echo !empty($filtro_mes) ? '&filtro_mes=' . urlencode($filtro_mes) : '';
+                                                                                                            echo !empty($itens_por_pagina) ? '&itens_por_pagina=' . $itens_por_pagina : '';
+                                                                                                            ?>">
+                                                <i class="fas fa-angle-double-right"></i>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </div>
-            </div>
             <?php else: ?>
-            <div class="card-body text-center py-5">
-                <div class="mb-3">
-                    <i class="fas fa-search fa-3x text-muted"></i>
+                <div class="card-body text-center py-5">
+                    <div class="mb-3">
+                        <i class="fas fa-search fa-3x text-muted"></i>
+                    </div>
+                    <h5 class="text-muted">Nenhum registro encontrado</h5>
+                    <p class="mb-0 text-muted">Tente modificar seus filtros de busca ou limpar os filtros.</p>
+                    <a href="listar.php" class="btn btn-outline-primary mt-3">
+                        <i class="fas fa-sync-alt me-1"></i> Limpar filtros
+                    </a>
                 </div>
-                <h5 class="text-muted">Nenhum registro encontrado</h5>
-                <p class="mb-0 text-muted">Tente modificar seus filtros de busca ou limpar os filtros.</p>
-                <a href="listar.php" class="btn btn-outline-primary mt-3">
-                    <i class="fas fa-sync-alt me-1"></i> Limpar filtros
-                </a>
-            </div>
             <?php endif; ?>
         </div>
     </div>
@@ -984,7 +989,7 @@ $result_especialidades = $conn->query($sql_especialidades);
                                 <label for="termo_busca_modal" class="form-label">Nome do Paciente ou Número da Guia</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                    <input type="text" id="termo_busca_modal" name="termo_busca" class="form-control" 
+                                    <input type="text" id="termo_busca_modal" name="termo_busca" class="form-control"
                                         value="<?php echo htmlspecialchars($termo_busca); ?>">
                                 </div>
                             </div>
@@ -1014,7 +1019,7 @@ $result_especialidades = $conn->query($sql_especialidades);
                                     <select id="filtro_convenio_modal" name="filtro_convenio" class="form-select">
                                         <option value="">Todos</option>
                                         <?php while ($convenio = $result_convenios->fetch_assoc()): ?>
-                                            <option value="<?php echo htmlspecialchars($convenio['paciente_convenio']); ?>" 
+                                            <option value="<?php echo htmlspecialchars($convenio['paciente_convenio']); ?>"
                                                 <?php echo $filtro_convenio == $convenio['paciente_convenio'] ? 'selected' : ''; ?>>
                                                 <?php echo htmlspecialchars($convenio['paciente_convenio']); ?>
                                             </option>
@@ -1029,7 +1034,7 @@ $result_especialidades = $conn->query($sql_especialidades);
                                     <select id="filtro_mes_modal" name="filtro_mes" class="form-select">
                                         <option value="">Todos</option>
                                         <?php while ($mes = $result_meses->fetch_assoc()): ?>
-                                            <option value="<?php echo htmlspecialchars($mes['paciente_mes']); ?>" 
+                                            <option value="<?php echo htmlspecialchars($mes['paciente_mes']); ?>"
                                                 <?php echo $filtro_mes == $mes['paciente_mes'] ? 'selected' : ''; ?>>
                                                 <?php echo htmlspecialchars($mes['paciente_mes']); ?>
                                             </option>
@@ -1064,11 +1069,11 @@ $result_especialidades = $conn->query($sql_especialidades);
                                                             AND paciente_especialidade != '' 
                                                             ORDER BY especialidade ASC";
                                         $result_especialidades = $conn->query($sql_especialidades);
-                                        
+
                                         while ($esp = $result_especialidades->fetch_assoc()):
                                             $esp_value = $esp['especialidade']; // ou o nome do campo apropriado
                                         ?>
-                                            <option value="<?php echo htmlspecialchars($esp_value); ?>" 
+                                            <option value="<?php echo htmlspecialchars($esp_value); ?>"
                                                 <?php echo $filtro_especialidade == $esp_value ? 'selected' : ''; ?>>
                                                 <?php echo htmlspecialchars($esp_value); ?>
                                             </option>
@@ -1103,7 +1108,7 @@ $result_especialidades = $conn->query($sql_especialidades);
                 <div class="modal-body">
                     <form action="exportar.php" method="post" id="exportForm">
                         <input type="hidden" name="query" value="<?php echo htmlspecialchars($where_clause); ?>">
-                        
+
                         <div class="mb-3">
                             <label class="form-label">Formato de Exportação</label>
                             <div class="d-flex">
@@ -1127,7 +1132,7 @@ $result_especialidades = $conn->query($sql_especialidades);
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label">Opções de Exportação</label>
                             <div class="form-check">
@@ -1143,7 +1148,7 @@ $result_especialidades = $conn->query($sql_especialidades);
                                 </label>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="seleciona_campos" class="form-label">Campos a Exportar</label>
                             <select class="form-select" id="seleciona_campos" name="campos[]" multiple size="8">

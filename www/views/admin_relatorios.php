@@ -8,7 +8,7 @@ if (!isset($_SESSION['login'])) {
 
 // Verificar se o usuário tem permissão para acessar esta página
 // Apenas admin e usuários específicos podem acessar
-if (!($_SESSION['login'] == 'admin' || in_array($_SESSION['login'], ['gustavoramos', 'talita']))) {
+if (!($_SESSION['login'] == 'admin' || in_array($_SESSION['login'], ['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin', 'talita']))) {
     header("Location: ../index.php");
     exit();
 }
