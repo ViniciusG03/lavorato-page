@@ -52,6 +52,7 @@ if (!isset($status_array) || !is_array($status_array)) {
         .table th {
             background-color: var(--main-color-btn);
             color: white;
+            white-space: nowrap;
         }
 
         .export-buttons {
@@ -66,6 +67,35 @@ if (!isset($status_array) || !is_array($status_array)) {
         /* Hover sobre as linhas da tabela */
         .table-hover tbody tr:hover {
             background-color: rgba(0, 179, 255, 0.1);
+        }
+
+        /* Garantir que a tabela role horizontalmente */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+        }
+
+        /* Ajustar o layout dos controles do DataTables */
+        div.dataTables_wrapper div.dataTables_length {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            /* Espaço entre os elementos */
+        }
+
+        div.dataTables_wrapper div.dataTables_length select {
+            padding-right: 30px;
+            /* Espaço para o ícone não sobrepor o texto */
+            min-width: 80px;
+        }
+
+        div.dataTables_wrapper div.dataTables_length label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
         }
 
         /* Responsividade para dispositivos móveis */
@@ -228,11 +258,25 @@ if (!isset($status_array) || !is_array($status_array)) {
             if ($("#relatorioTable").length && $("#relatorioTable tbody tr").length > 0) {
                 $('#relatorioTable').DataTable({
                     "language": {
-                        "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/pt-BR.json"
+                        "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/pt-BR.json",
+                        "lengthMenu": "Exibir _MENU_ resultados por página"
                     },
                     "pageLength": 25,
                     "order": [],
-                    "responsive": true
+                    "scrollX": true,
+                    "responsive": false,
+                    "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                    "lengthMenu": [
+                        [10, 25, 50, 100, -1],
+                        [10, 25, 50, 100, "Todos"]
+                    ],
+                    "drawCallback": function(settings) {
+                        // Aplicar estilos adicionais após carregar a tabela
+                        $('.dataTables_length select').addClass('form-select form-select-sm');
+                        if ($(window).width() < 768) {
+                            $('.dataTables_length, .dataTables_filter').addClass('w-100');
+                        }
+                    }
                 });
             }
         });
