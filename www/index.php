@@ -270,6 +270,22 @@ $conn->close();
         </div>
       <?php endif; ?>
 
+      <!-- Adicionar este código dentro da div de botões ou cards no index.php -->
+      <div class="col">
+        <div class="card h-100 text-center border-0 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <div class="mb-3">
+              <i class="fas fa-chart-bar fa-3x text-primary"></i>
+            </div>
+            <h5 class="card-title">Relatórios Personalizados</h5>
+            <p class="card-text text-muted">Gere relatórios detalhados e exporte para Excel e PDF</p>
+            <a href="views/relatorios_customizados.php" class="btn btn-primary mt-auto w-100">
+              <i class="fas fa-chart-bar me-2"></i>Relatórios
+            </a>
+          </div>
+        </div>
+      </div>
+
       <?php if (hasPermission(['gustavoramos', 'raphael', 'kaynnanduraes', 'will', 'eviny', 'tulio', 'admin'])): ?>
         <div class="col">
           <div class="card h-100 text-center border-0 shadow-sm">

@@ -194,8 +194,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $validade = $_POST["validade"];
         $section = $_POST["section"];
         // Capturar especialidades como array
-        $especialidades = isset($_POST["especialidades"]) && is_array($_POST["especialidades"]) 
-            ? $_POST["especialidades"] 
+        $especialidades = isset($_POST["especialidades"]) && is_array($_POST["especialidades"])
+            ? $_POST["especialidades"]
             : [];
         $quantidadeFaturada = $_POST["qtd_faturada"];
         $checkbox_guia = isset($_POST['checkbox_guia']) ? $_POST['checkbox_guia'] : 0;
@@ -245,80 +245,80 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $statusAnterior = $row['paciente_status'];
                     $guiaId = $row['id'];
                     $guiaNumero = $row['paciente_guia'];
-                    
+
                     // Iniciar transação
                     $conn->begin_transaction();
-                    
+
                     try {
                         // Primeira especialidade para manter compatibilidade
                         $especialidade_principal = !empty($especialidades) ? $especialidades[0] : $row['paciente_especialidade'];
-                        
+
                         $sql_update = "UPDATE pacientes SET paciente_status = ?, usuario_responsavel = ?";
                         $params = [$status_guia, $usuarioResponsavel];
                         $types = "ss";
-                        
+
                         if (!empty($numero_lote)) {
                             $sql_update .= ", paciente_lote = ?";
                             $params[] = $numero_lote;
                             $types .= "s";
                         }
-                        
+
                         if (!empty($entrada)) {
                             $sql_update .= ", paciente_entrada = ?";
                             $params[] = $entrada;
                             $types .= "s";
                         }
-                        
+
                         if (!empty($saida)) {
                             $sql_update .= ", paciente_saida = ?";
                             $params[] = $saida;
                             $types .= "s";
                         }
-                        
+
                         if (!empty($correcao_guia)) {
                             $sql_update .= ", paciente_guia = ?";
                             $params[] = $correcao_guia;
                             $types .= "s";
                             $guiaNumero = $correcao_guia; // Atualizar o número da guia para o log
                         }
-                        
+
                         if (!empty($valor_guia)) {
                             $sql_update .= ", paciente_valor = ?";
                             $params[] = $valor_guia;
                             $types .= "s";
                         }
-                        
+
                         if (!empty($data_remessa)) {
                             $sql_update .= ", paciente_data_remessa = ?";
                             $params[] = $data_remessa;
                             $types .= "s";
                         }
-                        
+
                         if (!empty($validade)) {
                             $sql_update .= ", paciente_validade = ?";
                             $params[] = $validade;
                             $types .= "s";
                         }
-                        
+
                         if (!empty($section)) {
                             $sql_update .= ", paciente_section = ?";
                             $params[] = $section;
                             $types .= "s";
                         }
-                        
+
                         if (!empty($especialidades)) {
                             // Atualizar especialidade principal para manter compatibilidade
                             $sql_update .= ", paciente_especialidade = ?";
                             $params[] = $especialidade_principal;
                             $types .= "s";
                         }
-                        
+
                         if (!empty($quantidadeFaturada)) {
                             $sql_update .= ", paciente_faturado = ?";
                             $params[] = $quantidadeFaturada;
                             $types .= "s";
                         }
-                        
+
                         // Adicionar condição WHERE
                         if ($checkbox_guia) {
                             $sql_update .= " WHERE paciente_guia = ? AND paciente_mes = ?";
@@ -330,24 +330,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $params[] = $numero_guia;
                             $types .= "i";
                         }
-                        
+
                         // Executar atualização
                         $stmt_update = $conn->prepare($sql_update);
                         $stmt_update->bind_param($types, ...$params);
-                        
+
                         if (!$stmt_update->execute()) {
                             throw new Exception("Erro ao atualizar: " . $stmt_update->error);
                         }
-                        
+
                         $stmt_update->close();
-                        
+
                         // Atualizar especialidades se fornecidas
                         if (!empty($especialidades)) {
                             if (!salvar_especialidades_paciente($guiaId, $especialidades, $conn)) {
                                 throw new Exception("Erro ao atualizar especialidades");
                             }
                         }
-                        
+
                         // Registrar log de alteração se o status foi alterado
                         if ($statusAnterior != $status_guia) {
                             if (!registrar_alteracao_status(
@@ -362,13 +362,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 throw new Exception("Erro ao registrar log de alteração");
                             }
                         }
-                        
+
                         // Confirmar transação
                         $conn->commit();
-                        
+
                         // Mensagem de sucesso para o usuário
                         $mensagem = "Atualização bem-sucedida";
-                        
+
                         if ($isAjax) {
                             header('Content-Type: application/json');
                             echo json_encode([
@@ -382,7 +382,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     } catch (Exception $e) {
                         // Reverter transação em caso de erro
                         $conn->rollback();
-                        
+
                         $mensagem = "Erro ao atualizar: " . $e->getMessage();
                         if ($isAjax) {
                             header('Content-Type: application/json');
@@ -414,4 +414,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->close();
     }
 }
-?>
