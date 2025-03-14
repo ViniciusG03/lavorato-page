@@ -256,80 +256,192 @@ $result_especialidades = $conn->query($sql_especialidades);
     <link rel="stylesheet" href="../stylesheet/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+
+    <!-- Carregue jQuery e Bootstrap primeiro -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    
+    <!-- Script corrigido usando jQuery -->
     <script>
+        // Usar window.onload em vez de DOMContentLoaded
+        window.onload = function() {
+            console.log('Página completamente carregada (window.onload)');
+            
+            // Verificar se o Bootstrap está disponível
+            if (typeof bootstrap !== 'undefined') {
+                console.log('Bootstrap carregado corretamente');
+                
+                // Inicializar tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.forEach(function(tooltipTriggerEl) {
+                    new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+                
+                // Adicionar event listeners para os botões
+                inicializarBotoes();
+            } else {
+                console.error('Bootstrap não está disponível. Verifique se o script foi carregado corretamente.');
+            }
+        };
+        
+        // Função para inicializar os botões
+        function inicializarBotoes() {
+            console.log('Inicializando botões');
+            
+            // Botões de detalhes
+            document.querySelectorAll('.details-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    console.log('Clicou em detalhes do ID:', id);
+                    openDetailsModal(id);
+                });
+            });
+            
+            // Botões de exclusão
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    console.log('Clicou em excluir ID:', id);
+                    openDeleteModal(id);
+                });
+            });
+            
+            // Botões de edição
+            document.querySelectorAll('.edit-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    console.log('Clicou em editar ID:', id);
+                    window.location.href = '../index.php?action=edit&id=' + id;
+                });
+            });
+        }
+        
         // Função para abrir o modal de detalhes
-function openDetailsModal(id) {
-    // Referência ao modal de detalhes
-    const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-    
-    // Mostra o spinner de carregamento
-    document.querySelector('#detailsModal .modal-body').innerHTML = `
-        <div class="text-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Carregando...</span>
-            </div>
-            <p class="mt-2">Carregando detalhes...</p>
-        </div>
-    `;
-    
-    // Configura o botão de editar nos detalhes
-    const editButton = document.querySelector('.btn-edit-details');
-    editButton.style.display = 'block';
-    editButton.onclick = function() {
-        window.location.href = '../index.php?action=edit&id=' + id;
-    };
-    
-    // Abre o modal
-    detailsModal.show();
-    
-    // Carrega os detalhes via AJAX
-    fetch('../database/get_details.php?id=' + id)
-        .then(response => response.text())
-        .then(data => {
-            // Atualiza o conteúdo do modal com os detalhes recebidos
-            document.querySelector('#detailsModal .modal-body').innerHTML = data;
-        })
-        .catch(error => {
-            document.querySelector('#detailsModal .modal-body').innerHTML = `
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    Erro ao carregar detalhes: ${error.message}
-                </div>
-            `;
-        });
-}
+        function openDetailsModal(id) {
+            console.log('Tentando abrir modal de detalhes para ID:', id);
+            
+            // Verificar se o elemento do modal existe
+            const modalElement = document.getElementById('detailsModal');
+            if (!modalElement) {
+                console.error('Elemento do modal #detailsModal não encontrado!');
+                return;
+            }
+            
+            try {
+                // Verificar se o Bootstrap está disponível
+                if (typeof bootstrap === 'undefined' || typeof bootstrap.Modal === 'undefined') {
+                    console.error('Bootstrap Modal não está disponível');
+                    return;
+                }
+                
+                // Inicializar o modal com opções específicas para evitar problemas
+                const detailsModal = new bootstrap.Modal(modalElement);
+                
+                // Mostra o spinner de carregamento
+                const modalBody = modalElement.querySelector('.modal-body');
+                if (modalBody) {
+                    modalBody.innerHTML = `
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Carregando...</span>
+                            </div>
+                            <p class="mt-2">Carregando detalhes...</p>
+                        </div>
+                    `;
+                }
+                
+                // Configura o botão de editar nos detalhes
+                const editButton = modalElement.querySelector('.btn-edit-details');
+                if (editButton) {
+                    editButton.style.display = 'block';
+                    editButton.onclick = function() {
+                        window.location.href = '../index.php?action=edit&id=' + id;
+                    };
+                }
+                
+                // Abre o modal
+                detailsModal.show();
+                
+                // Carrega os detalhes via AJAX
+                fetch('../database/get_detalhes_guia.php?id=' + id)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro na requisição: ' + response.status);
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        // Atualiza o conteúdo do modal com os detalhes recebidos
+                        if (modalBody) {
+                            modalBody.innerHTML = data;
+                        }
+                    })
+                    .catch(error => {
+                        if (modalBody) {
+                            modalBody.innerHTML = `
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    Erro ao carregar detalhes: ${error.message}
+                                </div>
+                            `;
+                        }
+                        console.error('Erro ao carregar detalhes:', error);
+                    });
+            } catch (error) {
+                console.error('Erro ao inicializar o modal:', error);
+            }
+        }
 
-// Função para abrir o modal de confirmação de exclusão
-function openDeleteModal(id) {
-    // Referência ao modal de exclusão
-    const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
-    
-    // Define o ID da guia a ser excluída
-    document.getElementById('id_guia_delete').value = id;
-    
-    // Atualiza o texto com o ID sendo excluído
-    document.getElementById('deleteGuiaId').textContent = `#${id}`;
-    
-    // Configura o botão de confirmação
-    document.getElementById('confirmDelete').onclick = function() {
-        document.getElementById('deleteForm').submit();
-    };
-    
-    // Abre o modal
-    deleteModal.show();
-}
-
-// Garantir que os tooltips sejam inicializados
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializa todos os tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-});
+        // Função para abrir o modal de confirmação de exclusão
+        function openDeleteModal(id) {
+            console.log('Tentando abrir modal de exclusão para ID:', id);
+            
+            // Verificar se o elemento do modal existe
+            const modalElement = document.getElementById('deleteConfirmModal');
+            if (!modalElement) {
+                console.error('Elemento do modal #deleteConfirmModal não encontrado!');
+                return;
+            }
+            
+            try {
+                // Verificar se o Bootstrap está disponível
+                if (typeof bootstrap === 'undefined' || typeof bootstrap.Modal === 'undefined') {
+                    console.error('Bootstrap Modal não está disponível');
+                    return;
+                }
+                
+                // Inicializar o modal com opções específicas
+                const deleteModal = new bootstrap.Modal(modalElement);
+                
+                // Define o ID da guia a ser excluída
+                const idInput = document.getElementById('id_guia_delete');
+                if (idInput) {
+                    idInput.value = id;
+                }
+                
+                // Atualiza o texto com o ID sendo excluído
+                const idText = document.getElementById('deleteGuiaId');
+                if (idText) {
+                    idText.textContent = `#${id}`;
+                }
+                
+                // Configura o botão de confirmação
+                const confirmButton = document.getElementById('confirmDelete');
+                if (confirmButton) {
+                    confirmButton.onclick = function() {
+                        const form = document.getElementById('deleteForm');
+                        if (form) {
+                            form.submit();
+                        }
+                    };
+                }
+                
+                // Abre o modal
+                deleteModal.show();
+            } catch (error) {
+                console.error('Erro ao inicializar o modal de exclusão:', error);
+            }
+        }
     </script>
 
     <style>
@@ -501,6 +613,57 @@ document.addEventListener('DOMContentLoaded', function() {
 </head>
 
 <body>
+    <!-- Modal de detalhes -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel">Detalhes da Guia</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Carregando...</span>
+                        </div>
+                        <p class="mt-2">Carregando detalhes...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary btn-edit-details" style="display: none;">
+                        <i class="fas fa-edit me-1"></i> Editar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmação de exclusão -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><i class="fas fa-exclamation-triangle text-warning me-2"></i> Você está prestes a excluir a guia <strong id="deleteGuiaId"></strong>.</p>
+                    <p>Esta ação <strong class="text-danger">não pode ser desfeita</strong>. Tem certeza que deseja continuar?</p>
+                    <form id="deleteForm" action="../database/remover.php" method="post">
+                        <input type="hidden" id="id_guia_delete" name="id_guia" value="">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">
+                        <i class="fas fa-trash me-1"></i> Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #00b3ffde;">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#">
@@ -685,28 +848,25 @@ document.addEventListener('DOMContentLoaded', function() {
                             <td><?php echo !empty($row["paciente_valor"]) ? 'R$ ' . htmlspecialchars($row["paciente_valor"]) : '-'; ?></td>
                             <td><?php echo htmlspecialchars($row["data_hora_formatada"]); ?></td>
                             <td>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-primary btn-action edit-button" 
-                                    data-id="<?php echo $row["id"]; ?>"
-                                    data-bs-toggle="tooltip" title="Editar" 
-                                    onclick="window.location.href = '../index.php?action=edit&id=<?php echo $row['id']; ?>'">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-info btn-action details-button"
-                                    data-id="<?php echo $row["id"]; ?>"
-                                    data-bs-toggle="tooltip" title="Detalhes"
-                                    onclick="openDetailsModal(<?php echo $row['id']; ?>)">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
-                                <button type="button" class="btn btn-sm btn-outline-danger btn-action delete-button"
-                                    data-id="<?php echo $row["id"]; ?>"
-                                    data-bs-toggle="tooltip" title="Excluir"
-                                    onclick="openDeleteModal(<?php echo $row['id']; ?>)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <?php endif; ?>
-                            </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-primary btn-action edit-button" 
+                                        data-id="<?php echo $row["id"]; ?>"
+                                        data-bs-toggle="tooltip" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-info btn-action details-button"
+                                        data-id="<?php echo $row["id"]; ?>"
+                                        data-bs-toggle="tooltip" title="Detalhes">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
+                                    <button type="button" class="btn btn-sm btn-outline-danger btn-action delete-button"
+                                        data-id="<?php echo $row["id"]; ?>"
+                                        data-bs-toggle="tooltip" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <?php endif; ?>
+                                </div>
                         </td>
                         </tr>
                         <?php endwhile; ?>
@@ -1010,57 +1170,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="document.getElementById('exportForm').submit();">
                         <i class="fas fa-download me-1"></i> Exportar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de detalhes -->
-    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailsModalLabel">Detalhes da Guia</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Carregando...</span>
-                        </div>
-                        <p class="mt-2">Carregando detalhes...</p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary btn-edit-details" style="display: none;">
-                        <i class="fas fa-edit me-1"></i> Editar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de confirmação de exclusão -->
-    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="deleteConfirmModalLabel">Confirmar Exclusão</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p><i class="fas fa-exclamation-triangle text-warning me-2"></i> Você está prestes a excluir a guia <strong id="deleteGuiaId"></strong>.</p>
-                    <p>Esta ação <strong class="text-danger">não pode ser desfeita</strong>. Tem certeza que deseja continuar?</p>
-                    <form id="deleteForm" action="../database/remover.php" method="post">
-                        <input type="hidden" id="id_guia_delete" name="id_guia" value="">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDelete">
-                        <i class="fas fa-trash me-1"></i> Excluir
                     </button>
                 </div>
             </div>
