@@ -77,7 +77,8 @@ if (!isset($status_array) || !is_array($status_array)) {
         }
 
         /* Ajustar o layout dos controles do DataTables */
-        div.dataTables_wrapper div.dataTables_length {
+        div.dataTables_wrapper div.dataTables_length,
+        div.dataTables_wrapper div.dataTables_filter {
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -96,6 +97,24 @@ if (!isset($status_array) || !is_array($status_array)) {
             align-items: center;
             gap: 8px;
             margin: 0;
+            white-space: nowrap;
+        }
+
+        /* Alinhamento dos controles na mesma linha */
+        div.dataTables_wrapper div.top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        div.dataTables_wrapper div.dataTables_filter {
+            text-align: right;
+        }
+
+        div.dataTables_wrapper div.dataTables_filter input {
+            margin-left: 0.5em;
+            width: 200px;
         }
 
         /* Responsividade para dispositivos móveis */
@@ -179,7 +198,7 @@ if (!isset($status_array) || !is_array($status_array)) {
         </div>
 
         <div class="export-buttons text-end">
-            <form action="../database/gerar_relatorio_customizados.php" method="post" class="d-inline-block me-2 mb-2">
+            <form action="../database/gerar_relatorio_customizado.php" method="post" class="d-inline-block me-2 mb-2">
                 <!-- Repassar os mesmos parâmetros do filtro -->
                 <input type="hidden" name="periodo_mes" value="<?php echo htmlspecialchars($periodo_mes ?? ''); ?>">
                 <?php foreach ($status_array as $status): ?>
@@ -193,7 +212,7 @@ if (!isset($status_array) || !is_array($status_array)) {
                 </button>
             </form>
 
-            <form action="../database/gerar_relatorio_customizados.php" method="post" class="d-inline-block mb-2">
+            <form action="../database/gerar_relatorio_customizado.php" method="post" class="d-inline-block mb-2">
                 <!-- Repassar os mesmos parâmetros do filtro -->
                 <input type="hidden" name="periodo_mes" value="<?php echo htmlspecialchars($periodo_mes ?? ''); ?>">
                 <?php foreach ($status_array as $status): ?>
@@ -265,7 +284,7 @@ if (!isset($status_array) || !is_array($status_array)) {
                     "order": [],
                     "scrollX": true,
                     "responsive": false,
-                    "dom": '<"top"lf>rt<"bottom"ip><"clear">',
+                    "dom": '<"top d-flex justify-content-between align-items-center flex-wrap"lf>rt<"bottom"ip><"clear">',
                     "lengthMenu": [
                         [10, 25, 50, 100, -1],
                         [10, 25, 50, 100, "Todos"]

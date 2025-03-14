@@ -19,7 +19,7 @@ namespace MyCLabs\Enum;
  * @psalm-immutable
  * @psalm-consistent-constructor
  */
-abstract class Enum implements \JsonSerializable, \Stringable
+abstract class Enum implements \JsonSerializable
 {
     /**
      * Enum value
@@ -69,25 +69,15 @@ abstract class Enum implements \JsonSerializable, \Stringable
             $value = $value->getValue();
         }
 
-        /** @psalm-suppress ImplicitToStringCast assertValidValueReturningKey returns always a string but psalm has currently an issue here */
         $this->key = static::assertValidValueReturningKey($value);
 
         /** @psalm-var T */
         $this->value = $value;
     }
 
-    /**
-     * This method exists only for the compatibility reason when deserializing a previously serialized version
-     * that didn't had the key property
-     */
     public function __wakeup()
     {
-        /** @psalm-suppress DocblockTypeContradiction key can be null when deserializing an enum without the key */
         if ($this->key === null) {
-            /**
-             * @psalm-suppress InaccessibleProperty key is not readonly as marked by psalm
-             * @psalm-suppress PossiblyFalsePropertyAssignmentValue deserializing a case that was removed
-             */
             $this->key = static::search($this->value);
         }
     }
@@ -95,6 +85,7 @@ abstract class Enum implements \JsonSerializable, \Stringable
     /**
      * @param mixed $value
      * @return static
+     * @psalm-return static<T>
      */
     public static function from($value): self
     {
@@ -224,7 +215,6 @@ abstract class Enum implements \JsonSerializable, \Stringable
      *
      * @psalm-pure
      * @psalm-assert T $value
-     * @param mixed $value
      */
     public static function assertValidValue($value): void
     {
@@ -236,8 +226,6 @@ abstract class Enum implements \JsonSerializable, \Stringable
      *
      * @psalm-pure
      * @psalm-assert T $value
-     * @param mixed $value
-     * @return string
      */
     private static function assertValidValueReturningKey($value): string
     {
@@ -310,7 +298,6 @@ abstract class Enum implements \JsonSerializable, \Stringable
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @psalm-pure
      */
-    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->getValue();

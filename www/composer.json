@@ -1,20 +1,25 @@
 {
-    "require": {
-        "php": "^7.4 || ^8.0",
-        "dompdf/dompdf": "^2.0",
-        "google/apiclient": "2.15.0",
-        "phpoffice/phpspreadsheet": "^2.1",
-        "vlucas/phpdotenv": "^5.6",
-        "setasign/fpdi": "^2.6",
-        "setasign/fpdf": "^1.8"
-    },
-    "scripts": {
-        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
-    },
-    "extra": {
-        "google/apiclient-services": [
-            "Drive",
-            "YouTube"
-        ]
-    }
+  "require": {
+    "php": "^8.1 || ^8.2",
+    "dompdf/dompdf": "^2.0",
+    "google/apiclient": "2.15.0",
+    "phpoffice/phpspreadsheet": "^2.1",
+    "vlucas/phpdotenv": "^5.6",
+    "setasign/fpdi": "^2.6",
+    "setasign/fpdf": "^1.8",
+    "myclabs/php-enum": "1.8",
+    "psr/simple-cache": "1.0",
+    "maennchen/zipstream-php": "2.1",
+    "markbaker/complex": "3.0",
+    "markbaker/matrix": "3.0"
+  },
+  "scripts": {
+    "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+  },
+  "extra": {
+    "google/apiclient-services": [
+      "Drive",
+      "YouTube"
+    ]
+  }
 }
