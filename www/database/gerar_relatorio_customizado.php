@@ -134,53 +134,8 @@ if (!empty($especialidade)) {
 // Processar o formato de saída
 if ($formato === 'excel') {
     // Limpar qualquer saída anterior
-    while (ob_get_level()) {
-        ob_end_clean();
-    }
-
-    // Configurar limites de memória e tempo
-    ini_set('memory_limit', '256M');
-    set_time_limit(300);
-
-    try {
-        // Carregar a função de exportação
-        require_once('../exports/excel_export.php');
-
-        // Nome do arquivo personalizado
-        $filename = 'Relatorio_Guias';
-        if (!empty($periodo_mes)) {
-            $filename .= '_' . $periodo_mes;
-        }
-        if (!empty($convenio)) {
-            $filename .= '_' . $convenio;
-        }
-        $filename .= '_' . date('Y-m-d_H-i-s') . '.xlsx';
-
-        // Chamar a função de exportação
-        exportarParaExcel($dados, $titulo_relatorio, $filename);
-        exit;
-    } catch (Exception $e) {
-        // Registrar erro
-        error_log("Erro na exportação Excel: " . $e->getMessage() . "\n" . $e->getTraceAsString());
-
-        // Exibir mensagem de erro para o usuário
-        header('Content-Type: text/html; charset=utf-8');
-        echo '<div style="font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f8f9fa;">';
-        echo '<h2 style="color: #d9534f;">Erro ao gerar o relatório Excel</h2>';
-        echo '<p>Ocorreu um erro ao tentar gerar o arquivo Excel. Detalhes técnicos:</p>';
-        echo '<div style="background-color: #f5f5f5; padding: 10px; border-radius: 4px; font-family: monospace; margin: 15px 0; overflow-x: auto;">';
-        echo htmlspecialchars($e->getMessage());
-        echo '</div>';
-        echo '<p>Por favor, tente as seguintes soluções:</p>';
-        echo '<ul>';
-        echo '<li>Reduza o volume de dados selecionando filtros mais específicos</li>';
-        echo '<li>Verifique se o sistema tem todas as dependências necessárias</li>';
-        echo '<li>Entre em contato com o suporte técnico se o problema persistir</li>';
-        echo '</ul>';
-        echo '<p><a href="javascript:history.back()" style="display: inline-block; padding: 8px 12px; background-color: #0275d8; color: white; text-decoration: none; border-radius: 4px;">Voltar à página anterior</a></p>';
-        echo '</div>';
-        exit;
-    }
+    require_once('../exports/excel_export.php');
+    exportarParaExcel($dados, $titulo_relatorio, $filename);
 } elseif ($formato === 'pdf') {
     require_once('../exports/pdf_export.php');
     exportarParaPDF($dados, $titulo_relatorio);

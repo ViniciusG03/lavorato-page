@@ -42,6 +42,19 @@ function exportarParaExcel($dados, $titulo_relatorio, $filename = null)
         throw new Exception('Não foi possível carregar o autoloader. Verifique se o Composer está instalado corretamente.');
     }
 
+    if (!class_exists('\PhpOffice\PhpSpreadsheet\Spreadsheet')) {
+        throw new Exception('A classe PhpSpreadsheet não foi encontrada. Verifique se o pacote está instalado: composer require phpoffice/phpspreadsheet');
+    }
+
+    foreach ($autoloaderPaths as $path) {
+        if (file_exists($path)) {
+            require_once $path;
+            $autoloaderLoaded = true;
+            error_log("Autoloader carregado de: " . $path);
+            break;
+        }
+    }
+
     // Verifica se há dados para exportar
     if (empty($dados)) {
         throw new Exception('Nenhum dado disponível para exportação.');

@@ -372,6 +372,8 @@ $conn->close();
                     <option>SESSAO DE ARTETERAPIA</option>
                     <option>SESSAO DE EQUOTERAPIA</option>
                     <option>SESSAO DE FISIOTERAPIA</option>
+                    <option>SESSAO DE FONOAUDIOLOGIA</option>
+                    <option>SESSAO DE FONOAUDIOLOGIA EM GRUPO</option>
                     <option>SESSAO DE FONOAUDIOLOGIA FORMAL DE CABINE</option>
                     <option>SESSAO DE MUSICOTERAPIA</option>
                     <option>SESSAO DE NUTRIÇÃO</option>
