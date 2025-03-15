@@ -2,6 +2,7 @@
 
 /**
  * Função para exportar dados para Excel usando PhpSpreadsheet
+ * Versão que usa arquivo temporário para evitar problemas com ZipStream
  * 
  * @param array $dados Array associativo com os dados para exportar
  * @param string $titulo_relatorio Título do relatório
@@ -22,7 +23,24 @@ function exportarParaExcel($dados, $titulo_relatorio, $filename = null)
     // Remove caracteres inválidos do nome do arquivo
     $filename = preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', $filename);
 
-    require_once('../vendor/autoload.php');
+    // Verificar se o autoloader está disponível
+    $autoloaderPaths = [
+        __DIR__ . '/../vendor/autoload.php',
+        __DIR__ . '/vendor/autoload.php',
+    ];
+
+    $autoloaderLoaded = false;
+    foreach ($autoloaderPaths as $path) {
+        if (file_exists($path)) {
+            require_once $path;
+            $autoloaderLoaded = true;
+            break;
+        }
+    }
+
+    if (!$autoloaderLoaded) {
+        throw new Exception('Não foi possível carregar o autoloader. Verifique se o Composer está instalado corretamente.');
+    }
 
     // Verifica se há dados para exportar
     if (empty($dados)) {
@@ -30,9 +48,16 @@ function exportarParaExcel($dados, $titulo_relatorio, $filename = null)
     }
 
     try {
-        // Cria uma nova instância do Spreadsheet
+        // Aumentar limite de memória e tempo de execução
+        ini_set('memory_limit', '256M');
+        set_time_limit(300);
+
+        // Criar uma nova instância do Spreadsheet
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
+
+        // Definir título da planilha
+        $sheet->setTitle(substr('Relatório', 0, 31)); // Máximo de 31 caracteres
 
         // Configurar propriedades do documento
         $spreadsheet->getProperties()
@@ -41,54 +66,27 @@ function exportarParaExcel($dados, $titulo_relatorio, $filename = null)
             ->setTitle($titulo_relatorio)
             ->setSubject('Relatório de Guias')
             ->setDescription('Relatório gerado pelo sistema Lavorato')
-            ->setKeywords('lavorato relatório guias')
             ->setCategory('Relatórios');
 
-        // Configurar título do relatório
+        // Título do relatório na célula A1
         $sheet->setCellValue('A1', $titulo_relatorio);
 
-        // Verificar se $dados[0] existe e é array antes de tentar acessar suas chaves
-        $numColunas = 5; // Valor padrão se não houver dados
-        if (!empty($dados) && isset($dados[0]) && is_array($dados[0])) {
-            $numColunas = count($dados[0]);
-        }
-
-        $lastCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($numColunas - 1);
-        $sheet->mergeCells('A1:' . $lastCol . '1');
-
         // Estilizar o título
-        $titleStyle = [
-            'font' => [
-                'bold' => true,
-                'size' => 16,
-                'color' => ['rgb' => '00B3FF'],
-            ],
-            'alignment' => [
-                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-            ],
-        ];
-        $sheet->getStyle('A1')->applyFromArray($titleStyle);
-        $sheet->getRowDimension(1)->setRowHeight(30);
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-        // Adicionar data do relatório
+        // Mesclar células para o título
+        $lastColumn = empty($dados) ? 'D' : \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(count(reset($dados)) - 1);
+        $sheet->mergeCells('A1:' . $lastColumn . '1');
+
+        // Adicionar data do relatório e total de registros
         $sheet->setCellValue('A2', 'Data do Relatório: ' . date('d/m/Y H:i:s'));
-        $sheet->mergeCells('A2:' . $lastCol . '2');
-
-        // Adicionar total de registros
         $sheet->setCellValue('A3', 'Total de Registros: ' . count($dados));
-        $sheet->mergeCells('A3:' . $lastCol . '3');
+        $sheet->mergeCells('A2:' . $lastColumn . '2');
+        $sheet->mergeCells('A3:' . $lastColumn . '3');
 
-        // Estilizar informações adicionais
-        $infoStyle = [
-            'font' => [
-                'size' => 10,
-                'color' => ['rgb' => '666666'],
-            ],
-            'alignment' => [
-                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
-            ],
-        ];
-        $sheet->getStyle('A2:A3')->applyFromArray($infoStyle);
+        // Adicionar altura da linha do título
+        $sheet->getRowDimension(1)->setRowHeight(25);
 
         // Definir cabeçalhos da tabela na linha 5
         if (count($dados) > 0) {
@@ -104,28 +102,12 @@ function exportarParaExcel($dados, $titulo_relatorio, $filename = null)
             }
 
             // Estilizar cabeçalhos
-            $headerStyle = [
-                'font' => [
-                    'bold' => true,
-                    'color' => ['rgb' => 'FFFFFF'],
-                ],
-                'fill' => [
-                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'startColor' => [
-                        'rgb' => '00B3FF',
-                    ],
-                ],
-                'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                ],
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                        'color' => ['rgb' => 'FFFFFF'],
-                    ],
-                ],
-            ];
-            $sheet->getStyle('A5:' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column - 1) . '5')->applyFromArray($headerStyle);
+            $lastCol = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column - 1);
+            $sheet->getStyle('A5:' . $lastCol . '5')->getFont()->setBold(true);
+            $sheet->getStyle('A5:' . $lastCol . '5')->getFill()
+                ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                ->getStartColor()->setRGB('00B3FF');
+            $sheet->getStyle('A5:' . $lastCol . '5')->getFont()->getColor()->setRGB('FFFFFF');
 
             // Adicionar dados a partir da linha 6
             $row = 6;
@@ -139,75 +121,85 @@ function exportarParaExcel($dados, $titulo_relatorio, $filename = null)
                 $row++;
             }
 
-            // Adicionar estilo zebrado nas linhas de dados
-            $zebraStyle = [
-                'fill' => [
-                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'startColor' => [
-                        'rgb' => 'F2F2F2',
-                    ],
-                ],
-            ];
-
-            for ($i = 6; $i < $row; $i += 2) {
-                $sheet->getStyle('A' . $i . ':' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column - 1) . $i)->applyFromArray($zebraStyle);
-            }
-
-            // Aplicar bordas finas em toda a tabela
-            $borderStyle = [
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                        'color' => ['rgb' => 'DDDDDD'],
-                    ],
-                ],
-            ];
-            $sheet->getStyle('A5:' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column - 1) . ($row - 1))->applyFromArray($borderStyle);
-
             // Auto-dimensionar colunas
-            foreach (range('A', \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column - 1)) as $col) {
+            foreach (range('A', $lastCol) as $col) {
                 $sheet->getColumnDimension($col)->setAutoSize(true);
             }
 
             // Adicionar filtros aos cabeçalhos
-            $sheet->setAutoFilter('A5:' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column - 1) . '5');
+            $sheet->setAutoFilter('A5:' . $lastCol . '5');
+
+            // Formatar linha alternada (estilo zebra)
+            for ($i = 6; $i < $row; $i += 2) {
+                $sheet->getStyle('A' . $i . ':' . $lastCol . $i)->getFill()
+                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                    ->getStartColor()->setRGB('F2F2F2');
+            }
         } else {
             // Se não houver dados, exibir mensagem
             $sheet->setCellValue('A5', 'Nenhum registro encontrado.');
             $sheet->mergeCells('A5:D5');
         }
 
-        // Limpar os buffers de saída antes de enviar cabeçalhos
+        // Método alternativo: Salvar em arquivo temporário e enviar para download
+        // Isso evita problemas com ZipStream
+
+        // Criar diretório temporário se não existir
+        $tempDir = __DIR__ . '/../temp';
+        if (!file_exists($tempDir)) {
+            if (!mkdir($tempDir, 0755, true)) {
+                throw new Exception("Não foi possível criar o diretório temporário.");
+            }
+        }
+
+        // Gerar nome de arquivo temporário
+        $tempFile = $tempDir . '/' . $filename;
+
+        // Limpar saída antes de enviar cabeçalhos
         while (ob_get_level()) {
             ob_end_clean();
         }
 
-        // Configurar os cabeçalhos HTTP
+        // Criar e salvar o arquivo
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->setPreCalculateFormulas(false);
+        $writer->save($tempFile);
+
+        // Verificar se o arquivo foi criado
+        if (!file_exists($tempFile) || filesize($tempFile) <= 0) {
+            throw new Exception("Falha ao gerar o arquivo Excel.");
+        }
+
+        // Enviar o arquivo para download
+        header('Content-Description: File Transfer');
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
-        header('Cache-Control: max-age=0');
+        header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
+        header('Cache-Control: must-revalidate');
         header('Pragma: public');
+        header('Content-Length: ' . filesize($tempFile));
 
-        // Criar o escritor Xlsx
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        // Ler e enviar o arquivo
+        if (readfile($tempFile)) {
+            // Remover arquivo temporário após envio
+            @unlink($tempFile);
+        } else {
+            throw new Exception("Falha ao ler o arquivo temporário.");
+        }
 
-        // Desabilitar recursos que podem causar problemas
-        $writer->setPreCalculateFormulas(false);
-
-        // Salvar diretamente para saída
-        $writer->save('php://output');
+        exit();
     } catch (Exception $e) {
-        // Em caso de erro, fornecer detalhes
+        // Registrar o erro no log
+        error_log("Erro na exportação Excel: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+
+        // Exibir mensagem de erro para o usuário
         header('Content-Type: text/html; charset=utf-8');
         echo '<h2>Erro ao gerar o arquivo Excel</h2>';
         echo '<p>Ocorreu um erro ao tentar gerar o arquivo. Detalhes do erro:</p>';
         echo '<pre>' . htmlspecialchars($e->getMessage()) . '</pre>';
         echo '<p>Por favor, tente novamente ou entre em contato com o suporte técnico.</p>';
         echo '<p><a href="javascript:history.back()">Voltar</a></p>';
-
-        // Registrar o erro em um arquivo de log para debug
-        error_log('Erro na exportação Excel: ' . $e->getMessage() . "\n" . $e->getTraceAsString(), 0);
     }
 
     exit();

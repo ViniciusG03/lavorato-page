@@ -52,6 +52,7 @@ class ComposerStaticInit87dd214d4ace004f03cb57dc63845542
         ),
         'M' => 
         array (
+            'MyCLabs\\Enum\\' => 13,
             'Monolog\\' => 8,
             'Matrix\\' => 7,
             'Masterminds\\' => 12,
@@ -78,6 +79,7 @@ class ComposerStaticInit87dd214d4ace004f03cb57dc63845542
         ),
         'C' => 
         array (
+            'Composer\\Pcre\\' => 14,
             'Complex\\' => 8,
         ),
     );
@@ -148,6 +150,10 @@ class ComposerStaticInit87dd214d4ace004f03cb57dc63845542
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
+        'MyCLabs\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -203,6 +209,10 @@ class ComposerStaticInit87dd214d4ace004f03cb57dc63845542
         'Dompdf\\' => 
         array (
             0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
+        ),
+        'Composer\\Pcre\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
         'Complex\\' => 
         array (
